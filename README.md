@@ -2,6 +2,8 @@
 
 Bienvenido al repositorio de DroidStock. Este proyecto es un SaaS multi-tenant diseñado específicamente para la gestión integral de talleres de reparación electrónica. Desarrollado bajo una arquitectura moderna enfocada en la eficiencia, el aislamiento de datos y la escalabilidad.
 
+![Preview del Proyecto](https://github.com/machinavicente/DroidStock/releases/download/v1.0.0/droidstock.png) 
+
 ## 🛠️ Stack Tecnológico
 
 Esta plataforma utiliza las herramientas más actuales del ecosistema web para garantizar un rendimiento óptimo y una experiencia de usuario fluida:
