@@ -9,7 +9,10 @@ export default defineEventHandler(async (event) => {
 
     const id = getRouterParam(event, 'id')
     const body = await readBody(event)
-    const { nombre_repuesto, cantidad_disponible, precio_costo, precio_venta } = body
+    const { nombre_repuesto, cantidad_disponible, precio_costo, precio_venta, precio_montaje } = body
+
+    console.log('=== ACTUALIZAR REPUESTO ===')
+    console.log('Datos recibidos:', { id, nombre_repuesto, cantidad_disponible, precio_costo, precio_venta, precio_montaje })
 
     if (!nombre_repuesto || nombre_repuesto.trim() === '') {
       throw createError({
@@ -39,25 +42,29 @@ export default defineEventHandler(async (event) => {
     const nuevoStock = cantidad_disponible
     const diferencia = nuevoStock - stockAnterior
 
-    // Actualizar repuesto con precio_costo y precio_venta
+    // Actualizar repuesto con precio_costo, precio_venta y precio_montaje
     const { data: repuesto, error } = await supabase
       .from('stock_repuestos')
       .update({
         nombre_repuesto: nombre_repuesto.trim(),
         cantidad_disponible: nuevoStock,
         precio_costo: precio_costo !== undefined && precio_costo !== '' ? Number(precio_costo) : null,
-        precio_venta: precio_venta !== undefined && precio_venta !== '' ? Number(precio_venta) : null
+        precio_venta: precio_venta !== undefined && precio_venta !== '' ? Number(precio_venta) : null,
+        precio_montaje: precio_montaje !== undefined && precio_montaje !== '' ? Number(precio_montaje) : null
       })
       .eq('id', id)
       .select()
       .single()
 
     if (error) {
+      console.error('Error al actualizar:', error)
       throw createError({
         statusCode: 500,
         message: 'Error al actualizar el repuesto'
       })
     }
+
+    console.log('Repuesto actualizado:', repuesto)
 
     // Registrar movimiento si hubo cambio de stock
     if (diferencia !== 0) {
@@ -84,6 +91,8 @@ export default defineEventHandler(async (event) => {
         console.error('Error al registrar movimiento:', movError)
       }
     }
+
+    console.log('=== FIN ===')
 
     return {
       success: true,

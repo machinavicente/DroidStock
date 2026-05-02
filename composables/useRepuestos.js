@@ -34,7 +34,8 @@ export const useRepuestos = () => {
           nombre_repuesto: repuesto.nombre_repuesto,
           cantidad_disponible: Number(repuesto.cantidad_disponible) || 0,
           precio_costo: repuesto.precio_costo ? Number(repuesto.precio_costo) : null,
-          precio_venta: repuesto.precio_venta ? Number(repuesto.precio_venta) : null
+          precio_venta: repuesto.precio_venta ? Number(repuesto.precio_venta) : null,
+          precio_montaje: repuesto.precio_montaje ? Number(repuesto.precio_montaje) : null
         })
       })
       
@@ -67,7 +68,8 @@ export const useRepuestos = () => {
           nombre_repuesto: repuesto.nombre_repuesto,
           cantidad_disponible: Number(repuesto.cantidad_disponible),
           precio_costo: repuesto.precio_costo ? Number(repuesto.precio_costo) : null,
-          precio_venta: repuesto.precio_venta ? Number(repuesto.precio_venta) : null
+          precio_venta: repuesto.precio_venta ? Number(repuesto.precio_venta) : null,
+          precio_montaje: repuesto.precio_montaje ? Number(repuesto.precio_montaje) : null
         })
       })
       

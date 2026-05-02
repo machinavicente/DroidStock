@@ -69,7 +69,7 @@
           <p class="text-xs text-gray-400 mt-1">Precio pagado al proveedor</p>
         </div>
 
-        <!-- Precio Venta (Taller) - NUEVO CAMPO -->
+        <!-- Precio Venta (Taller) -->
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">
             Precio venta (taller)
@@ -85,7 +85,26 @@
               placeholder="0.00"
             />
           </div>
-          <p class="text-xs text-gray-400 mt-1">Precio de venta al cliente (opcional)</p>
+          <p class="text-xs text-gray-400 mt-1">Precio de venta del repuesto (sin instalación)</p>
+        </div>
+
+        <!-- Precio Montaje (Servicio) - NUEVO CAMPO -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">
+            Precio montaje / Servicio
+          </label>
+          <div class="relative">
+            <i class="ri-tools-line absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            <input
+              v-model.number="form.precio_montaje"
+              type="number"
+              step="0.01"
+              min="0"
+              class="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+              placeholder="0.00"
+            />
+          </div>
+          <p class="text-xs text-gray-400 mt-1">Costo de instalación/montaje del repuesto</p>
         </div>
       </div>
 
@@ -93,7 +112,11 @@
       <div class="mx-6 mb-4 p-3 bg-blue-50 rounded-lg border border-blue-100">
         <div class="flex items-start gap-2">
           <i class="ri-information-line text-blue-500 text-sm mt-0.5"></i>
-          <p class="text-xs text-blue-700">Ganancia potencial por unidad: <span class="font-bold">${{ gananciaPotencial }}</span></p>
+          <p class="text-xs text-blue-700">Ganancia potencial por unidad (venta - costo): <span class="font-bold">${{ gananciaPotencial }}</span></p>
+        </div>
+        <div class="flex items-start gap-2 mt-2">
+          <i class="ri-tools-line text-blue-500 text-sm mt-0.5"></i>
+          <p class="text-xs text-blue-700">Ingreso por montaje: <span class="font-bold">${{ form.precio_montaje || 0 }}</span></p>
         </div>
       </div>
 
@@ -166,7 +189,8 @@ const form = reactive({
   nombre_repuesto: '',
   cantidad_disponible: 0,
   precio_costo: null,
-  precio_venta: null
+  precio_venta: null,
+  precio_montaje: null  // NUEVO CAMPO
 })
 
 // Calcular ganancia potencial
@@ -188,6 +212,7 @@ onMounted(async () => {
       form.cantidad_disponible = repuesto.cantidad_disponible || 0
       form.precio_costo = repuesto.precio_costo || null
       form.precio_venta = repuesto.precio_venta || null
+      form.precio_montaje = repuesto.precio_montaje || null  // NUEVO
     } else {
       router.push('/repuestos')
     }
@@ -211,7 +236,8 @@ const handleActualizar = async () => {
     nombre_repuesto: form.nombre_repuesto,
     cantidad_disponible: form.cantidad_disponible,
     precio_costo: form.precio_costo,
-    precio_venta: form.precio_venta
+    precio_venta: form.precio_venta,
+    precio_montaje: form.precio_montaje  // NUEVO
   })
   guardando.value = false
   

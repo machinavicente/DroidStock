@@ -45,7 +45,8 @@ export default defineEventHandler(async (event) => {
         nombre_repuesto: nombre_repuesto.trim(),
         cantidad_disponible: cantidad_disponible || 0,
         precio_costo: precio_costo && precio_costo !== '' ? Number(precio_costo) : null,
-        precio_venta: precio_venta && precio_venta !== '' ? Number(precio_venta) : null
+        precio_venta: precio_venta && precio_venta !== '' ? Number(precio_venta) : null,
+        precio_montaje: precio_montaje && precio_montaje !== '' ? Number(precio_montaje) : null
       })
       .select()
       .single()

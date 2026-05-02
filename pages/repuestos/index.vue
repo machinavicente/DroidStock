@@ -126,18 +126,40 @@
         <!-- Card body -->
         <div class="p-4 sm:p-5 space-y-2 sm:space-y-3">
           <div class="flex items-center gap-2 text-xs sm:text-sm">
-            <i class="ri-money-dollar-circle-line text-gray-400"></i>
+            <i class="ri-shopping-cart-line text-gray-400"></i>
             <span class="text-gray-600">
               Precio costo: <span class="font-medium">${{ repuesto.precio_costo || 0 }}</span>
             </span>
           </div>
           <div v-if="repuesto.precio_venta" class="flex items-center gap-2 text-xs sm:text-sm">
-            <i class="ri-store-line text-gray-400"></i>
+            <i class="ri-money-dollar-circle-line text-gray-400"></i>
             <span class="text-gray-600">
               Precio venta: <span class="font-medium text-green-600">${{ repuesto.precio_venta || 0 }}</span>
             </span>
           </div>
-          <div class="flex items-center gap-2 text-xs sm:text-sm">
+          <div v-if="repuesto.precio_montaje" class="flex items-center gap-2 text-xs sm:text-sm">
+            <i class="ri-tools-line text-gray-400"></i>
+            <span class="text-gray-600">
+              Montaje: <span class="font-medium text-blue-600">${{ repuesto.precio_montaje || 0 }}</span>
+            </span>
+          </div>
+          
+          <!-- PRECIO FINAL (VENTA + MONTAJE) - RESALTADO -->
+          <div class="mt-3 pt-2 border-t border-gray-100">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <i class="ri-calculator-line text-orange-500 text-sm"></i>
+                <span class="text-xs font-semibold text-gray-700">Precio final:</span>
+              </div>
+              <div class="bg-gradient-to-r from-orange-50 to-amber-50 px-3 py-1.5 rounded-lg">
+                <span class="text-base sm:text-lg font-bold text-orange-600">
+                  ${{ ((repuesto.precio_venta || 0) + (repuesto.precio_montaje || 0)).toFixed(2) }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2 text-xs sm:text-sm pt-1">
             <i class="ri-calendar-line text-gray-400"></i>
             <span class="text-gray-600 text-xs sm:text-sm">
               Agregado: {{ formatearFecha(repuesto.created_at) }}
@@ -407,7 +429,7 @@ const exportarInventarioPDF = async () => {
                 <td style="padding: 12px; text-align: right;"></td>
                 <td style="padding: 12px; text-align: right; font-weight: bold;">$${valorTotalCosto.toFixed(2)}</td>
                 <td style="padding: 12px; text-align: right; font-weight: bold; color: #38a169;">$${gananciaPotencial.toFixed(2)}</td>
-              </td>
+              </tr>
             </tfoot>
           </table>
         </div>
@@ -464,7 +486,8 @@ const aumentarStock = async () => {
       nombre_repuesto: repuestoSeleccionado.value.nombre_repuesto,
       cantidad_disponible: nuevoStock,
       precio_costo: repuestoSeleccionado.value.precio_costo,
-      precio_venta: repuestoSeleccionado.value.precio_venta
+      precio_venta: repuestoSeleccionado.value.precio_venta,
+      precio_montaje: repuestoSeleccionado.value.precio_montaje
     })
     
     modalAumentarVisible.value = false
