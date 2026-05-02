@@ -133,19 +133,7 @@
                   v-model="form.cliente_telefono"
                   type="tel"
                   class="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-                  placeholder="555-1234"
-                />
-              </div>
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-              <div class="relative">
-                <i class="ri-mail-line absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                <input
-                  v-model="form.cliente_email"
-                  type="email"
-                  class="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-                  placeholder="cliente@email.com"
+                  placeholder="0424-1234567"
                 />
               </div>
             </div>

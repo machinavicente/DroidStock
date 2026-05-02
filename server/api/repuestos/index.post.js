@@ -2,26 +2,18 @@ import { requireAuth } from '~/server/utils/session'
 import { createServerClient } from '~/server/utils/supabase'
 
 export default defineEventHandler(async (event) => {
-  console.log('=== INICIO API REPUESTOS ===')
-  
   try {
-    // 1. Obtener sesión
-    console.log('1. Obteniendo sesión...')
     const session = await requireAuth(event)
     const tiendaId = session.tienda_id
-    console.log('Sesión obtenida, tiendaId:', tiendaId)
+    const usuarioId = session.usuario_admin_id
 
-    // 2. Leer body
-    console.log('2. Leyendo body...')
     const body = await readBody(event)
-    console.log('Body recibido:', JSON.stringify(body, null, 2))
+    const { nombre_repuesto, cantidad_disponible, precio_costo, precio_venta } = body
 
-    const { nombre_repuesto, cantidad_disponible, precio_costo } = body
+    console.log('=== CREAR REPUESTO ===')
+    console.log('Datos:', { nombre_repuesto, cantidad_disponible, precio_costo, precio_venta })
 
-    // 3. Validaciones
-    console.log('3. Validando campos...')
     if (!nombre_repuesto || nombre_repuesto.trim() === '') {
-      console.log('ERROR: Nombre vacío')
       return {
         success: false,
         message: 'El nombre del repuesto es requerido'
@@ -29,33 +21,67 @@ export default defineEventHandler(async (event) => {
     }
 
     const supabase = createServerClient()
-    console.log('4. Cliente Supabase creado')
 
-    // 5. Insertar directamente (sin verificar duplicados primero)
-    console.log('5. Insertando repuesto...')
+    // Verificar si ya existe
+    const { data: existe } = await supabase
+      .from('stock_repuestos')
+      .select('id')
+      .eq('tienda_id', tiendaId)
+      .eq('nombre_repuesto', nombre_repuesto.trim())
+      .maybeSingle()
+
+    if (existe) {
+      return {
+        success: false,
+        message: `Ya existe un repuesto con el nombre "${nombre_repuesto}"`
+      }
+    }
+
+    // Crear repuesto
     const { data: repuesto, error } = await supabase
       .from('stock_repuestos')
       .insert({
         tienda_id: tiendaId,
         nombre_repuesto: nombre_repuesto.trim(),
-        cantidad_disponible: cantidad_disponible !== undefined ? Number(cantidad_disponible) : 0,
-        precio_costo: precio_costo !== undefined && precio_costo !== null && precio_costo !== '' ? Number(precio_costo) : null
+        cantidad_disponible: cantidad_disponible || 0,
+        precio_costo: precio_costo && precio_costo !== '' ? Number(precio_costo) : null,
+        precio_venta: precio_venta && precio_venta !== '' ? Number(precio_venta) : null
       })
       .select()
       .single()
 
     if (error) {
-      console.error('ERROR de Supabase:', error)
-      console.error('Código de error:', error.code)
-      console.error('Mensaje:', error.message)
+      console.error('Error al insertar:', error)
       return {
         success: false,
-        message: `Error de base de datos: ${error.message}`
+        message: 'Error al crear el repuesto: ' + error.message
       }
     }
 
-    console.log('Repuesto creado exitosamente:', repuesto)
-    console.log('=== FIN OK ===')
+    // REGISTRAR MOVIMIENTO DE ENTRADA (si la cantidad es mayor a 0)
+    if (cantidad_disponible && cantidad_disponible > 0) {
+      const { error: movError } = await supabase
+        .from('movimientos_inventario')
+        .insert({
+          tienda_id: tiendaId,
+          repuesto_id: repuesto.id,
+          tipo: 'entrada',
+          cantidad: cantidad_disponible,
+          stock_anterior: 0,
+          stock_nuevo: cantidad_disponible,
+          precio_unitario_costo: Number(precio_costo) || null,
+          precio_unitario_venta: Number(precio_venta) || null,
+          motivo: 'Creación de repuesto (stock inicial)',
+          referencia_tipo: 'creacion',
+          usuario_id: usuarioId
+        })
+
+      if (movError) {
+        console.error('Error al registrar movimiento:', movError)
+      } else {
+        console.log('Movimiento de entrada registrado correctamente')
+      }
+    }
 
     return {
       success: true,
@@ -63,8 +89,7 @@ export default defineEventHandler(async (event) => {
       data: repuesto
     }
   } catch (error) {
-    console.error('ERROR GENERAL:', error)
-    console.error('Stack:', error.stack)
+    console.error('Error general:', error)
     return {
       success: false,
       message: error.message || 'Error al crear el repuesto'

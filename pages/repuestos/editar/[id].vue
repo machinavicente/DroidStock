@@ -16,6 +16,7 @@
 
     <form v-else @submit.prevent="handleActualizar" class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
       <div class="p-6 space-y-5">
+        <!-- Nombre del repuesto -->
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">
             Nombre del repuesto <span class="text-red-500">*</span>
@@ -32,6 +33,7 @@
           </div>
         </div>
 
+        <!-- Cantidad disponible -->
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">
             Cantidad disponible
@@ -48,12 +50,13 @@
           </div>
         </div>
 
+        <!-- Precio Costo (Proveedor) -->
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">
-            Precio costo
+            Precio costo (proveedor)
           </label>
           <div class="relative">
-            <i class="ri-money-dollar-circle-line absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            <i class="ri-shopping-cart-line absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
             <input
               v-model.number="form.precio_costo"
               type="number"
@@ -63,6 +66,34 @@
               placeholder="0.00"
             />
           </div>
+          <p class="text-xs text-gray-400 mt-1">Precio pagado al proveedor</p>
+        </div>
+
+        <!-- Precio Venta (Taller) - NUEVO CAMPO -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">
+            Precio venta (taller)
+          </label>
+          <div class="relative">
+            <i class="ri-money-dollar-circle-line absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            <input
+              v-model.number="form.precio_venta"
+              type="number"
+              step="0.01"
+              min="0"
+              class="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+              placeholder="0.00"
+            />
+          </div>
+          <p class="text-xs text-gray-400 mt-1">Precio de venta al cliente (opcional)</p>
+        </div>
+      </div>
+
+      <!-- Tarjeta de información adicional -->
+      <div class="mx-6 mb-4 p-3 bg-blue-50 rounded-lg border border-blue-100">
+        <div class="flex items-start gap-2">
+          <i class="ri-information-line text-blue-500 text-sm mt-0.5"></i>
+          <p class="text-xs text-blue-700">Ganancia potencial por unidad: <span class="font-bold">${{ gananciaPotencial }}</span></p>
         </div>
       </div>
 
@@ -84,6 +115,20 @@
         </button>
       </div>
     </form>
+
+    <!-- Toast de notificación -->
+    <div v-if="toast.visible" class="fixed bottom-4 right-4 z-50 animate-slide-up">
+      <div :class="[
+        'px-4 py-3 rounded-lg shadow-lg flex items-center gap-3 min-w-[280px]',
+        toast.tipo === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
+      ]">
+        <i :class="toast.tipo === 'success' ? 'ri-checkbox-circle-fill text-xl' : 'ri-alert-fill text-xl'"></i>
+        <span class="flex-1 text-sm">{{ toast.mensaje }}</span>
+        <button @click="toast.visible = false" class="hover:opacity-70">
+          <i class="ri-close-line text-xl"></i>
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -100,10 +145,36 @@ const cargando = ref(true)
 const guardando = ref(false)
 const repuestoId = route.params.id
 
+const toast = ref({
+  visible: false,
+  mensaje: '',
+  tipo: 'success'
+})
+
+const mostrarToast = (mensaje, tipo = 'success') => {
+  toast.value = {
+    visible: true,
+    mensaje,
+    tipo
+  }
+  setTimeout(() => {
+    toast.value.visible = false
+  }, 3000)
+}
+
 const form = reactive({
   nombre_repuesto: '',
   cantidad_disponible: 0,
-  precio_costo: null
+  precio_costo: null,
+  precio_venta: null
+})
+
+// Calcular ganancia potencial
+const gananciaPotencial = computed(() => {
+  if (form.precio_costo && form.precio_venta) {
+    return (form.precio_venta - form.precio_costo).toFixed(2)
+  }
+  return '0.00'
 })
 
 onMounted(async () => {
@@ -116,6 +187,7 @@ onMounted(async () => {
       form.nombre_repuesto = repuesto.nombre_repuesto
       form.cantidad_disponible = repuesto.cantidad_disponible || 0
       form.precio_costo = repuesto.precio_costo || null
+      form.precio_venta = repuesto.precio_venta || null
     } else {
       router.push('/repuestos')
     }
@@ -128,14 +200,58 @@ onMounted(async () => {
 })
 
 const handleActualizar = async () => {
+  // Validar campos requeridos
+  if (!form.nombre_repuesto || form.nombre_repuesto.trim() === '') {
+    mostrarToast('El nombre del repuesto es requerido', 'error')
+    return
+  }
+
   guardando.value = true
-  const result = await actualizarRepuesto(repuestoId, form)
+  const result = await actualizarRepuesto(repuestoId, {
+    nombre_repuesto: form.nombre_repuesto,
+    cantidad_disponible: form.cantidad_disponible,
+    precio_costo: form.precio_costo,
+    precio_venta: form.precio_venta
+  })
   guardando.value = false
   
   if (result.success) {
-    router.push('/repuestos')
+    mostrarToast('Repuesto actualizado correctamente', 'success')
+    setTimeout(() => {
+      router.push('/repuestos')
+    }, 1500)
   } else {
-    alert(result.error)
+    mostrarToast(result.error || 'Error al actualizar el repuesto', 'error')
   }
 }
 </script>
+
+<style scoped>
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-up {
+  animation: slideUp 0.3s ease-out;
+}
+</style>

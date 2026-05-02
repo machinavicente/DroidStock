@@ -58,9 +58,6 @@
                   <div v-if="cliente.telefono" class="text-gray-600">
                     <i class="ri-phone-line text-xs mr-1"></i> {{ cliente.telefono }}
                   </div>
-                  <div v-if="cliente.email" class="text-gray-500 text-xs">
-                    {{ cliente.email }}
-                  </div>
                   <div v-if="!cliente.telefono && !cliente.email" class="text-gray-400">-</div>
                 </div>
               </td>

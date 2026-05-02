@@ -14,9 +14,9 @@
     </div>
 
     <template v-else>
-      <!-- Sidebar (escritorio) -->
+      <!-- Sidebar (escritorio - siempre visible) -->
       <aside
-        class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 -translate-x-full"
+        class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg hidden lg:block"
       >
         <div class="flex flex-col h-full">
           <!-- Logo -->
@@ -28,7 +28,7 @@
           </div>
 
           <!-- Menú de navegación -->
-          <nav class="flex-1 px-4 py-6 space-y-2">
+          <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
             <NuxtLink
               to="/dashboard"
               class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition group"
@@ -36,19 +36,13 @@
               <i class="ri-dashboard-line text-xl"></i>
               <span class="ml-3">Dashboard</span>
             </NuxtLink>
+
             <NuxtLink
               to="/reparaciones"
               class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition group"
             >
               <i class="ri-tools-line text-xl"></i>
               <span class="ml-3">Reparaciones</span>
-            </NuxtLink>
-            <NuxtLink
-              to="/clientes"
-              class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition group"
-            >
-              <i class="ri-group-line text-xl"></i>
-              <span class="ml-3">Clientes</span>
             </NuxtLink>
 
             <NuxtLink
@@ -67,6 +61,20 @@
               <span class="ml-3">Repuestos</span>
             </NuxtLink>
 
+            <NuxtLink
+              to="/reportes/movimientos"
+              class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition group"
+            >
+              <i class="ri-history-line text-xl"></i>
+              <span class="ml-3">Movimientos</span>
+            </NuxtLink>
+            <NuxtLink
+              to="/clientes"
+              class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition group"
+            >
+              <i class="ri-group-line text-xl"></i>
+              <span class="ml-3">Clientes</span>
+            </NuxtLink>
           </nav>
 
           <!-- Footer del sidebar -->
@@ -82,34 +90,137 @@
         </div>
       </aside>
 
+      <!-- Sidebar (móvil - deslizable) -->
+      <transition name="sidebar">
+        <aside
+          v-if="sidebarAbierta"
+          class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:hidden"
+        >
+          <div class="flex flex-col h-full">
+            <!-- Logo con botón de cerrar -->
+            <div
+              class="flex items-center justify-between px-4 py-4 border-b border-gray-200"
+            >
+              <div class="flex items-center">
+                <i class="ri-smartphone-line text-2xl text-blue-600"></i>
+                <span class="ml-2 text-xl font-bold text-gray-900"
+                  >DroidStock</span
+                >
+              </div>
+              <button
+                @click="sidebarAbierta = false"
+                class="text-gray-500 hover:text-gray-700"
+              >
+                <i class="ri-close-line text-2xl"></i>
+              </button>
+            </div>
+
+            <!-- Menú de navegación móvil -->
+            <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+              <NuxtLink
+                to="/dashboard"
+                class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition group"
+                @click="sidebarAbierta = false"
+              >
+                <i class="ri-dashboard-line text-xl"></i>
+                <span class="ml-3">Dashboard</span>
+              </NuxtLink>
+
+              <NuxtLink
+                to="/reparaciones"
+                class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition group"
+                @click="sidebarAbierta = false"
+              >
+                <i class="ri-tools-line text-xl"></i>
+                <span class="ml-3">Reparaciones</span>
+              </NuxtLink>
+
+              <NuxtLink
+                to="/tecnicos"
+                class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition group"
+                @click="sidebarAbierta = false"
+              >
+                <i class="ri-user-settings-line text-xl"></i>
+                <span class="ml-3">Técnicos</span>
+              </NuxtLink>
+
+              <NuxtLink
+                to="/repuestos"
+                class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition group"
+                @click="sidebarAbierta = false"
+              >
+                <i class="ri-stack-line text-xl"></i>
+                <span class="ml-3">Repuestos</span>
+              </NuxtLink>
+
+              <NuxtLink
+                to="/reportes/movimientos"
+                class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition group"
+                @click="sidebarAbierta = false"
+              >
+                <i class="ri-history-line text-xl"></i>
+                <span class="ml-3">Movimientos</span>
+              </NuxtLink>
+
+              <NuxtLink
+                to="/clientes"
+                class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition group"
+                @click="sidebarAbierta = false"
+              >
+                <i class="ri-group-line text-xl"></i>
+                <span class="ml-3">Clientes</span>
+              </NuxtLink>
+            </nav>
+
+            <!-- Footer del sidebar móvil -->
+            <div class="p-4 border-t border-gray-200">
+              <button
+                @click="cerrarSesion"
+                class="flex items-center w-full px-4 py-3 text-red-600 rounded-lg hover:bg-red-50 transition"
+              >
+                <i class="ri-logout-box-line text-xl"></i>
+                <span class="ml-3">Cerrar Sesión</span>
+              </button>
+            </div>
+          </div>
+        </aside>
+      </transition>
+
       <!-- Contenido principal -->
       <div class="lg:ml-64">
         <!-- Navbar superior -->
         <header class="bg-white shadow-sm sticky top-0 z-40">
-          <div class="flex items-center justify-between px-6 py-4">
+          <div
+            class="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4"
+          >
             <!-- Botón hamburguesa (móvil) -->
             <button
               @click="sidebarAbierta = !sidebarAbierta"
-              class="lg:hidden text-gray-600"
+              class="lg:hidden text-gray-600 p-2 rounded-lg hover:bg-gray-100 transition"
             >
               <i class="ri-menu-line text-2xl"></i>
             </button>
 
+            <!-- Espacio para mantener el título centrado en móvil -->
+            <div class="lg:hidden w-10"></div>
+
             <!-- Título de la página -->
-            <h1 class="text-xl font-semibold text-gray-900">
+            <h1 class="text-base sm:text-xl font-semibold text-gray-900">
               {{ tituloPagina }}
             </h1>
 
             <!-- Info del taller -->
-            <div class="flex items-center space-x-4">
-              <div class="text-right hidden sm:block">
-                <p class="text-sm font-medium text-gray-900">
+            <div class="flex items-center space-x-2 sm:space-x-4">
+              <div class="text-right hidden xs:block">
+                <p class="text-xs sm:text-sm font-medium text-gray-900">
                   {{ tiendaNombre }}
                 </p>
-                <p class="text-xs text-gray-500">{{ usuarioEmail }}</p>
+                <p class="text-[10px] sm:text-xs text-gray-500">
+                  {{ usuarioEmail }}
+                </p>
               </div>
               <div
-                class="w-10 h-10 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-semibold"
+                class="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-semibold text-sm sm:text-base shadow-md"
               >
                 {{ iniciales }}
               </div>
@@ -118,17 +229,19 @@
         </header>
 
         <!-- Contenido dinámico -->
-        <main class="p-6">
+        <main class="p-3 sm:p-6">
           <slot />
         </main>
       </div>
 
       <!-- Overlay móvil -->
-      <div
-        v-if="sidebarAbierta"
-        @click="sidebarAbierta = false"
-        class="fixed inset-0 bg-black/50 z-40 lg:hidden"
-      ></div>
+      <transition name="fade">
+        <div
+          v-if="sidebarAbierta"
+          @click="sidebarAbierta = false"
+          class="fixed inset-0 bg-black/50 z-40 lg:hidden"
+        ></div>
+      </transition>
     </template>
   </div>
 </template>
@@ -158,10 +271,11 @@ const iniciales = computed(() => {
 const tituloPagina = computed(() => {
   const path = router.currentRoute.value.path;
   if (path.includes("dashboard")) return "Dashboard";
-  if (path.includes("clientes")) return "Gestión de Clientes";
-  if (path.includes("tecnicos")) return "Gestión de Técnicos";
-  if (path.includes("repuestos")) return "Control de Repuestos";
-  if (path.includes("reparaciones")) return "Gestión de Reparaciones";
+  if (path.includes("clientes")) return "Clientes";
+  if (path.includes("tecnicos")) return "Técnicos";
+  if (path.includes("repuestos")) return "Repuestos";
+  if (path.includes("reparaciones")) return "Reparaciones";
+  if (path.includes("movimientos")) return "Movimientos";
   return "DroidStock";
 });
 
@@ -187,5 +301,32 @@ const cerrarSesion = async () => {
 }
 .animate-spin {
   animation: spin 1s linear infinite;
+}
+
+/* Transición para el sidebar móvil */
+.sidebar-enter-active,
+.sidebar-leave-active {
+  transition: transform 0.3s ease;
+}
+.sidebar-enter-from,
+.sidebar-leave-to {
+  transform: translateX(-100%);
+}
+
+/* Transición para el overlay */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+/* Breakpoint extra small para pantallas muy pequeñas */
+@media (max-width: 480px) {
+  .xs\:block {
+    display: block;
+  }
 }
 </style>

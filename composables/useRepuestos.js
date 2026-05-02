@@ -33,7 +33,8 @@ export const useRepuestos = () => {
         body: JSON.stringify({
           nombre_repuesto: repuesto.nombre_repuesto,
           cantidad_disponible: Number(repuesto.cantidad_disponible) || 0,
-          precio_costo: repuesto.precio_costo ? Number(repuesto.precio_costo) : null
+          precio_costo: repuesto.precio_costo ? Number(repuesto.precio_costo) : null,
+          precio_venta: repuesto.precio_venta ? Number(repuesto.precio_venta) : null
         })
       })
       
@@ -65,7 +66,8 @@ export const useRepuestos = () => {
         body: JSON.stringify({
           nombre_repuesto: repuesto.nombre_repuesto,
           cantidad_disponible: Number(repuesto.cantidad_disponible),
-          precio_costo: repuesto.precio_costo ? Number(repuesto.precio_costo) : null
+          precio_costo: repuesto.precio_costo ? Number(repuesto.precio_costo) : null,
+          precio_venta: repuesto.precio_venta ? Number(repuesto.precio_venta) : null
         })
       })
       

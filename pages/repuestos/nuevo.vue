@@ -79,14 +79,14 @@
               <p class="text-xs text-gray-400 mt-1">Cantidad actual disponible en inventario</p>
             </div>
 
-            <!-- Precio costo -->
+            <!-- Precio costo (proveedor) -->
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1.5">
-                Precio costo
+                Precio costo (proveedor)
               </label>
               <div class="relative">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <i class="ri-money-dollar-circle-line text-gray-400 text-base"></i>
+                  <i class="ri-shopping-cart-line text-gray-400 text-base"></i>
                 </div>
                 <input
                   v-model.number="form.precio_costo"
@@ -97,7 +97,28 @@
                   placeholder="0.00"
                 />
               </div>
-              <p class="text-xs text-gray-400 mt-1">Precio de compra del repuesto (opcional)</p>
+              <p class="text-xs text-gray-400 mt-1">Precio pagado al proveedor</p>
+            </div>
+
+            <!-- Precio venta (taller) - NUEVO CAMPO -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">
+                Precio venta (taller)
+              </label>
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <i class="ri-money-dollar-circle-line text-gray-400 text-base"></i>
+                </div>
+                <input
+                  v-model.number="form.precio_venta"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  class="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm bg-gray-50 focus:bg-white transition-colors"
+                  placeholder="0.00"
+                />
+              </div>
+              <p class="text-xs text-gray-400 mt-1">Precio de venta al cliente (opcional)</p>
             </div>
           </div>
         </div>
@@ -108,7 +129,7 @@
             <i class="ri-information-line text-green-500 text-lg mt-0.5"></i>
             <div class="text-sm text-green-800">
               <p class="font-medium mb-1">Información importante</p>
-              <p class="text-xs text-green-700">Los repuestos pueden ser asignados a reparaciones. Mantenga el stock actualizado para un mejor control de inventario.</p>
+              <p class="text-xs text-green-700">El precio de venta se usará para calcular la ganancia potencial en reportes de inventario. Los repuestos pueden ser asignados a reparaciones.</p>
             </div>
           </div>
         </div>
@@ -169,7 +190,8 @@ const toast = ref({
 const form = reactive({
   nombre_repuesto: '',
   cantidad_disponible: 0,
-  precio_costo: null
+  precio_costo: null,
+  precio_venta: null  // NUEVO CAMPO
 })
 
 const mostrarToast = (mensaje, tipo = 'success') => {
@@ -196,7 +218,8 @@ const guardarRepuesto = async () => {
     const result = await crearRepuesto({
       nombre_repuesto: form.nombre_repuesto,
       cantidad_disponible: form.cantidad_disponible || 0,
-      precio_costo: form.precio_costo || null
+      precio_costo: form.precio_costo || null,
+      precio_venta: form.precio_venta || null  // NUEVO CAMPO
     })
     
     if (result.success) {
