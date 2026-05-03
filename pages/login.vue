@@ -18,47 +18,28 @@
 
       <!-- Formulario -->
       <form @submit.prevent="handleLogin" class="space-y-4 sm:space-y-5">
-        <!-- Slug del taller (corregido para móvil) -->
+        <!-- Slug del taller -->
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1 sm:mb-2">
             <i class="ri-store-2-line mr-1"></i>
-            Tu taller
+           Usuario de tu taller
           </label>
-          <div class="flex flex-col sm:flex-row">
-            <span class="inline-flex items-center justify-center px-3 py-2 bg-gray-100 border border-gray-300 rounded-t-lg sm:rounded-l-lg sm:rounded-r-none border-b-0 sm:border-b sm:border-r-0 text-gray-500 text-sm">
-              droidstock.com/
-            </span>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i class="ri-link-m text-gray-400 text-base"></i>
+            </div>
             <input
               v-model="form.slug"
               type="text"
               required
-              class="flex-1 px-4 py-2 border border-gray-300 rounded-b-lg sm:rounded-r-lg sm:rounded-l-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+              class="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
               placeholder="mi-taller"
               :disabled="cargando"
             />
           </div>
-          <p class="text-xs text-gray-500 mt-1">La URL que elegiste al registrar tu taller</p>
-        </div>
-
-        <!-- Email -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1 sm:mb-2">
-            <i class="ri-mail-line mr-1"></i>
-            Correo electrónico
-          </label>
-          <div class="relative">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <i class="ri-mail-line text-gray-400 text-base"></i>
-            </div>
-            <input
-              v-model="form.email"
-              type="email"
-              required
-              class="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-              placeholder="admin@tutaller.com"
-              :disabled="cargando"
-            />
-          </div>
+          <p class="text-xs text-gray-500 mt-1">
+            Ej: droidstock.com/<span class="font-mono font-medium text-blue-600">{{ form.slug || 'mi-taller' }}</span>
+          </p>
         </div>
 
         <!-- Contraseña -->
@@ -118,7 +99,6 @@ const successMessage = ref('')
 
 const form = reactive({
   slug: '',
-  email: '',
   password: ''
 })
 
@@ -135,10 +115,10 @@ const obtenerMensajeError = (error) => {
   if (error.response?.status === 401) {
     const mensaje = error.data?.message
     if (mensaje?.includes('Credenciales inválidas')) {
-      return '🔐 Credenciales incorrectas. Verifica tu email, contraseña o el nombre de tu taller.'
+      return '🔐 Credenciales incorrectas. Verifica el nombre de tu taller o tu contraseña.'
     }
     if (mensaje?.includes('Taller no encontrado')) {
-      return '🏪 Taller no encontrado. Verifica que la URL sea correcta.'
+      return '🏪 Taller no encontrado. Verifica que el nombre sea correcto.'
     }
     return mensaje || 'Credenciales incorrectas. Intenta de nuevo.'
   }
@@ -155,7 +135,7 @@ const handleLogin = async () => {
   errorMessage.value = ''
   successMessage.value = ''
 
-  if (!form.slug || !form.email || !form.password) {
+  if (!form.slug || !form.password) {
     errorMessage.value = '📝 Todos los campos son obligatorios'
     cargando.value = false
     return
@@ -195,49 +175,14 @@ const handleLogin = async () => {
   animation: spin 1s linear infinite;
 }
 
-/* Breakpoint para pantallas pequeñas */
-@media (max-width: 640px) {
-  .flex-col {
-    flex-direction: column;
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
   }
-  .rounded-t-lg {
-    border-top-left-radius: 0.5rem;
-    border-top-right-radius: 0.5rem;
-  }
-  .rounded-b-lg {
-    border-bottom-left-radius: 0.5rem;
-    border-bottom-right-radius: 0.5rem;
-  }
-  .border-b-0 {
-    border-bottom-width: 0;
-  }
-}
-
-@media (min-width: 641px) {
-  .sm\:flex-row {
-    flex-direction: row;
-  }
-  .sm\:rounded-l-lg {
-    border-top-left-radius: 0.5rem;
-    border-bottom-left-radius: 0.5rem;
-  }
-  .sm\:rounded-r-none {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-  }
-  .sm\:rounded-r-lg {
-    border-top-right-radius: 0.5rem;
-    border-bottom-right-radius: 0.5rem;
-  }
-  .sm\:rounded-l-none {
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-  }
-  .sm\:border-b {
-    border-bottom-width: 1px;
-  }
-  .sm\:border-r-0 {
-    border-right-width: 0;
+  to {
+    transform: translateY(0);
+    opacity: 1;
   }
 }
 </style>

@@ -3,13 +3,12 @@ import { createSession, destroySession } from '~/server/utils/session'
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
-  const { slug, email, password } = body
+  const { slug, password } = body
 
-  // Validar campos requeridos
-  if (!slug || !email || !password) {
+  if (!slug || !password) {
     throw createError({
       statusCode: 400,
-      message: 'Slug, email y contraseña son requeridos'
+      message: 'Nombre de taller y contraseña son requeridos'
     })
   }
 
@@ -25,16 +24,15 @@ export default defineEventHandler(async (event) => {
   if (!tienda) {
     throw createError({
       statusCode: 401,
-      message: 'Credenciales inválidas'
+      message: 'Taller no encontrado'
     })
   }
 
-  // Buscar el usuario admin
+  // Buscar el usuario admin de esa tienda
   const { data: admin, error: adminError } = await supabase
     .from('usuarios_admin')
     .select('id, nombre_apellido, email, password_hash')
     .eq('tienda_id', tienda.id)
-    .eq('email', email.toLowerCase().trim())
     .single()
 
   if (!admin) {
@@ -52,7 +50,7 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  // Destruir sesiones anteriores del mismo usuario
+  // Destruir sesiones anteriores
   await destroySession(event)
 
   // Obtener IP y User Agent

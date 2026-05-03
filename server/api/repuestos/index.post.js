@@ -8,10 +8,10 @@ export default defineEventHandler(async (event) => {
     const usuarioId = session.usuario_admin_id
 
     const body = await readBody(event)
-    const { nombre_repuesto, cantidad_disponible, precio_costo, precio_venta } = body
+    const { nombre_repuesto, cantidad_disponible, precio_costo, precio_venta, precio_montaje } = body
 
     console.log('=== CREAR REPUESTO ===')
-    console.log('Datos:', { nombre_repuesto, cantidad_disponible, precio_costo, precio_venta })
+    console.log('Datos:', { nombre_repuesto, cantidad_disponible, precio_costo, precio_venta, precio_montaje })
 
     if (!nombre_repuesto || nombre_repuesto.trim() === '') {
       return {
@@ -22,8 +22,8 @@ export default defineEventHandler(async (event) => {
 
     const supabase = createServerClient()
 
-    // Verificar si ya existe
-    const { data: existe } = await supabase
+    // Verificar si ya existe un repuesto con el mismo nombre en esta tienda
+    const { data: existe, error: errorExiste } = await supabase
       .from('stock_repuestos')
       .select('id')
       .eq('tienda_id', tiendaId)
@@ -46,7 +46,7 @@ export default defineEventHandler(async (event) => {
         cantidad_disponible: cantidad_disponible || 0,
         precio_costo: precio_costo && precio_costo !== '' ? Number(precio_costo) : null,
         precio_venta: precio_venta && precio_venta !== '' ? Number(precio_venta) : null,
-        precio_montaje: precio_montaje && precio_montaje !== '' ? Number(precio_montaje) : null
+        precio_montaje: precio_montaje && precio_montaje !== '' ? Number(precio_montaje) : 0
       })
       .select()
       .single()
@@ -59,7 +59,9 @@ export default defineEventHandler(async (event) => {
       }
     }
 
-    // REGISTRAR MOVIMIENTO DE ENTRADA (si la cantidad es mayor a 0)
+    console.log('Repuesto creado:', repuesto)
+
+    // Registrar movimiento de entrada si hay stock inicial
     if (cantidad_disponible && cantidad_disponible > 0) {
       const { error: movError } = await supabase
         .from('movimientos_inventario')
@@ -83,6 +85,8 @@ export default defineEventHandler(async (event) => {
         console.log('Movimiento de entrada registrado correctamente')
       }
     }
+
+    console.log('=== FIN ===')
 
     return {
       success: true,

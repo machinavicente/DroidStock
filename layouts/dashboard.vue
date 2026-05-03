@@ -36,7 +36,13 @@
               <i class="ri-dashboard-line text-xl"></i>
               <span class="ml-3">Dashboard</span>
             </NuxtLink>
-
+<NuxtLink
+  to="/ventas"
+  class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition group"
+>
+  <i class="ri-shopping-cart-line text-xl"></i>
+  <span class="ml-3">Ventas</span>
+</NuxtLink>
             <NuxtLink
               to="/reparaciones"
               class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition group"
@@ -67,13 +73,6 @@
             >
               <i class="ri-history-line text-xl"></i>
               <span class="ml-3">Movimientos</span>
-            </NuxtLink>
-            <NuxtLink
-              to="/clientes"
-              class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition group"
-            >
-              <i class="ri-group-line text-xl"></i>
-              <span class="ml-3">Clientes</span>
             </NuxtLink>
           </nav>
 
@@ -125,7 +124,14 @@
                 <i class="ri-dashboard-line text-xl"></i>
                 <span class="ml-3">Dashboard</span>
               </NuxtLink>
-
+              <NuxtLink
+                to="/ventas"
+                class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition group"
+                @click="sidebarAbierta = false"
+              >
+                <i class="ri-shopping-cart-line text-xl"></i>
+                <span class="ml-3">Ventas</span>
+              </NuxtLink>
               <NuxtLink
                 to="/reparaciones"
                 class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition group"
@@ -160,15 +166,6 @@
               >
                 <i class="ri-history-line text-xl"></i>
                 <span class="ml-3">Movimientos</span>
-              </NuxtLink>
-
-              <NuxtLink
-                to="/clientes"
-                class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition group"
-                @click="sidebarAbierta = false"
-              >
-                <i class="ri-group-line text-xl"></i>
-                <span class="ml-3">Clientes</span>
               </NuxtLink>
             </nav>
 

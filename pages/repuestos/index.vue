@@ -77,111 +77,114 @@
     </div>
 
     <!-- Grid de tarjetas -->
-    <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
-      <div
-        v-for="repuesto in repuestosFiltrados"
-        :key="repuesto.id"
-        class="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200"
-      >
-        <!-- Card header -->
-        <div class="p-4 sm:p-5 border-b border-gray-100">
-          <div class="flex items-start justify-between">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-r from-green-500 to-green-600 flex items-center justify-center text-white font-semibold text-base sm:text-lg shadow-sm">
-                <i class="ri-stack-line text-base sm:text-xl"></i>
-              </div>
-              <div class="flex-1 min-w-0">
-                <h3 class="font-semibold text-gray-900 text-sm sm:text-base truncate">{{ repuesto.nombre_repuesto }}</h3>
-                <span class="inline-block px-2 py-0.5 text-xs rounded-full mt-1" :class="stockClass(repuesto.cantidad_disponible)">
-                  Stock: {{ repuesto.cantidad_disponible }} uds
-                </span>
-              </div>
-            </div>
-            <div class="flex gap-1 flex-shrink-0">
-              <button
-                @click="abrirModalAumentarStock(repuesto)"
-                class="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-lg transition"
-                title="Aumentar stock"
-              >
-                <i class="ri-add-line text-base sm:text-lg"></i>
-              </button>
-              <NuxtLink
-                :to="`/repuestos/editar/${repuesto.id}`"
-                class="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition"
-                title="Editar"
-              >
-                <i class="ri-edit-line text-base sm:text-lg"></i>
-              </NuxtLink>
-              <button
-                @click="confirmarEliminar(repuesto)"
-                class="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition"
-                title="Eliminar"
-              >
-                <i class="ri-delete-bin-line text-base sm:text-lg"></i>
-              </button>
-            </div>
+<!-- Grid de tarjetas -->
+<div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+  <div
+    v-for="repuesto in repuestosFiltrados"
+    :key="repuesto.id"
+    class="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 flex flex-col"
+  >
+    <!-- Card header -->
+    <div class="p-4 sm:p-5 border-b border-gray-100">
+      <div class="flex items-start justify-between">
+        <div class="flex items-center gap-3 flex-1 min-w-0">
+          <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-r from-green-500 to-green-600 flex items-center justify-center text-white font-semibold text-base sm:text-lg shadow-sm flex-shrink-0">
+            <i class="ri-stack-line text-base sm:text-xl"></i>
           </div>
-        </div>
-
-        <!-- Card body -->
-        <div class="p-4 sm:p-5 space-y-2 sm:space-y-3">
-          <div class="flex items-center gap-2 text-xs sm:text-sm">
-            <i class="ri-shopping-cart-line text-gray-400"></i>
-            <span class="text-gray-600">
-              Precio costo: <span class="font-medium">${{ repuesto.precio_costo || 0 }}</span>
-            </span>
-          </div>
-          <div v-if="repuesto.precio_venta" class="flex items-center gap-2 text-xs sm:text-sm">
-            <i class="ri-money-dollar-circle-line text-gray-400"></i>
-            <span class="text-gray-600">
-              Precio venta: <span class="font-medium text-green-600">${{ repuesto.precio_venta || 0 }}</span>
-            </span>
-          </div>
-          <div v-if="repuesto.precio_montaje" class="flex items-center gap-2 text-xs sm:text-sm">
-            <i class="ri-tools-line text-gray-400"></i>
-            <span class="text-gray-600">
-              Montaje: <span class="font-medium text-blue-600">${{ repuesto.precio_montaje || 0 }}</span>
-            </span>
-          </div>
-          
-          <!-- PRECIO FINAL (VENTA + MONTAJE) - RESALTADO -->
-          <div class="mt-3 pt-2 border-t border-gray-100">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center gap-2">
-                <i class="ri-calculator-line text-orange-500 text-sm"></i>
-                <span class="text-xs font-semibold text-gray-700">Precio final:</span>
-              </div>
-              <div class="bg-gradient-to-r from-orange-50 to-amber-50 px-3 py-1.5 rounded-lg">
-                <span class="text-base sm:text-lg font-bold text-orange-600">
-                  ${{ ((repuesto.precio_venta || 0) + (repuesto.precio_montaje || 0)).toFixed(2) }}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div class="flex items-center gap-2 text-xs sm:text-sm pt-1">
-            <i class="ri-calendar-line text-gray-400"></i>
-            <span class="text-gray-600 text-xs sm:text-sm">
-              Agregado: {{ formatearFecha(repuesto.created_at) }}
+          <div class="flex-1 min-w-0">
+            <h3 class="font-semibold text-gray-900 text-sm sm:text-base break-words leading-tight">
+              {{ repuesto.nombre_repuesto }}
+            </h3>
+            <span class="inline-block px-2 py-0.5 text-xs rounded-full mt-1" :class="stockClass(repuesto.cantidad_disponible)">
+              Stock: {{ repuesto.cantidad_disponible }} uds
             </span>
           </div>
         </div>
-
-        <!-- Card footer con indicador de stock bajo -->
-        <div v-if="repuesto.cantidad_disponible <= 5 && repuesto.cantidad_disponible > 0" class="px-4 sm:px-5 py-2 sm:py-3 bg-yellow-50 rounded-b-xl border-t border-yellow-100">
-          <div class="flex items-center gap-2 text-xs sm:text-sm text-yellow-700">
-            <i class="ri-alert-line"></i>
-            <span>Stock bajo. ¡Reabastecer pronto!</span>
-          </div>
-        </div>
-        <div v-else-if="repuesto.cantidad_disponible === 0" class="px-4 sm:px-5 py-2 sm:py-3 bg-red-50 rounded-b-xl border-t border-red-100">
-          <div class="flex items-center gap-2 text-xs sm:text-sm text-red-700">
-            <i class="ri-error-warning-line"></i>
-            <span>Sin stock. ¡Urgente reabastecer!</span>
-          </div>
+        <div class="flex gap-1 flex-shrink-0 ml-2">
+          <button
+            @click="abrirModalAumentarStock(repuesto)"
+            class="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-lg transition"
+            title="Aumentar stock"
+          >
+            <i class="ri-add-line text-base sm:text-lg"></i>
+          </button>
+          <NuxtLink
+            :to="`/repuestos/editar/${repuesto.id}`"
+            class="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition"
+            title="Editar"
+          >
+            <i class="ri-edit-line text-base sm:text-lg"></i>
+          </NuxtLink>
+          <button
+            @click="confirmarEliminar(repuesto)"
+            class="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition"
+            title="Eliminar"
+          >
+            <i class="ri-delete-bin-line text-base sm:text-lg"></i>
+          </button>
         </div>
       </div>
     </div>
+
+    <!-- Card body -->
+    <div class="p-4 sm:p-5 space-y-2 sm:space-y-3 flex-1">
+      <div class="flex items-center gap-2 text-xs sm:text-sm">
+        <i class="ri-shopping-cart-line text-gray-400 flex-shrink-0"></i>
+        <span class="text-gray-600 truncate">
+          Precio costo: <span class="font-medium">${{ repuesto.precio_costo || 0 }}</span>
+        </span>
+      </div>
+      <div v-if="repuesto.precio_venta" class="flex items-center gap-2 text-xs sm:text-sm">
+        <i class="ri-money-dollar-circle-line text-gray-400 flex-shrink-0"></i>
+        <span class="text-gray-600 truncate">
+          Precio venta: <span class="font-medium text-green-600">${{ repuesto.precio_venta || 0 }}</span>
+        </span>
+      </div>
+      <div v-if="repuesto.precio_montaje" class="flex items-center gap-2 text-xs sm:text-sm">
+        <i class="ri-tools-line text-gray-400 flex-shrink-0"></i>
+        <span class="text-gray-600 truncate">
+          Montaje: <span class="font-medium text-blue-600">${{ repuesto.precio_montaje || 0 }}</span>
+        </span>
+      </div>
+      
+      <!-- PRECIO FINAL -->
+      <div class="mt-3 pt-2 border-t border-gray-100">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <i class="ri-calculator-line text-orange-500 text-sm flex-shrink-0"></i>
+            <span class="text-xs font-semibold text-gray-700">Precio final:</span>
+          </div>
+          <div class="bg-gradient-to-r from-orange-50 to-amber-50 px-3 py-1.5 rounded-lg">
+            <span class="text-base sm:text-lg font-bold text-orange-600">
+              ${{ ((repuesto.precio_venta || 0) + (repuesto.precio_montaje || 0)).toFixed(2) }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 text-xs sm:text-sm pt-1">
+        <i class="ri-calendar-line text-gray-400 flex-shrink-0"></i>
+        <span class="text-gray-600 text-xs sm:text-sm truncate">
+          Agregado: {{ formatearFecha(repuesto.created_at) }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Card footer -->
+    <div v-if="repuesto.cantidad_disponible <= 5 && repuesto.cantidad_disponible > 0" class="px-4 sm:px-5 py-2 sm:py-3 bg-yellow-50 rounded-b-xl border-t border-yellow-100">
+      <div class="flex items-center gap-2 text-xs sm:text-sm text-yellow-700">
+        <i class="ri-alert-line flex-shrink-0"></i>
+        <span class="truncate">Stock bajo. ¡Reabastecer pronto!</span>
+      </div>
+    </div>
+    <div v-else-if="repuesto.cantidad_disponible === 0" class="px-4 sm:px-5 py-2 sm:py-3 bg-red-50 rounded-b-xl border-t border-red-100">
+      <div class="flex items-center gap-2 text-xs sm:text-sm text-red-700">
+        <i class="ri-error-warning-line flex-shrink-0"></i>
+        <span class="truncate">Sin stock. ¡Urgente reabastecer!</span>
+      </div>
+    </div>
+  </div>
+</div>
 
     <!-- Modal para aumentar stock (responsivo) -->
     <div v-if="modalAumentarVisible" class="fixed inset-0 z-50 overflow-y-auto">

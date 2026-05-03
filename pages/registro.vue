@@ -39,25 +39,28 @@
           <p class="text-xs text-gray-500 mt-1">El nombre que identificará tu negocio</p>
         </div>
 
-        <!-- Slug del taller (corregido para móvil) -->
+        <!-- Slug del taller (corregido - input redondeado) -->
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1 sm:mb-2">
             <i class="ri-link-mr-1"></i>
-            URL de tu taller
+            Usuario de tu taller
           </label>
-          <div class="flex flex-col sm:flex-row">
-            <span class="inline-flex items-center justify-center px-3 py-2 bg-gray-100 border border-gray-300 rounded-t-lg sm:rounded-l-lg sm:rounded-r-none border-b-0 sm:border-b sm:border-r-0 text-gray-500 text-sm">
-              droidstock.com/
-            </span>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i class="ri-link-m text-gray-400 text-base"></i>
+            </div>
             <input
               v-model="form.configuracion_slug"
               type="text"
               required
-              class="flex-1 px-4 py-2 border border-gray-300 rounded-b-lg sm:rounded-r-lg sm:rounded-l-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+              class="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
               placeholder="taller-perez"
             />
           </div>
-          <p class="text-xs text-gray-500 mt-1">Solo letras minúsculas, números y guiones. Ej: taller-perez</p>
+          <p class="text-xs text-gray-500 mt-1">
+            Ej: droidstock.com/<span class="font-mono font-medium text-blue-600">{{ form.configuracion_slug || 'taller-perez' }}</span>
+          </p>
+          <p class="text-xs text-gray-400 mt-0.5">Solo letras minúsculas, números y guiones</p>
         </div>
 
         <!-- Nombre completo -->
@@ -211,49 +214,18 @@ const handleRegistro = async () => {
   animation: spin 1s linear infinite;
 }
 
-/* Breakpoint para pantallas pequeñas */
-@media (max-width: 640px) {
-  .flex-col {
-    flex-direction: column;
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
   }
-  .rounded-t-lg {
-    border-top-left-radius: 0.5rem;
-    border-top-right-radius: 0.5rem;
-  }
-  .rounded-b-lg {
-    border-bottom-left-radius: 0.5rem;
-    border-bottom-right-radius: 0.5rem;
-  }
-  .border-b-0 {
-    border-bottom-width: 0;
+  to {
+    transform: translateY(0);
+    opacity: 1;
   }
 }
 
-@media (min-width: 641px) {
-  .sm\:flex-row {
-    flex-direction: row;
-  }
-  .sm\:rounded-l-lg {
-    border-top-left-radius: 0.5rem;
-    border-bottom-left-radius: 0.5rem;
-  }
-  .sm\:rounded-r-none {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-  }
-  .sm\:rounded-r-lg {
-    border-top-right-radius: 0.5rem;
-    border-bottom-right-radius: 0.5rem;
-  }
-  .sm\:rounded-l-none {
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-  }
-  .sm\:border-b {
-    border-bottom-width: 1px;
-  }
-  .sm\:border-r-0 {
-    border-right-width: 0;
-  }
+.animate-slide-up {
+  animation: slideUp 0.3s ease-out;
 }
 </style>
