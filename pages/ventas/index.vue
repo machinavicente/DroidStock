@@ -93,17 +93,6 @@
           </div>
         </div>
       </div>
-      <div class="bg-gradient-to-r from-purple-50 to-white rounded-xl border border-purple-100 p-4">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-xs text-gray-500">Clientes distintos</p>
-            <p class="text-2xl font-bold text-gray-900">{{ clientesDistintos }}</p>
-          </div>
-          <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
-            <i class="ri-group-line text-purple-600"></i>
-          </div>
-        </div>
-      </div>
     </div>
 
     <!-- Loading -->
@@ -155,12 +144,14 @@
                 </span>
               </td>
               <td class="px-4 sm:px-6 py-3 text-right">
-                <span 
-                  v-if="venta.incluye_montaje" 
-                  class="inline-flex items-center gap-1 text-xs text-blue-600"
-                >
-                  <i class="ri-tools-line"></i> Incluido
-                </span>
+                <div v-if="venta.incluye_montaje" class="space-y-1">
+                  <span class="inline-flex items-center gap-1 text-xs text-blue-600">
+                    <i class="ri-tools-line"></i> Incluido
+                  </span>
+                  <div class="text-xs text-gray-500">
+                    +${{ formatearTotal((venta.stock_repuestos?.precio_montaje || 0) * venta.cantidad) }}
+                  </div>
+                </div>
                 <span v-else class="text-xs text-gray-400">Sin montaje</span>
               </td>
               <td class="px-4 sm:px-6 py-3 text-right">

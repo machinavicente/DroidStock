@@ -186,14 +186,14 @@
       <!-- Contenido principal -->
       <div class="lg:ml-64">
         <!-- Navbar superior -->
-        <header class="bg-white shadow-sm sticky top-0 z-40">
+        <header class="bg-gradient-to-r from-white to-gray-50 shadow-md border-b border-gray-200 sticky top-0 z-40">
           <div
             class="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4"
           >
             <!-- Botón hamburguesa (móvil) -->
             <button
               @click="sidebarAbierta = !sidebarAbierta"
-              class="lg:hidden text-gray-600 p-2 rounded-lg hover:bg-gray-100 transition"
+              class="lg:hidden text-gray-700 p-2 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition-all duration-200 shadow-sm hover:shadow-md"
             >
               <i class="ri-menu-line text-2xl"></i>
             </button>
@@ -202,22 +202,22 @@
             <div class="lg:hidden w-10"></div>
 
             <!-- Título de la página -->
-            <h1 class="text-base sm:text-xl font-semibold text-gray-900">
+            <h1 class="text-base sm:text-xl font-bold text-gray-900 tracking-tight">
               {{ tituloPagina }}
             </h1>
 
             <!-- Info del taller -->
             <div class="flex items-center space-x-2 sm:space-x-4">
-              <div class="text-right hidden xs:block">
-                <p class="text-xs sm:text-sm font-medium text-gray-900">
+              <div class="text-right">
+                <p class="text-xs sm:text-sm font-semibold text-gray-900">
                   {{ tiendaNombre }}
                 </p>
-                <p class="text-[10px] sm:text-xs text-gray-500">
+                <p class="text-[10px] sm:text-xs text-gray-600 font-medium">
                   {{ usuarioEmail }}
                 </p>
               </div>
               <div
-                class="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-semibold text-sm sm:text-base shadow-md"
+                class="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-semibold text-sm sm:text-base shadow-lg ring-2 ring-white"
               >
                 {{ iniciales }}
               </div>

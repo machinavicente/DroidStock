@@ -15,7 +15,7 @@
           <i v-if="exportandoInventario" class="ri-loader-4-line animate-spin"></i>
           <i v-else class="ri-file-pdf-line"></i>
           <span class="hidden xs:inline">{{ exportandoInventario ? 'Generando...' : 'Exportar Inventario' }}</span>
-          <span class="xs:hidden">{{ exportandoInventario ? '...' : 'PDF' }}</span>
+          <span class="xs:hidden">{{ exportandoInventario ? '...' : 'Exportar Inventario' }}</span>
         </button>
         <NuxtLink
           to="/repuestos/nuevo"
@@ -23,7 +23,7 @@
         >
           <i class="ri-add-line"></i>
           <span class="hidden xs:inline">Nuevo Repuesto</span>
-          <span class="xs:hidden">Nuevo</span>
+          <span class="xs:hidden">Nuevo Repuesto</span>
         </NuxtLink>
       </div>
     </div>

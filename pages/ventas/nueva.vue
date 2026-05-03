@@ -525,8 +525,7 @@ const guardarVenta = async () => {
       cliente_id: clienteId,
       repuesto_id: ventaForm.repuesto_id,
       cantidad: ventaForm.cantidad,
-      precio_unitario: ventaForm.precio_unitario,
-      precio_montaje: ventaForm.incluir_montaje ? (repuestoSeleccionado.value?.precio_montaje || 0) : 0,
+      incluye_montaje: ventaForm.incluir_montaje,
       total: totalFinal,
       nota: ventaForm.nota
     })
