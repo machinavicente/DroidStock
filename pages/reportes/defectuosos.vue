@@ -9,7 +9,7 @@
       <button 
         @click="exportarPDF"
         :disabled="exportando"
-        class="w-full xs:w-auto px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition flex items-center justify-center gap-2 text-sm"
+        class=" xs:w-auto px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition flex items-center justify-center gap-2 text-sm"
       >
         <i v-if="exportando" class="ri-loader-4-line animate-spin"></i>
         <i v-else class="ri-file-pdf-line"></i>
@@ -27,17 +27,6 @@
           </div>
           <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
             <i class="ri-error-warning-line text-red-600"></i>
-          </div>
-        </div>
-      </div>
-      <div class="bg-gradient-to-r from-orange-50 to-white rounded-xl shadow-sm border border-orange-100 p-4">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-xs text-gray-500">Pérdida total (costo)</p>
-            <p class="text-2xl font-bold text-orange-600">${{ perdidaTotalGlobal }}</p>
-          </div>
-          <div class="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
-            <i class="ri-money-dollar-circle-line text-orange-600"></i>
           </div>
         </div>
       </div>

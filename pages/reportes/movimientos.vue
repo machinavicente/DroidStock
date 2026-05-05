@@ -642,6 +642,14 @@ watch(tabActiva, () => {
   aplicarFiltros()
 })
 
+watch(() => filtros.repuesto_id, () => {
+  aplicarFiltros()
+})
+
+watch(() => filtros.periodo, () => {
+  aplicarFiltros()
+})
+
 onMounted(() => {
   cargarRepuestos()
   cargarEntradas()
