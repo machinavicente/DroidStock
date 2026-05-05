@@ -31,20 +31,18 @@
           </div>
         </div>
         <div>
-          <label class="block text-xs font-medium text-gray-700 mb-1">Desde</label>
-          <input 
-            type="date" 
-            v-model="filtros.fecha_inicio" 
+          <label class="block text-xs font-medium text-gray-700 mb-1">Período</label>
+          <select 
+            v-model="filtros.periodo" 
+            @change="aplicarPeriodo"
             class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          />
-        </div>
-        <div>
-          <label class="block text-xs font-medium text-gray-700 mb-1">Hasta</label>
-          <input 
-            type="date" 
-            v-model="filtros.fecha_fin" 
-            class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          />
+          >
+            <option value="">Todos</option>
+            <option value="hoy">Hoy</option>
+            <option value="ultima_semana">Última semana</option>
+            <option value="ultimo_mes">Último mes</option>
+            <option value="ultimo_ano">Último año</option>
+          </select>
         </div>
         <div class="flex items-end">
           <button 
@@ -188,6 +186,7 @@ const toast = ref({ visible: false, mensaje: '', tipo: 'success' })
 
 const filtros = reactive({
   busqueda: '',
+  periodo: '',
   fecha_inicio: '',
   fecha_fin: ''
 })
@@ -251,8 +250,44 @@ const formatearTotal = (total) => {
   })
 }
 
+const aplicarPeriodo = () => {
+  const hoy = new Date()
+  hoy.setHours(0, 0, 0, 0)
+  
+  switch (filtros.periodo) {
+    case 'hoy':
+      filtros.fecha_inicio = hoy.toISOString().split('T')[0]
+      const finHoy = new Date(hoy)
+      finHoy.setHours(23, 59, 59)
+      filtros.fecha_fin = finHoy.toISOString().split('T')[0]
+      break
+    case 'ultima_semana':
+      const inicioSemana = new Date(hoy)
+      inicioSemana.setDate(hoy.getDate() - 7)
+      filtros.fecha_inicio = inicioSemana.toISOString().split('T')[0]
+      filtros.fecha_fin = hoy.toISOString().split('T')[0]
+      break
+    case 'ultimo_mes':
+      const inicioMes = new Date(hoy)
+      inicioMes.setMonth(hoy.getMonth() - 1)
+      filtros.fecha_inicio = inicioMes.toISOString().split('T')[0]
+      filtros.fecha_fin = hoy.toISOString().split('T')[0]
+      break
+    case 'ultimo_ano':
+      const inicioAno = new Date(hoy)
+      inicioAno.setFullYear(hoy.getFullYear() - 1)
+      filtros.fecha_inicio = inicioAno.toISOString().split('T')[0]
+      filtros.fecha_fin = hoy.toISOString().split('T')[0]
+      break
+    default:
+      filtros.fecha_inicio = ''
+      filtros.fecha_fin = ''
+  }
+}
+
 const limpiarFiltros = () => {
   filtros.busqueda = ''
+  filtros.periodo = ''
   filtros.fecha_inicio = ''
   filtros.fecha_fin = ''
 }

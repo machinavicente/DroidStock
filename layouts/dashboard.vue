@@ -36,13 +36,13 @@
               <i class="ri-dashboard-line text-xl"></i>
               <span class="ml-3">Dashboard</span>
             </NuxtLink>
-<NuxtLink
-  to="/ventas"
-  class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition group"
->
-  <i class="ri-shopping-cart-line text-xl"></i>
-  <span class="ml-3">Ventas</span>
-</NuxtLink>
+            <NuxtLink
+              to="/ventas"
+              class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition group"
+            >
+              <i class="ri-shopping-cart-line text-xl"></i>
+              <span class="ml-3">Ventas</span>
+            </NuxtLink>
             <NuxtLink
               to="/reparaciones"
               class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition group"
@@ -65,6 +65,13 @@
             >
               <i class="ri-stack-line text-xl"></i>
               <span class="ml-3">Repuestos</span>
+            </NuxtLink>
+            <NuxtLink
+              to="/reportes/defectuosos"
+              class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition group"
+            >
+              <i class="ri-error-warning-line text-xl"></i>
+              <span class="ml-3">Defectuosos</span>
             </NuxtLink>
 
             <NuxtLink
@@ -158,6 +165,13 @@
                 <i class="ri-stack-line text-xl"></i>
                 <span class="ml-3">Repuestos</span>
               </NuxtLink>
+              <NuxtLink
+                to="/reportes/defectuosos"
+                class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition group"
+              >
+                <i class="ri-error-warning-line text-xl"></i>
+                <span class="ml-3">Defectuosos</span>
+              </NuxtLink>
 
               <NuxtLink
                 to="/reportes/movimientos"
@@ -186,7 +200,9 @@
       <!-- Contenido principal -->
       <div class="lg:ml-64">
         <!-- Navbar superior -->
-        <header class="bg-gradient-to-r from-white to-gray-50 shadow-md border-b border-gray-200 sticky top-0 z-40">
+        <header
+          class="bg-gradient-to-r from-white to-gray-50 shadow-md border-b border-gray-200 sticky top-0 z-40"
+        >
           <div
             class="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4"
           >
@@ -202,7 +218,9 @@
             <div class="lg:hidden w-10"></div>
 
             <!-- Título de la página -->
-            <h1 class="text-base sm:text-xl font-bold text-gray-900 tracking-tight">
+            <h1
+              class="text-base sm:text-xl font-bold text-gray-900 tracking-tight"
+            >
               {{ tituloPagina }}
             </h1>
 

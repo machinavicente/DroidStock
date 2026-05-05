@@ -7,28 +7,6 @@
           <h1 class="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">Movimientos de Stock</h1>
           <p class="text-xs sm:text-sm text-gray-600 mt-0.5 sm:mt-1">Historial de entradas y salidas de repuestos</p>
         </div>
-        <div class="flex flex-col xs:flex-row gap-2 w-full sm:w-auto">
-          <button 
-            @click="exportarEntradasPDF"
-            :disabled="generandoEntradasPDF"
-            class="w-full xs:w-auto px-3 sm:px-4 py-1.5 sm:py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm disabled:opacity-50"
-          >
-            <i v-if="generandoEntradasPDF" class="ri-loader-4-line animate-spin"></i>
-            <i v-else class="ri-arrow-down-line"></i>
-            <span class="hidden xs:inline">{{ generandoEntradasPDF ? 'Generando...' : 'Exportar Entradas' }}</span>
-            <span class="xs:hidden">{{ generandoEntradasPDF ? '...' : 'Entradas' }}</span>
-          </button>
-          <button 
-            @click="exportarSalidasPDF"
-            :disabled="generandoSalidasPDF"
-            class="w-full xs:w-auto px-3 sm:px-4 py-1.5 sm:py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm disabled:opacity-50"
-          >
-            <i v-if="generandoSalidasPDF" class="ri-loader-4-line animate-spin"></i>
-            <i v-else class="ri-arrow-up-line"></i>
-            <span class="hidden xs:inline">{{ generandoSalidasPDF ? 'Generando...' : 'Exportar Salidas' }}</span>
-            <span class="xs:hidden">{{ generandoSalidasPDF ? '...' : 'Salidas' }}</span>
-          </button>
-        </div>
       </div>
     </div>
 
@@ -99,6 +77,20 @@
 
     <!-- CONTENIDO QUE SE EXPORTA A PDF (Entradas) -->
     <div v-if="tabActiva === 'entradas'" ref="contenidoEntradasPDF" class="contenido-pdf bg-white p-4 sm:p-6 md:p-8 rounded-xl shadow-sm border border-gray-100 overflow-x-auto">
+      <!-- Botón de exportar específico para entradas -->
+      <div class="flex justify-end mb-4 sm:mb-6">
+        <button 
+          @click="exportarEntradasPDF"
+          :disabled="generandoEntradasPDF"
+          class="w-full xs:w-auto px-3 sm:px-4 py-1.5 sm:py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm disabled:opacity-50"
+        >
+          <i v-if="generandoEntradasPDF" class="ri-loader-4-line animate-spin"></i>
+          <i v-else class="ri-arrow-down-line"></i>
+          <span class="hidden xs:inline">{{ generandoEntradasPDF ? 'Generando...' : 'Exportar Entradas' }}</span>
+          <span class="xs:hidden">{{ generandoEntradasPDF ? '...' : 'Entradas' }}</span>
+        </button>
+      </div>
+      
       <!-- MEMBRETE -->
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b-2 border-green-600 pb-4 sm:pb-6 mb-6 sm:mb-8 gap-4">
         <div class="flex-1">
@@ -116,10 +108,10 @@
           </div>
         </div>
       </div>
-
+      
       <!-- Tarjetas de resumen - Entradas -->
       <div class="grid grid-cols-2 gap-3 sm:gap-4 mb-6 sm:mb-8">
-        <div class="bg-white rounded-xl border border-green-200 p-3 sm:p-4 shadow-sm">
+        <div class="bg-green-50 rounded-xl border border-green-200 p-3 sm:p-4 shadow-sm">
           <div class="flex justify-between items-center">
             <div>
               <p class="text-[8px] sm:text-[10px] font-bold text-green-600 uppercase tracking-wider">Total Entradas</p>
@@ -127,17 +119,6 @@
             </div>
             <div class="w-8 h-8 sm:w-10 sm:h-10 bg-green-500 text-white rounded-lg flex items-center justify-center">
               <i class="ri-arrow-down-line text-sm sm:text-xl"></i>
-            </div>
-          </div>
-        </div>
-        <div class="bg-white rounded-xl border border-blue-200 p-3 sm:p-4 shadow-sm">
-          <div class="flex justify-between items-center">
-            <div>
-              <p class="text-[8px] sm:text-[10px] font-bold text-blue-600 uppercase tracking-wider">Valor Invertido</p>
-              <p class="text-xl sm:text-2xl font-black text-gray-800 mt-1">${{ totalesEntradas.valorTotal.toLocaleString() }}</p>
-            </div>
-            <div class="w-8 h-8 sm:w-10 sm:h-10 bg-blue-600 text-white rounded-lg flex items-center justify-center">
-              <i class="ri-money-dollar-circle-line text-sm sm:text-xl"></i>
             </div>
           </div>
         </div>
@@ -187,6 +168,20 @@
 
     <!-- CONTENIDO QUE SE EXPORTA A PDF (Salidas) -->
     <div v-if="tabActiva === 'salidas'" ref="contenidoSalidasPDF" class="contenido-pdf bg-white p-4 sm:p-6 md:p-8 rounded-xl shadow-sm border border-gray-100 overflow-x-auto">
+      <!-- Botón de exportar específico para salidas -->
+      <div class="flex justify-end mb-4 sm:mb-6">
+        <button 
+          @click="exportarSalidasPDF"
+          :disabled="generandoSalidasPDF"
+          class="w-full xs:w-auto px-3 sm:px-4 py-1.5 sm:py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm disabled:opacity-50"
+        >
+          <i v-if="generandoSalidasPDF" class="ri-loader-4-line animate-spin"></i>
+          <i v-else class="ri-arrow-up-line"></i>
+          <span class="hidden xs:inline">{{ generandoSalidasPDF ? 'Generando...' : 'Exportar Salidas' }}</span>
+          <span class="xs:hidden">{{ generandoSalidasPDF ? '...' : 'Salidas' }}</span>
+        </button>
+      </div>
+      
       <!-- MEMBRETE -->
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b-2 border-red-600 pb-4 sm:pb-6 mb-6 sm:mb-8 gap-4">
         <div class="flex-1">
@@ -204,10 +199,10 @@
           </div>
         </div>
       </div>
-
+      
       <!-- Tarjetas de resumen - Salidas -->
       <div class="grid grid-cols-2 gap-3 sm:gap-4 mb-6 sm:mb-8">
-        <div class="bg-white rounded-xl border border-red-200 p-3 sm:p-4 shadow-sm">
+        <div class="bg-red-50 rounded-xl border border-red-200 p-3 sm:p-4 shadow-sm">
           <div class="flex justify-between items-center">
             <div>
               <p class="text-[8px] sm:text-[10px] font-bold text-red-600 uppercase tracking-wider">Total Salidas</p>
@@ -218,7 +213,7 @@
             </div>
           </div>
         </div>
-        <div class="bg-white rounded-xl border border-purple-200 p-3 sm:p-4 shadow-sm">
+        <div class="bg-purple-50 rounded-xl border border-purple-200 p-3 sm:p-4 shadow-sm">
           <div class="flex justify-between items-center">
             <div>
               <p class="text-[8px] sm:text-[10px] font-bold text-purple-600 uppercase tracking-wider">Reparaciones</p>
@@ -409,20 +404,116 @@ const limpiarFiltros = () => {
 }
 
 const exportarEntradasPDF = async () => {
-  if (!contenidoEntradasPDF.value || generandoEntradasPDF.value) return
+  if (generandoEntradasPDF.value) return
   generandoEntradasPDF.value = true
   try {
     const html2pdfModule = await import('html2pdf.js')
     const html2pdf = html2pdfModule.default
-    const element = contenidoEntradasPDF.value
+
+    if (movimientosEntradas.value.length === 0) {
+      mostrarToast('No hay datos para exportar', 'error')
+      return
+    }
+    
+    const contenido = `
+      <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 1200px; margin: 0 auto;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #dc2626; padding-bottom: 20px; margin-bottom: 25px;">
+          <div style="flex: 1;">
+            <h1 style="color: #dc2626; font-size: 28px; margin: 0; font-weight: 900; letter-spacing: -0.5px;">DROIDSTOCK</h1>
+            <p style="color: #6b7280; font-size: 10px; margin: 3px 0; text-transform: uppercase; font-weight: 700; letter-spacing: 1px;">INVENTORY & REPAIR MANAGEMENT SYSTEM</p>
+          </div>
+          <div style="flex: 1; text-align: right;">
+            <h2 style="color: #374151; font-size: 18px; margin: 0; font-weight: 700; text-transform: uppercase;">REPORTE DE ENTRADAS</h2>
+            <div style="margin-top: 5px;">
+              <span style="color: #6b7280; font-size: 10px; background: #f3f4f6; padding: 4px 8px; border-radius: 4px; font-family: monospace;">FECHA: ${new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+            </div>
+          </div>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 25px;">
+          <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 10px; padding: 15px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <p style="color: #dc2626; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">Total Entradas</p>
+                <p style="color: #374151; font-size: 24px; font-weight: 900; margin: 5px 0;">${totalesEntradas.value.totalCantidad}</p>
+              </div>
+              <div style="width: 40px; height: 40px; background: #dc2626; color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                <span style="font-size: 20px; font-weight: bold;">↓</span>
+              </div>
+            </div>
+          </div>
+          <div style="background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 10px; padding: 15px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <p style="color: #0284c7; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">Valor Invertido</p>
+                <p style="color: #374151; font-size: 24px; font-weight: 900; margin: 5px 0;">$${totalesEntradas.value.valorTotal.toLocaleString()}</p>
+              </div>
+              <div style="width: 40px; height: 40px; background: #0284c7; color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                <span style="font-size: 20px; font-weight: bold;">$</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div style="overflow-x: auto;">
+          <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+            <thead>
+              <tr style="background: #f3f4f6; border-bottom: 2px solid #d1d5db;">
+                <th style="padding: 12px; text-align: left; font-weight: 700; color: #374151;">Fecha</th>
+                <th style="padding: 12px; text-align: left; font-weight: 700; color: #374151;">Repuesto</th>
+                <th style="padding: 12px; text-align: center; font-weight: 700; color: #374151;">Cant.</th>
+                <th style="padding: 12px; text-align: center; font-weight: 700; color: #374151;">Precio Compra</th>
+                <th style="padding: 12px; text-align: center; font-weight: 700; color: #374151;">Precio Venta</th>
+                <th style="padding: 12px; text-align: center; font-weight: 700; color: #374151;">Total</th>
+                <th style="padding: 12px; text-align: left; font-weight: 700; color: #374151;">Motivo</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${movimientosEntradas.value.map(mov => `
+                <tr style="border-bottom: 1px solid #e5e7eb;">
+                  <td style="padding: 10px 12px; color: #6b7280; font-size: 11px;">${formatearFecha(mov.created_at)}</td>
+                  <td style="padding: 10px 12px; font-weight: 600; color: #111827; font-size: 11px;">${mov.stock_repuestos?.nombre_repuesto || 'N/A'}</td>
+                  <td style="padding: 10px 12px; text-align: center; font-weight: 900; color: #16a34a; font-size: 11px;">+${mov.cantidad}</td>
+                  <td style="padding: 10px 12px; text-align: center; color: #6b7280; font-size: 11px;">$${(mov.precio_unitario_costo || 0).toFixed(2)}</td>
+                  <td style="padding: 10px 12px; text-align: center; color: #2563eb; font-weight: 600; font-size: 11px;">$${(mov.precio_unitario_venta || 0).toFixed(2)}</td>
+                  <td style="padding: 10px 12px; text-align: center; font-weight: 700; color: #111827; font-size: 11px;">$${((mov.precio_unitario_costo || 0) * mov.cantidad).toFixed(2)}</td>
+                  <td style="padding: 10px 12px; color: #6b7280; font-size: 10px; font-style: italic;">${mov.motivo || 'Compra'}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+            <tfoot>
+              <tr style="background: #f9fafb; border-top: 2px solid #d1d5db;">
+                <td colspan="3" style="padding: 12px; font-weight: 700; color: #374151; text-align: right;">TOTALES:</td>
+                <td style="padding: 12px; text-align: right; font-weight: 700; color: #6b7280;"></td>
+                <td style="padding: 12px; text-align: right; font-weight: 700; color: #6b7280;"></td>
+                <td style="padding: 12px; text-align: right; font-weight: 900; color: #111827; font-size: 16px;">$${totalesEntradas.value.valorTotal}</td>
+                <td style="padding: 12px;"></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+        
+        <div style="margin-top: 30px; padding-top: 15px; border-top: 1px solid #e5e7eb; text-align: center; font-size: 9px; color: #6b7280;">
+          <p>Reporte generado automáticamente por DroidStock - Inventory & Repair Management System</p>
+          <p>Zaraza - Guárico</p>
+        </div>
+      </div>
+    `
+    
+    const element = document.createElement('div')
+    element.innerHTML = contenido
+    document.body.appendChild(element)
+
     const opt = {
-      margin: [0.3, 0.3, 0.3, 0.3],
+      margin: [0.5, 0.5, 0.5, 0.5],
       filename: `Reporte_Entradas_${new Date().getTime()}.pdf`,
       image: { type: 'jpeg', quality: 0.98 },
       html2canvas: { scale: 2, useCORS: true, letterRendering: true },
       jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
     }
+    
     await html2pdf().set(opt).from(element).save()
+    element.remove()
     mostrarToast('Reporte de Entradas generado correctamente')
   } catch (error) {
     console.error('Error:', error)
@@ -433,20 +524,111 @@ const exportarEntradasPDF = async () => {
 }
 
 const exportarSalidasPDF = async () => {
-  if (!contenidoSalidasPDF.value || generandoSalidasPDF.value) return
+  if (generandoSalidasPDF.value) return
   generandoSalidasPDF.value = true
   try {
     const html2pdfModule = await import('html2pdf.js')
     const html2pdf = html2pdfModule.default
-    const element = contenidoSalidasPDF.value
+
+    if (movimientosSalidas.value.length === 0) {
+      mostrarToast('No hay datos para exportar', 'error')
+      return
+    }
+    
+    const contenido = `
+      <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 1200px; margin: 0 auto;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #dc2626; padding-bottom: 20px; margin-bottom: 25px;">
+          <div style="flex: 1;">
+            <h1 style="color: #dc2626; font-size: 28px; margin: 0; font-weight: 900; letter-spacing: -0.5px;">DROIDSTOCK</h1>
+            <p style="color: #6b7280; font-size: 10px; margin: 3px 0; text-transform: uppercase; font-weight: 700; letter-spacing: 1px;">INVENTORY & REPAIR MANAGEMENT SYSTEM</p>
+          </div>
+          <div style="flex: 1; text-align: right;">
+            <h2 style="color: #374151; font-size: 18px; margin: 0; font-weight: 700; text-transform: uppercase;">REPORTE DE SALIDAS</h2>
+            <div style="margin-top: 5px;">
+              <span style="color: #6b7280; font-size: 10px; background: #f3f4f6; padding: 4px 8px; border-radius: 4px; font-family: monospace;">FECHA: ${new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+            </div>
+          </div>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 25px;">
+          <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 10px; padding: 15px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <p style="color: #dc2626; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">Total Salidas</p>
+                <p style="color: #374151; font-size: 24px; font-weight: 900; margin: 5px 0;">${totalesSalidas.value.totalCantidad}</p>
+              </div>
+              <div style="width: 40px; height: 40px; background: #dc2626; color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                <span style="font-size: 20px; font-weight: bold;">↑</span>
+              </div>
+            </div>
+          </div>
+          <div style="background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 10px; padding: 15px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <p style="color: #0284c7; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">Reparaciones</p>
+                <p style="color: #374151; font-size: 24px; font-weight: 900; margin: 5px 0;">${totalesSalidas.value.totalReparaciones}</p>
+              </div>
+              <div style="width: 40px; height: 40px; background: #0284c7; color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                <span style="font-size: 20px; font-weight: bold;">🔧</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div style="overflow-x: auto;">
+          <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+            <thead>
+              <tr style="background: #f3f4f6; border-bottom: 2px solid #d1d5db;">
+                <th style="padding: 12px; text-align: left; font-weight: 700; color: #374151;">Fecha</th>
+                <th style="padding: 12px; text-align: left; font-weight: 700; color: #374151;">Repuesto</th>
+                <th style="padding: 12px; text-align: center; font-weight: 700; color: #374151;">Cant.</th>
+                <th style="padding: 12px; text-align: left; font-weight: 700; color: #374151;">Motivo</th>
+                <th style="padding: 12px; text-align: left; font-weight: 700; color: #374151;">Referencia</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${movimientosSalidas.value.map(mov => `
+                <tr style="border-bottom: 1px solid #e5e7eb;">
+                  <td style="padding: 10px 12px; color: #6b7280; font-size: 11px;">${formatearFecha(mov.created_at)}</td>
+                  <td style="padding: 10px 12px; font-weight: 600; color: #111827; font-size: 11px;">${mov.stock_repuestos?.nombre_repuesto || 'N/A'}</td>
+                  <td style="padding: 10px 12px; text-align: center; font-weight: 900; color: #dc2626; font-size: 11px;">-${mov.cantidad}</td>
+                  <td style="padding: 10px 12px; color: #6b7280; font-size: 10px; font-style: italic;">${mov.motivo || 'Uso en reparación'}</td>
+                  <td style="padding: 10px 12px; color: #6b7280; font-size: 11px;">${mov.referencia_tipo === 'reparacion' ? 'Reparación' : 'Ajuste'}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+            <tfoot>
+              <tr style="background: #f9fafb; border-top: 2px solid #d1d5db;">
+                <td colspan="2" style="padding: 12px; font-weight: 700; color: #374151; text-align: right;">TOTALES:</td>
+                <td style="padding: 12px; text-align: center; font-weight: 900; color: #dc2626; font-size: 16px;">-${totalesSalidas.value.totalCantidad}</td>
+                <td style="padding: 12px;"></td>
+                <td style="padding: 12px;"></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+        
+        <div style="margin-top: 30px; padding-top: 15px; border-top: 1px solid #e5e7eb; text-align: center; font-size: 9px; color: #6b7280;">
+          <p>Reporte generado automáticamente por DroidStock - Inventory & Repair Management System</p>
+          <p>Zaraza - Guárico</p>
+        </div>
+      </div>
+    `
+    
+    const element = document.createElement('div')
+    element.innerHTML = contenido
+    document.body.appendChild(element)
+
     const opt = {
-      margin: [0.3, 0.3, 0.3, 0.3],
+      margin: [0.5, 0.5, 0.5, 0.5],
       filename: `Reporte_Salidas_${new Date().getTime()}.pdf`,
       image: { type: 'jpeg', quality: 0.98 },
       html2canvas: { scale: 2, useCORS: true, letterRendering: true },
       jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
     }
+    
     await html2pdf().set(opt).from(element).save()
+    element.remove()
     mostrarToast('Reporte de Salidas generado correctamente')
   } catch (error) {
     console.error('Error:', error)
