@@ -11,7 +11,9 @@ export default defineEventHandler(async (event) => {
     tipo, 
     periodo,
     fecha_inicio, 
-    fecha_fin 
+    fecha_fin,
+    excluir_tipo,
+    referencia_tipo
   } = query
 
   const supabase = createServerClient()
@@ -71,6 +73,16 @@ export default defineEventHandler(async (event) => {
   }
   if (fecha_fin) {
     queryBuilder = queryBuilder.lte('created_at', fecha_fin)
+  }
+
+  // Excluir por tipo (ej: defectuoso)
+  if (excluir_tipo) {
+    queryBuilder = queryBuilder.neq('referencia_tipo', excluir_tipo)
+  }
+
+  // Filtrar por referencia_tipo (venta/reparacion)
+  if (referencia_tipo && referencia_tipo !== 'todos') {
+    queryBuilder = queryBuilder.eq('referencia_tipo', referencia_tipo)
   }
 
   const { data: movimientos, error } = await queryBuilder

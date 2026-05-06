@@ -105,6 +105,28 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  // 3. Crear movimiento de inventario
+  const { error: movimientoError } = await supabase
+    .from('movimientos_inventario')
+    .insert({
+      tienda_id: tiendaId,
+      repuesto_id: repuesto_id,
+      cantidad: cantidad,
+      tipo: 'salida',
+      stock_anterior: repuesto.cantidad_disponible,
+      stock_nuevo: repuesto.cantidad_disponible - cantidad,
+      referencia_tipo: 'reparacion',
+      referencia_id: id,
+      motivo: `Reparación #${id.slice(0, 8)}`,
+      precio_unitario_costo: repuesto.precio_costo,
+      precio_unitario_venta: repuesto.precio_costo
+    })
+
+  if (movimientoError) {
+    console.error('Error al crear movimiento de inventario:', movimientoError)
+    // No revertimos todo porque el repuesto ya fue asignado
+  }
+
   return {
     success: true,
     message: `Repuesto "${repuesto.nombre_repuesto}" agregado (${cantidad} unidades)`,
