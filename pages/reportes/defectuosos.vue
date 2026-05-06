@@ -9,7 +9,7 @@
       <button 
         @click="exportarPDF"
         :disabled="exportando"
-        class=" xs:w-auto px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition flex items-center justify-center gap-2 text-sm"
+        class="xs:w-auto px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition flex items-center justify-center gap-2 text-sm"
       >
         <i v-if="exportando" class="ri-loader-4-line animate-spin"></i>
         <i v-else class="ri-file-pdf-line"></i>
@@ -18,7 +18,7 @@
     </div>
 
     <!-- Tarjetas de resumen de pérdidas (usando datos TOTALES, no filtrados) -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
       <div class="bg-gradient-to-r from-red-50 to-white rounded-xl shadow-sm border border-red-100 p-4">
         <div class="flex items-center justify-between">
           <div>
@@ -112,8 +112,46 @@
       <p class="text-gray-500 text-sm mb-4">Los repuestos que marques como defectuosos aparecerán aquí</p>
     </div>
 
-    <!-- Tabla de repuestos defectuosos (datos filtrados) -->
+    <!-- Tabla de repuestos defectuosos CON PAGINACIÓN -->
     <div v-else class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+      <!-- Controles de paginación superior -->
+      <div class="px-4 sm:px-6 py-3 border-b border-gray-100 bg-gray-50/50 flex flex-col sm:flex-row justify-between items-center gap-3">
+        <div class="text-sm text-gray-500">
+          Mostrando <span class="font-medium">{{ inicioMostrando }}</span> - <span class="font-medium">{{ finMostrando }}</span> de <span class="font-medium">{{ defectuososFiltrados.length }}</span> registros
+        </div>
+        <div class="flex items-center gap-2">
+          <button 
+            @click="paginaAnterior" 
+            :disabled="paginaActual === 1"
+            class="p-2 rounded-lg border disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 transition"
+          >
+            <i class="ri-arrow-left-s-line"></i>
+          </button>
+          <div class="flex gap-1">
+            <button 
+              v-for="pagina in paginasMostradas" 
+              :key="pagina"
+              @click="irPagina(pagina)"
+              :class="[
+                'w-8 h-8 rounded-lg text-sm font-medium transition',
+                paginaActual === pagina 
+                  ? 'bg-blue-600 text-white' 
+                  : 'text-gray-700 hover:bg-gray-100'
+              ]"
+            >
+              {{ pagina }}
+            </button>
+          </div>
+          <button 
+            @click="paginaSiguiente" 
+            :disabled="paginaActual === totalPaginas"
+            class="p-2 rounded-lg border disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 transition"
+          >
+            <i class="ri-arrow-right-s-line"></i>
+          </button>
+        </div>
+      </div>
+
       <div class="overflow-x-auto">
         <table class="min-w-[800px] w-full">
           <thead class="bg-gray-50 border-b border-gray-200">
@@ -126,7 +164,7 @@
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-100">
-            <tr v-for="item in defectuososFiltrados" :key="item.id" class="hover:bg-gray-50 transition">
+            <tr v-for="item in defectuososPaginados" :key="item.id" class="hover:bg-gray-50 transition">
               <td class="px-4 sm:px-6 py-3 text-sm text-gray-500">{{ formatearFecha(item.created_at) }}</td>
               <td class="px-4 sm:px-6 py-3">
                 <div class="font-medium text-gray-900">{{ item.stock_repuestos?.nombre_repuesto }}</div>
@@ -147,6 +185,29 @@
           </tbody>
         </table>
       </div>
+
+      <!-- Paginación inferior -->
+      <div class="px-4 sm:px-6 py-3 border-t border-gray-100 bg-gray-50/50 flex flex-col sm:flex-row justify-between items-center gap-3">
+        <div class="text-sm text-gray-500">
+          Página {{ paginaActual }} de {{ totalPaginas }}
+        </div>
+        <div class="flex items-center gap-2">
+          <button 
+            @click="paginaAnterior" 
+            :disabled="paginaActual === 1"
+            class="px-3 py-1.5 rounded-lg border disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 transition text-sm"
+          >
+            Anterior
+          </button>
+          <button 
+            @click="paginaSiguiente" 
+            :disabled="paginaActual === totalPaginas"
+            class="px-3 py-1.5 rounded-lg border disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 transition text-sm"
+          >
+            Siguiente
+          </button>
+        </div>
+      </div>
     </div>
 
     <!-- Toast -->
@@ -160,6 +221,8 @@
 </template>
 
 <script setup>
+import { ref, computed, onMounted, watch } from 'vue'
+
 definePageMeta({
   layout: 'dashboard'
 })
@@ -175,6 +238,10 @@ const filtros = reactive({
   motivo: '',
   periodo: ''
 })
+
+// ========== PAGINACIÓN ==========
+const ITEMS_POR_PAGINA = 7
+const paginaActual = ref(1)
 
 // Función para calcular fecha según periodo
 const getFechaPorPeriodo = (periodo) => {
@@ -246,6 +313,72 @@ const defectuososFiltrados = computed(() => {
   return resultado
 })
 
+// Total de páginas
+const totalPaginas = computed(() => {
+  return Math.ceil(defectuososFiltrados.value.length / ITEMS_POR_PAGINA)
+})
+
+// Datos paginados
+const defectuososPaginados = computed(() => {
+  const inicio = (paginaActual.value - 1) * ITEMS_POR_PAGINA
+  const fin = inicio + ITEMS_POR_PAGINA
+  return defectuososFiltrados.value.slice(inicio, fin)
+})
+
+// Indicadores de rango
+const inicioMostrando = computed(() => {
+  if (defectuososFiltrados.value.length === 0) return 0
+  return (paginaActual.value - 1) * ITEMS_POR_PAGINA + 1
+})
+
+const finMostrando = computed(() => {
+  const fin = paginaActual.value * ITEMS_POR_PAGINA
+  return Math.min(fin, defectuososFiltrados.value.length)
+})
+
+// Números de página a mostrar (máximo 5)
+const paginasMostradas = computed(() => {
+  const total = totalPaginas.value
+  const actual = paginaActual.value
+  const maxMostrar = 5
+  
+  if (total <= maxMostrar) {
+    return Array.from({ length: total }, (_, i) => i + 1)
+  }
+  
+  let inicio = Math.max(1, actual - 2)
+  let fin = Math.min(total, inicio + maxMostrar - 1)
+  
+  if (fin - inicio + 1 < maxMostrar) {
+    inicio = Math.max(1, fin - maxMostrar + 1)
+  }
+  
+  return Array.from({ length: fin - inicio + 1 }, (_, i) => inicio + i)
+})
+
+// Navegación de páginas
+const paginaAnterior = () => {
+  if (paginaActual.value > 1) {
+    paginaActual.value--
+  }
+}
+
+const paginaSiguiente = () => {
+  if (paginaActual.value < totalPaginas.value) {
+    paginaActual.value++
+  }
+}
+
+const irPagina = (pagina) => {
+  paginaActual.value = pagina
+}
+
+// Reiniciar paginación al cambiar filtros
+watch([() => filtros.busqueda, () => filtros.motivo, () => filtros.periodo], () => {
+  paginaActual.value = 1
+})
+
+// Formateadores
 const formatearFecha = (fecha) => {
   if (!fecha) return '-'
   return new Date(fecha).toLocaleDateString('es-ES', {
@@ -366,7 +499,7 @@ const exportarPDF = async () => {
               <tr style="background: #f9fafb; border-top: 2px solid #d1d5db;">
                 <td colspan="4" style="padding: 12px; font-weight: 700; color: #374151; text-align: right;">TOTALES:</td>
                 <td style="padding: 12px; text-align: right; font-weight: 900; color: #dc2626; font-size: 16px;">$${perdidaTotalNumero.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-              </tr>
+               </tr>
             </tfoot>
           </table>
         </div>

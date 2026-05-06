@@ -26,7 +26,7 @@ export default defineEventHandler(async (event) => {
     // Verificar que la reparación existe
     const { data: reparacion, error: getError } = await supabase
       .from('reparaciones')
-      .select('id, estado_servicio')
+      .select('*') // Cambiado de 'id, estado_servicio' a '*' para obtener todos los campos
       .eq('id', id)
       .eq('tienda_id', tiendaId)
       .single()
@@ -40,12 +40,28 @@ export default defineEventHandler(async (event) => {
 
     // Preparar datos a actualizar
     const updateData = { estado_servicio: nuevoEstado }
-    
-    if (nuevoEstado === 'Entregado') {
-      updateData.fecha_entrega_real = new Date().toISOString()
+    const ahora = new Date().toISOString()
+
+    // Registrar la fecha según el nuevo estado
+    switch (nuevoEstado) {
+      case 'Recibido':
+        updateData.fecha_recibido = ahora
+        break
+      case 'En reparacion':
+        updateData.fecha_en_reparacion = ahora
+        break
+      case 'Finalizado':
+        updateData.fecha_finalizado = ahora
+        break
+      case 'Entregado':
+        updateData.fecha_entregado = ahora
+        updateData.fecha_entrega_real = ahora
+        break
     }
 
-    // Actualizar estado
+    console.log(`📅 Registrando fecha para estado "${nuevoEstado}": ${ahora}`)
+
+    // Actualizar estado y fecha
     const { error: updateError } = await supabase
       .from('reparaciones')
       .update(updateData)
@@ -61,7 +77,8 @@ export default defineEventHandler(async (event) => {
 
     return {
       success: true,
-      message: `Estado cambiado de ${reparacion.estado_servicio} a ${nuevoEstado}`
+      message: `Estado cambiado de ${reparacion.estado_servicio} a ${nuevoEstado}`,
+      fecha_cambio: ahora
     }
   } catch (error) {
     console.error('Error en PATCH /api/reparaciones/[id]/estado:', error)

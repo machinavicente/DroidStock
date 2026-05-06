@@ -41,14 +41,14 @@
               class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition group"
             >
               <i class="ri-shopping-cart-line text-xl"></i>
-              <span class="ml-3">Ventas</span>
+              <span class="ml-3">Gestión de Ventas</span>
             </NuxtLink>
             <NuxtLink
               to="/reparaciones"
               class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition group"
             >
               <i class="ri-tools-line text-xl"></i>
-              <span class="ml-3">Reparaciones</span>
+              <span class="ml-3">Órdenes de Trabajo</span>
             </NuxtLink>
 
             <NuxtLink
@@ -56,7 +56,7 @@
               class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition group"
             >
               <i class="ri-user-settings-line text-xl"></i>
-              <span class="ml-3">Técnicos</span>
+              <span class="ml-3">Equipo Técnico</span>
             </NuxtLink>
 
             <NuxtLink
@@ -64,14 +64,14 @@
               class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition group"
             >
               <i class="ri-stack-line text-xl"></i>
-              <span class="ml-3">Repuestos</span>
+              <span class="ml-3">Stock de Repuestos</span>
             </NuxtLink>
             <NuxtLink
               to="/reportes/defectuosos"
               class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition group"
             >
               <i class="ri-error-warning-line text-xl"></i>
-              <span class="ml-3">Defectuosos</span>
+              <span class="ml-3">Repuestos Defectuosos</span>
             </NuxtLink>
 
             <NuxtLink
@@ -79,7 +79,7 @@
               class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition group"
             >
               <i class="ri-history-line text-xl"></i>
-              <span class="ml-3">Movimientos</span>
+              <span class="ml-3">Bitácora de Inventario</span>
             </NuxtLink>
           </nav>
 
@@ -137,7 +137,7 @@
                 @click="sidebarAbierta = false"
               >
                 <i class="ri-shopping-cart-line text-xl"></i>
-                <span class="ml-3">Ventas</span>
+                <span class="ml-3">Gestión de Ventas</span>
               </NuxtLink>
               <NuxtLink
                 to="/reparaciones"
@@ -145,7 +145,7 @@
                 @click="sidebarAbierta = false"
               >
                 <i class="ri-tools-line text-xl"></i>
-                <span class="ml-3">Reparaciones</span>
+                <span class="ml-3">Órdenes de Trabajo</span>
               </NuxtLink>
 
               <NuxtLink
@@ -154,7 +154,7 @@
                 @click="sidebarAbierta = false"
               >
                 <i class="ri-user-settings-line text-xl"></i>
-                <span class="ml-3">Técnicos</span>
+                <span class="ml-3">Equipo Técnico</span>
               </NuxtLink>
 
               <NuxtLink
@@ -163,14 +163,14 @@
                 @click="sidebarAbierta = false"
               >
                 <i class="ri-stack-line text-xl"></i>
-                <span class="ml-3">Repuestos</span>
+                <span class="ml-3">Stock de Repuestos</span>
               </NuxtLink>
               <NuxtLink
                 to="/reportes/defectuosos"
                 class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition group"
               >
                 <i class="ri-error-warning-line text-xl"></i>
-                <span class="ml-3">Defectuosos</span>
+                <span class="ml-3">Repuestos Defectuosos</span>
               </NuxtLink>
 
               <NuxtLink
@@ -179,7 +179,7 @@
                 @click="sidebarAbierta = false"
               >
                 <i class="ri-history-line text-xl"></i>
-                <span class="ml-3">Movimientos</span>
+                <span class="ml-3">Bitácora de Inventario</span>
               </NuxtLink>
             </nav>
 

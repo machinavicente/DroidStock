@@ -124,6 +124,44 @@
         </div>
       </div>
 
+      <!-- Controles de paginación - Entradas -->
+      <div class="flex flex-col sm:flex-row justify-between items-center gap-3 mb-4">
+        <div class="text-sm text-gray-500">
+          Mostrando <span class="font-medium">{{ inicioEntradas }}</span> - <span class="font-medium">{{ finEntradas }}</span> de <span class="font-medium">{{ movimientosEntradas.length }}</span> registros
+        </div>
+        <div class="flex items-center gap-2">
+          <button 
+            @click="paginaEntradasAnterior" 
+            :disabled="paginaEntradasActual === 1"
+            class="p-2 rounded-lg border disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 transition"
+          >
+            <i class="ri-arrow-left-s-line"></i>
+          </button>
+          <div class="flex gap-1">
+            <button 
+              v-for="pagina in paginasEntradasMostradas" 
+              :key="pagina"
+              @click="irPaginaEntradas(pagina)"
+              :class="[
+                'w-8 h-8 rounded-lg text-sm font-medium transition',
+                paginaEntradasActual === pagina 
+                  ? 'bg-green-600 text-white' 
+                  : 'text-gray-700 hover:bg-gray-100'
+              ]"
+            >
+              {{ pagina }}
+            </button>
+          </div>
+          <button 
+            @click="paginaEntradasSiguiente" 
+            :disabled="paginaEntradasActual === totalPaginasEntradas"
+            class="p-2 rounded-lg border disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 transition"
+          >
+            <i class="ri-arrow-right-s-line"></i>
+          </button>
+        </div>
+      </div>
+
       <!-- Tabla de Entradas - Responsive con scroll -->
       <div class="overflow-x-auto rounded-lg border border-gray-200">
         <table class="min-w-[800px] w-full text-xs">
@@ -142,10 +180,10 @@
             <tr v-if="cargandoEntradas">
               <td colspan="7" class="px-4 py-8 text-center text-gray-400 italic">Cargando datos...</td>
             </tr>
-            <tr v-else-if="movimientosEntradas.length === 0">
+            <tr v-else-if="movimientosEntradasPaginados.length === 0">
               <td colspan="7" class="px-4 py-8 text-center text-gray-400 italic">No hay registros de entrada</td>
             </tr>
-            <tr v-for="mov in movimientosEntradas" :key="mov.id" class="hover:bg-gray-50 transition-colors">
+            <tr v-for="mov in movimientosEntradasPaginados" :key="mov.id" class="hover:bg-gray-50 transition-colors">
               <td class="px-2 sm:px-4 py-2 sm:py-3 text-gray-500 font-mono text-[10px] sm:text-xs">{{ formatearFecha(mov.created_at) }}</td>
               <td class="px-2 sm:px-4 py-2 sm:py-3 font-semibold text-gray-800 text-[10px] sm:text-xs">{{ mov.stock_repuestos?.nombre_repuesto || 'N/A' }}</td>
               <td class="px-2 sm:px-4 py-2 sm:py-3 text-center font-black text-green-600">+{{ mov.cantidad }}</td>
@@ -156,6 +194,25 @@
             </tr>
           </tbody>
         </table>
+      </div>
+
+      <!-- Paginación inferior - Entradas -->
+      <div v-if="totalPaginasEntradas > 1" class="mt-4 flex justify-center">
+        <div class="flex gap-1">
+          <button 
+            v-for="pagina in totalPaginasEntradas" 
+            :key="pagina"
+            @click="irPaginaEntradas(pagina)"
+            :class="[
+              'px-3 py-1 text-sm rounded transition',
+              paginaEntradasActual === pagina 
+                ? 'bg-green-600 text-white' 
+                : 'bg-white text-gray-700 hover:bg-gray-100 border'
+            ]"
+          >
+            {{ pagina }}
+          </button>
+        </div>
       </div>
 
       <div class="mt-6 sm:mt-10 pt-4 sm:pt-6 border-t border-dashed border-gray-200">
@@ -226,6 +283,44 @@
         </div>
       </div>
 
+      <!-- Controles de paginación - Salidas -->
+      <div class="flex flex-col sm:flex-row justify-between items-center gap-3 mb-4">
+        <div class="text-sm text-gray-500">
+          Mostrando <span class="font-medium">{{ inicioSalidas }}</span> - <span class="font-medium">{{ finSalidas }}</span> de <span class="font-medium">{{ movimientosSalidas.length }}</span> registros
+        </div>
+        <div class="flex items-center gap-2">
+          <button 
+            @click="paginaSalidasAnterior" 
+            :disabled="paginaSalidasActual === 1"
+            class="p-2 rounded-lg border disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 transition"
+          >
+            <i class="ri-arrow-left-s-line"></i>
+          </button>
+          <div class="flex gap-1">
+            <button 
+              v-for="pagina in paginasSalidasMostradas" 
+              :key="pagina"
+              @click="irPaginaSalidas(pagina)"
+              :class="[
+                'w-8 h-8 rounded-lg text-sm font-medium transition',
+                paginaSalidasActual === pagina 
+                  ? 'bg-red-600 text-white' 
+                  : 'text-gray-700 hover:bg-gray-100'
+              ]"
+            >
+              {{ pagina }}
+            </button>
+          </div>
+          <button 
+            @click="paginaSalidasSiguiente" 
+            :disabled="paginaSalidasActual === totalPaginasSalidas"
+            class="p-2 rounded-lg border disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 transition"
+          >
+            <i class="ri-arrow-right-s-line"></i>
+          </button>
+        </div>
+      </div>
+
       <!-- Tabla de Salidas - Responsive con scroll -->
       <div class="overflow-x-auto rounded-lg border border-gray-200">
         <table class="min-w-[500px] w-full text-xs">
@@ -242,10 +337,10 @@
             <tr v-if="cargandoSalidas">
               <td colspan="5" class="px-4 py-8 text-center text-gray-400 italic">Cargando datos...</td>
             </tr>
-            <tr v-else-if="movimientosSalidas.length === 0">
+            <tr v-else-if="movimientosSalidasPaginados.length === 0">
               <td colspan="5" class="px-4 py-8 text-center text-gray-400 italic">No hay registros de salida</td>
             </tr>
-            <tr v-for="mov in movimientosSalidas" :key="mov.id" class="hover:bg-gray-50 transition-colors">
+            <tr v-for="mov in movimientosSalidasPaginados" :key="mov.id" class="hover:bg-gray-50 transition-colors">
               <td class="px-2 sm:px-4 py-2 sm:py-3 text-gray-500 font-mono text-[10px] sm:text-xs">{{ formatearFecha(mov.created_at) }}</td>
               <td class="px-2 sm:px-4 py-2 sm:py-3 font-semibold text-gray-800">{{ mov.stock_repuestos?.nombre_repuesto || 'N/A' }}</td>
               <td class="px-2 sm:px-4 py-2 sm:py-3 text-center font-black text-red-600">-{{ mov.cantidad }}</td>
@@ -254,6 +349,25 @@
             </tr>
           </tbody>
         </table>
+      </div>
+
+      <!-- Paginación inferior - Salidas -->
+      <div v-if="totalPaginasSalidas > 1" class="mt-4 flex justify-center">
+        <div class="flex gap-1">
+          <button 
+            v-for="pagina in totalPaginasSalidas" 
+            :key="pagina"
+            @click="irPaginaSalidas(pagina)"
+            :class="[
+              'px-3 py-1 text-sm rounded transition',
+              paginaSalidasActual === pagina 
+                ? 'bg-red-600 text-white' 
+                : 'bg-white text-gray-700 hover:bg-gray-100 border'
+            ]"
+          >
+            {{ pagina }}
+          </button>
+        </div>
       </div>
 
       <div class="mt-6 sm:mt-10 pt-4 sm:pt-6 border-t border-dashed border-gray-200">
@@ -281,10 +395,96 @@
 </template>
 
 <script setup>
+import { ref, computed, onMounted, watch } from 'vue'
+
 definePageMeta({
   layout: 'dashboard'
 })
 
+// ========== PAGINACIÓN ==========
+const ITEMS_POR_PAGINA = 7
+
+// Paginación Entradas
+const paginaEntradasActual = ref(1)
+const totalPaginasEntradas = computed(() => {
+  return Math.ceil(movimientosEntradas.value.length / ITEMS_POR_PAGINA)
+})
+const movimientosEntradasPaginados = computed(() => {
+  const inicio = (paginaEntradasActual.value - 1) * ITEMS_POR_PAGINA
+  const fin = inicio + ITEMS_POR_PAGINA
+  return movimientosEntradas.value.slice(inicio, fin)
+})
+const inicioEntradas = computed(() => {
+  if (movimientosEntradas.value.length === 0) return 0
+  return (paginaEntradasActual.value - 1) * ITEMS_POR_PAGINA + 1
+})
+const finEntradas = computed(() => {
+  const fin = paginaEntradasActual.value * ITEMS_POR_PAGINA
+  return Math.min(fin, movimientosEntradas.value.length)
+})
+const paginasEntradasMostradas = computed(() => {
+  const total = totalPaginasEntradas.value
+  const actual = paginaEntradasActual.value
+  const maxMostrar = 5
+  
+  if (total <= maxMostrar) {
+    return Array.from({ length: total }, (_, i) => i + 1)
+  }
+  let inicio = Math.max(1, actual - 2)
+  let fin = Math.min(total, inicio + maxMostrar - 1)
+  if (fin - inicio + 1 < maxMostrar) {
+    inicio = Math.max(1, fin - maxMostrar + 1)
+  }
+  return Array.from({ length: fin - inicio + 1 }, (_, i) => inicio + i)
+})
+const paginaEntradasAnterior = () => { if (paginaEntradasActual.value > 1) paginaEntradasActual.value-- }
+const paginaEntradasSiguiente = () => { if (paginaEntradasActual.value < totalPaginasEntradas.value) paginaEntradasActual.value++ }
+const irPaginaEntradas = (pagina) => { paginaEntradasActual.value = pagina }
+
+// Paginación Salidas
+const paginaSalidasActual = ref(1)
+const totalPaginasSalidas = computed(() => {
+  return Math.ceil(movimientosSalidas.value.length / ITEMS_POR_PAGINA)
+})
+const movimientosSalidasPaginados = computed(() => {
+  const inicio = (paginaSalidasActual.value - 1) * ITEMS_POR_PAGINA
+  const fin = inicio + ITEMS_POR_PAGINA
+  return movimientosSalidas.value.slice(inicio, fin)
+})
+const inicioSalidas = computed(() => {
+  if (movimientosSalidas.value.length === 0) return 0
+  return (paginaSalidasActual.value - 1) * ITEMS_POR_PAGINA + 1
+})
+const finSalidas = computed(() => {
+  const fin = paginaSalidasActual.value * ITEMS_POR_PAGINA
+  return Math.min(fin, movimientosSalidas.value.length)
+})
+const paginasSalidasMostradas = computed(() => {
+  const total = totalPaginasSalidas.value
+  const actual = paginaSalidasActual.value
+  const maxMostrar = 5
+  
+  if (total <= maxMostrar) {
+    return Array.from({ length: total }, (_, i) => i + 1)
+  }
+  let inicio = Math.max(1, actual - 2)
+  let fin = Math.min(total, inicio + maxMostrar - 1)
+  if (fin - inicio + 1 < maxMostrar) {
+    inicio = Math.max(1, fin - maxMostrar + 1)
+  }
+  return Array.from({ length: fin - inicio + 1 }, (_, i) => inicio + i)
+})
+const paginaSalidasAnterior = () => { if (paginaSalidasActual.value > 1) paginaSalidasActual.value-- }
+const paginaSalidasSiguiente = () => { if (paginaSalidasActual.value < totalPaginasSalidas.value) paginaSalidasActual.value++ }
+const irPaginaSalidas = (pagina) => { paginaSalidasActual.value = pagina }
+
+// Reiniciar paginación
+const reiniciarPaginacion = () => {
+  paginaEntradasActual.value = 1
+  paginaSalidasActual.value = 1
+}
+
+// Estado
 const cargandoEntradas = ref(false)
 const cargandoSalidas = ref(false)
 const movimientosEntradas = ref([])
@@ -354,6 +554,7 @@ const cargarEntradas = async () => {
       valorTotal += (mov.precio_unitario_costo || 0) * mov.cantidad
     })
     totalesEntradas.value = { totalCantidad, valorTotal: valorTotal.toFixed(2) }
+    paginaEntradasActual.value = 1
   } catch (error) {
     mostrarToast('Error al cargar entradas', 'error')
   } finally {
@@ -382,6 +583,7 @@ const cargarSalidas = async () => {
       totalCantidad, 
       totalReparaciones: reparacionesUnicas.size 
     }
+    paginaSalidasActual.value = 1
   } catch (error) {
     mostrarToast('Error al cargar salidas', 'error')
   } finally {
@@ -390,6 +592,7 @@ const cargarSalidas = async () => {
 }
 
 const aplicarFiltros = () => {
+  reiniciarPaginacion()
   if (tabActiva.value === 'entradas') {
     cargarEntradas()
   } else {
@@ -663,6 +866,15 @@ onMounted(() => {
 }
 .animate-slide-up {
   animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 @media (max-width: 480px) {

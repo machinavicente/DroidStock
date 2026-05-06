@@ -57,12 +57,12 @@
     </div>
 
     <!-- Tarjetas de resumen -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
       <div class="bg-gradient-to-r from-blue-50 to-white rounded-xl border border-blue-100 p-4">
         <div class="flex items-center justify-between">
           <div>
             <p class="text-xs text-gray-500">Total ventas</p>
-            <p class="text-2xl font-bold text-gray-900">{{ ventasFiltradas.length }}</p>
+            <p class="text-2xl font-bold text-gray-900">{{ totalVentasMostradas }}</p>
           </div>
           <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
             <i class="ri-shopping-cart-line text-blue-600"></i>
@@ -73,21 +73,10 @@
         <div class="flex items-center justify-between">
           <div>
             <p class="text-xs text-gray-500">Unidades vendidas</p>
-            <p class="text-2xl font-bold text-gray-900">{{ totalUnidades }}</p>
+            <p class="text-2xl font-bold text-gray-900">{{ totalUnidadesMostradas }}</p>
           </div>
           <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
             <i class="ri-stack-line text-green-600"></i>
-          </div>
-        </div>
-      </div>
-      <div class="bg-gradient-to-r from-emerald-50 to-white rounded-xl border border-emerald-100 p-4">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-xs text-gray-500">Ingresos totales</p>
-            <p class="text-2xl font-bold text-emerald-600">${{ totalIngresos }}</p>
-          </div>
-          <div class="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center">
-            <i class="ri-money-dollar-circle-line text-emerald-600"></i>
           </div>
         </div>
       </div>
@@ -112,8 +101,46 @@
       </NuxtLink>
     </div>
 
-    <!-- Tabla de ventas -->
+    <!-- Tabla de ventas CON PAGINACIÓN (7 registros por página) -->
     <div v-else class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+      <!-- Controles de paginación superior -->
+      <div class="px-4 sm:px-6 py-3 border-b border-gray-100 bg-gray-50/50 flex flex-col sm:flex-row justify-between items-center gap-3">
+        <div class="text-sm text-gray-500">
+          Mostrando <span class="font-medium">{{ inicioMostrando }}</span> - <span class="font-medium">{{ finMostrando }}</span> de <span class="font-medium">{{ ventasFiltradas.length }}</span> ventas
+        </div>
+        <div class="flex items-center gap-2">
+          <button 
+            @click="paginaAnterior" 
+            :disabled="paginaActual === 1"
+            class="p-2 rounded-lg border disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 transition"
+          >
+            <i class="ri-arrow-left-s-line"></i>
+          </button>
+          <div class="flex gap-1">
+            <button 
+              v-for="pagina in paginasMostradas" 
+              :key="pagina"
+              @click="irPagina(pagina)"
+              :class="[
+                'w-8 h-8 rounded-lg text-sm font-medium transition',
+                paginaActual === pagina 
+                  ? 'bg-blue-600 text-white' 
+                  : 'text-gray-700 hover:bg-gray-100'
+              ]"
+            >
+              {{ pagina }}
+            </button>
+          </div>
+          <button 
+            @click="paginaSiguiente" 
+            :disabled="paginaActual === totalPaginas"
+            class="p-2 rounded-lg border disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 transition"
+          >
+            <i class="ri-arrow-right-s-line"></i>
+          </button>
+        </div>
+      </div>
+
       <div class="overflow-x-auto">
         <table class="min-w-[900px] w-full">
           <thead class="bg-gray-50 border-b border-gray-200">
@@ -127,7 +154,7 @@
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-100">
-            <tr v-for="venta in ventasFiltradas" :key="venta.id" class="hover:bg-gray-50 transition-colors">
+            <tr v-for="venta in ventasPaginadas" :key="venta.id" class="hover:bg-gray-50 transition-colors">
               <td class="px-4 sm:px-6 py-3 text-sm text-gray-500">{{ formatearFecha(venta.created_at) }}</td>
               <td class="px-4 sm:px-6 py-3">
                 <div class="font-medium text-gray-900">{{ venta.clientes?.nombre_completo }}</div>
@@ -159,6 +186,29 @@
           </tbody>
         </table>
       </div>
+
+      <!-- Paginación inferior -->
+      <div class="px-4 sm:px-6 py-3 border-t border-gray-100 bg-gray-50/50 flex flex-col sm:flex-row justify-between items-center gap-3">
+        <div class="text-sm text-gray-500">
+          Página {{ paginaActual }} de {{ totalPaginas }}
+        </div>
+        <div class="flex items-center gap-2">
+          <button 
+            @click="paginaAnterior" 
+            :disabled="paginaActual === 1"
+            class="px-3 py-1.5 rounded-lg border disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 transition text-sm"
+          >
+            Anterior
+          </button>
+          <button 
+            @click="paginaSiguiente" 
+            :disabled="paginaActual === totalPaginas"
+            class="px-3 py-1.5 rounded-lg border disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 transition text-sm"
+          >
+            Siguiente
+          </button>
+        </div>
+      </div>
     </div>
 
     <!-- Toast -->
@@ -176,6 +226,8 @@
 </template>
 
 <script setup>
+import { ref, computed, onMounted, watch } from 'vue'
+
 definePageMeta({
   layout: 'dashboard'
 })
@@ -184,6 +236,7 @@ const { ventas, cargando, obtenerVentas } = useVentas()
 
 const toast = ref({ visible: false, mensaje: '', tipo: 'success' })
 
+// Filtros
 const filtros = reactive({
   busqueda: '',
   periodo: '',
@@ -191,7 +244,11 @@ const filtros = reactive({
   fecha_fin: ''
 })
 
-// Ventas filtradas
+// ========== PAGINACIÓN ==========
+const ITEMS_POR_PAGINA = 7  // Cambiado de 10 a 7
+const paginaActual = ref(1)
+
+// Ventas filtradas (sin paginación)
 const ventasFiltradas = computed(() => {
   let resultado = ventas.value
 
@@ -217,23 +274,89 @@ const ventasFiltradas = computed(() => {
   return resultado
 })
 
-// Totales
-const totalUnidades = computed(() => {
+// Total de páginas
+const totalPaginas = computed(() => {
+  return Math.ceil(ventasFiltradas.value.length / ITEMS_POR_PAGINA)
+})
+
+// Ventas paginadas
+const ventasPaginadas = computed(() => {
+  const inicio = (paginaActual.value - 1) * ITEMS_POR_PAGINA
+  const fin = inicio + ITEMS_POR_PAGINA
+  return ventasFiltradas.value.slice(inicio, fin)
+})
+
+// Indicadores de rango
+const inicioMostrando = computed(() => {
+  if (ventasFiltradas.value.length === 0) return 0
+  return (paginaActual.value - 1) * ITEMS_POR_PAGINA + 1
+})
+
+const finMostrando = computed(() => {
+  const fin = paginaActual.value * ITEMS_POR_PAGINA
+  return Math.min(fin, ventasFiltradas.value.length)
+})
+
+// Números de página a mostrar (máximo 5)
+const paginasMostradas = computed(() => {
+  const total = totalPaginas.value
+  const actual = paginaActual.value
+  const maxMostrar = 5
+  
+  if (total <= maxMostrar) {
+    return Array.from({ length: total }, (_, i) => i + 1)
+  }
+  
+  let inicio = Math.max(1, actual - 2)
+  let fin = Math.min(total, inicio + maxMostrar - 1)
+  
+  if (fin - inicio + 1 < maxMostrar) {
+    inicio = Math.max(1, fin - maxMostrar + 1)
+  }
+  
+  return Array.from({ length: fin - inicio + 1 }, (_, i) => inicio + i)
+})
+
+// Navegación de páginas
+const paginaAnterior = () => {
+  if (paginaActual.value > 1) {
+    paginaActual.value--
+  }
+}
+
+const paginaSiguiente = () => {
+  if (paginaActual.value < totalPaginas.value) {
+    paginaActual.value++
+  }
+}
+
+const irPagina = (pagina) => {
+  paginaActual.value = pagina
+}
+
+// Reiniciar paginación al cambiar filtros
+watch([() => filtros.busqueda, () => filtros.fecha_inicio, () => filtros.fecha_fin], () => {
+  paginaActual.value = 1
+})
+
+// ========== ESTADÍSTICAS ==========
+const totalVentasMostradas = computed(() => {
+  return ventasFiltradas.value.length
+})
+
+const totalUnidadesMostradas = computed(() => {
   return ventasFiltradas.value.reduce((sum, v) => sum + (v.cantidad || 0), 0)
 })
 
-const totalIngresos = computed(() => {
-  return ventasFiltradas.value.reduce((sum, v) => sum + (v.total || 0), 0).toLocaleString('es-ES', {
+const totalIngresosMostrados = computed(() => {
+  const total = ventasFiltradas.value.reduce((sum, v) => sum + (v.total || 0), 0)
+  return total.toLocaleString('es-ES', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2
   })
 })
 
-const clientesDistintos = computed(() => {
-  const clientesIds = new Set(ventasFiltradas.value.map(v => v.cliente_id))
-  return clientesIds.size
-})
-
+// ========== FUNCIONES ==========
 const formatearFecha = (fecha) => {
   if (!fecha) return '-'
   return new Date(fecha).toLocaleDateString('es-ES', {
