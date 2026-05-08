@@ -72,14 +72,6 @@
               <i class="ri-user-settings-line text-xl"></i>
               <span class="ml-3">Equipo Técnico</span>
             </NuxtLink>
-
-            <NuxtLink
-              to="/reportes/movimientos"
-              class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition group"
-            >
-              <i class="ri-history-line text-xl"></i>
-              <span class="ml-3">Bitácora de Inventario</span>
-            </NuxtLink>
           </nav>
 
           <!-- Footer del sidebar -->
@@ -169,15 +161,6 @@
               >
                 <i class="ri-user-settings-line text-xl"></i>
                 <span class="ml-3">Equipo Técnico</span>
-              </NuxtLink>
-
-              <NuxtLink
-                to="/reportes/movimientos"
-                class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition group"
-                @click="sidebarAbierta = false"
-              >
-                <i class="ri-history-line text-xl"></i>
-                <span class="ml-3">Bitácora de Inventario</span>
               </NuxtLink>
             </nav>
 

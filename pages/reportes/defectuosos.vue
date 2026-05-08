@@ -437,32 +437,18 @@ const exportarPDF = async () => {
           </div>
           <div style="flex: 1; text-align: right;">
             <h2 style="color: #374151; font-size: 18px; margin: 0; font-weight: 700; text-transform: uppercase;">Reporte de Repuestos Defectuosos</h2>
-            <div style="margin-top: 5px;">
-              <span style="color: #6b7280; font-size: 10px; background: #f3f4f6; padding: 4px 8px; border-radius: 4px; font-family: monospace;">FECHA: ${new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+            <div style="margin-top: 6px;">
+              <span style="color: #6b7280; font-size: 10px; padding: 4px 8px; border-radius: 4px; font-family: monospace;">FECHA: ${new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
             </div>
           </div>
         </div>
         
         <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 25px;">
-          <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 10px; padding: 15px;">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-              <div>
-                <p style="color: #dc2626; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">Total pérdidas</p>
-                <p style="color: #374151; font-size: 24px; font-weight: 900; margin: 5px 0;">$${perdidaTotalNumero.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
-              </div>
-              <div style="width: 40px; height: 40px; background: #dc2626; color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
-                <span style="font-size: 20px; font-weight: bold;">$</span>
-              </div>
-            </div>
-          </div>
           <div style="background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 10px; padding: 15px;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
               <div>
-                <p style="color: #0284c7; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">Total unidades</p>
+                <p style="color: #0284c7; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">Total de unidades afectadas:</p>
                 <p style="color: #374151; font-size: 24px; font-weight: 900; margin: 5px 0;">${totalUnidadesNumero}</p>
-              </div>
-              <div style="width: 40px; height: 40px; background: #0284c7; color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
-                <span style="font-size: 20px; font-weight: bold;">#</span>
               </div>
             </div>
           </div>
@@ -488,7 +474,7 @@ const exportarPDF = async () => {
                     <div style="font-size: 10px; color: #6b7280;">Costo: $${item.precio_unitario_costo || 0}</div>
                   </td>
                   <td style="padding: 10px 12px; text-align: center;">
-                    <span style="background: #fef2f2; color: #dc2626; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600;">${item.cantidad} uds</span>
+                    <span style="color: #dc2626; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600;">${item.cantidad} uds</span>
                   </td>
                   <td style="padding: 10px 12px; color: #6b7280; font-size: 11px; max-width: 200px;">${item.motivo}</td>
                   <td style="padding: 10px 12px; text-align: right; font-weight: 700; color: #dc2626;">$${(item.perdida_total || 0).toFixed(2)}</td>
@@ -498,7 +484,7 @@ const exportarPDF = async () => {
             <tfoot>
               <tr style="background: #f9fafb; border-top: 2px solid #d1d5db;">
                 <td colspan="4" style="padding: 12px; font-weight: 700; color: #374151; text-align: right;">TOTALES:</td>
-                <td style="padding: 12px; text-align: right; font-weight: 900; color: #dc2626; font-size: 16px;">$${perdidaTotalNumero.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                
                </tr>
             </tfoot>
           </table>

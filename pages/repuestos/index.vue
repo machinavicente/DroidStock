@@ -477,53 +477,31 @@ const exportarInventarioPDF = async () => {
           <div style="flex: 1; text-align: right;">
             <h2 style="color: #374151; font-size: 18px; margin: 0; font-weight: 700; text-transform: uppercase;">Reporte de Inventario</h2>
             <div style="margin-top: 5px;">
-              <span style="color: #6b7280; font-size: 10px; background: #f3f4f6; padding: 4px 8px; border-radius: 4px; font-family: monospace;">FECHA: ${new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+              <span style="color: #6b7280; font-size: 10px; padding: 4px 8px; border-radius: 4px; font-family: monospace;">FECHA: ${new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
             </div>
           </div>
         </div>
         
-        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 25px;">
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 25px;">
           <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 15px;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
               <div>
-                <p style="color: #16a34a; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">Productos</p>
+                <p style="color: #16a34a; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">Variedad de Catálogo: </p>
                 <p style="color: #374151; font-size: 24px; font-weight: 900; margin: 5px 0;">${totalProductos}</p>
               </div>
-              <div style="width: 40px; height: 40px; background: #16a34a; color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
-                <i style="font-size: 20px;">📦</i>
+              <div style="width: 40px; height: 40px; color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                <i style="font-size: 20px;">📑</i>
               </div>
             </div>
           </div>
           <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 15px;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
               <div>
-                <p style="color: #2563eb; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">Unidades</p>
+                <p style="color: #2563eb; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">Existencia Global: </p>
                 <p style="color: #374151; font-size: 24px; font-weight: 900; margin: 5px 0;">${totalUnidades}</p>
               </div>
-              <div style="width: 40px; height: 40px; background: #2563eb; color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
-                <i style="font-size: 20px;">#</i>
-              </div>
-            </div>
-          </div>
-          <div style="background: #fefce8; border: 1px solid #fde047; border-radius: 10px; padding: 15px;">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-              <div>
-                <p style="color: #ca8a04; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">Valor Costo</p>
-                <p style="color: #374151; font-size: 24px; font-weight: 900; margin: 5px 0;">$${valorTotalCosto.toFixed(2)}</p>
-              </div>
-              <div style="width: 40px; height: 40px; background: #ca8a04; color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
-                <i style="font-size: 20px;">$</i>
-              </div>
-            </div>
-          </div>
-          <div style="background: #f0fdfa; border: 1px solid #99e6d4; border-radius: 10px; padding: 15px;">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-              <div>
-                <p style="color: #0d9488; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">Valor Venta</p>
-                <p style="color: #374151; font-size: 24px; font-weight: 900; margin: 5px 0;">$${valorTotalVenta.toFixed(2)}</p>
-              </div>
-              <div style="width: 40px; height: 40px; background: #0d9488; color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
-                <i style="font-size: 20px;">💰</i>
+              <div style="width: 40px; height: 40px; color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                <i style="font-size: 20px;">📦</i>
               </div>
             </div>
           </div>
@@ -538,7 +516,6 @@ const exportarInventarioPDF = async () => {
                 <th style="padding: 12px; text-align: right;">Precio Compra</th>
                 <th style="padding: 12px; text-align: right;">Precio Venta</th>
                 <th style="padding: 12px; text-align: right;">Valor Stock</th>
-                <th style="padding: 12px; text-align: right;">Ganancia Pot.</th>
               </tr>
             </thead>
             <tbody>
@@ -549,8 +526,6 @@ const exportarInventarioPDF = async () => {
                   <td style="padding: 10px 12px; text-align: right;">$${(r.precio_costo || 0).toFixed(2)}</td>
                   <td style="padding: 10px 12px; text-align: right;">$${(r.precio_venta || 0).toFixed(2)}</td>
                   <td style="padding: 10px 12px; text-align: right;">$${((r.precio_costo || 0) * r.cantidad_disponible).toFixed(2)}</td>
-                  <td style="padding: 10px 12px; text-align: right; color: #38a169;">$${(((r.precio_venta || 0) - (r.precio_costo || 0)) * r.cantidad_disponible).toFixed(2)}</td>
-                </td>
               `).join('')}
             </tbody>
             <tfoot>
@@ -559,8 +534,6 @@ const exportarInventarioPDF = async () => {
                 <td style="padding: 12px; text-align: center; font-weight: bold;">${totalUnidades}</td>
                 <td style="padding: 12px; text-align: right;"></td>
                 <td style="padding: 12px; text-align: right;"></td>
-                <td style="padding: 12px; text-align: right; font-weight: bold;">$${valorTotalCosto.toFixed(2)}</td>
-                <td style="padding: 12px; text-align: right; font-weight: bold; color: #38a169;">$${gananciaPotencial.toFixed(2)}</td>
               </tr>
             </tfoot>
           </table>
@@ -591,10 +564,10 @@ const exportarInventarioPDF = async () => {
     await html2pdf().set(opt).from(element).save()
     element.remove()
     
-    mostrarToast('✅ Reporte de inventario generado correctamente', 'success')
+    mostrarToast(' Reporte de inventario generado correctamente', 'success')
   } catch (error) {
     console.error('Error:', error)
-    mostrarToast('❌ Error al generar el reporte', 'error')
+    mostrarToast(' Error al generar el reporte', 'error')
   } finally {
     exportandoInventario.value = false
   }
@@ -623,9 +596,9 @@ const aumentarStock = async () => {
     })
     
     modalAumentarVisible.value = false
-    mostrarToast(`✅ Stock aumentado: +${cantidadAgregar.value} unidades. Nuevo stock: ${nuevoStock}`, 'success')
+    mostrarToast(`Stock aumentado: +${cantidadAgregar.value} unidades. Nuevo stock: ${nuevoStock}`, 'success')
   } catch (error) {
-    mostrarToast(`❌ Error al aumentar el stock: ${error.message}`, 'error')
+    mostrarToast(`Error al aumentar el stock: ${error.message}`, 'error')
   }
 }
 
@@ -672,11 +645,11 @@ const registrarDefectuoso = async () => {
     })
     
     modalDefectuosoVisible.value = false
-    mostrarToast('✅ Repuesto marcado como defectuoso', 'success')
+    mostrarToast('Repuesto marcado como defectuoso', 'success')
     await obtenerRepuestos()
   } catch (error) {
     console.error('Error:', error)
-    mostrarToast(`❌ ${error.data?.message || 'Error al registrar'}`, 'error')
+    mostrarToast(`${error.data?.message || 'Error al registrar'}`, 'error')
   } finally {
     registrando.value = false
   }
@@ -699,9 +672,9 @@ const eliminarRepuestoConfirmado = async () => {
   if (result.success) {
     modalEliminarVisible.value = false
     repuestoAEliminar.value = null
-    mostrarToast(`🗑️ Repuesto "${repuestoAEliminar?.nombre_repuesto}" eliminado`, 'success')
+    mostrarToast(`Repuesto "${repuestoAEliminar?.nombre_repuesto}" eliminado`, 'success')
   } else {
-    mostrarToast(`❌ Error al eliminar: ${result.error}`, 'error')
+    mostrarToast(`Error al eliminar: ${result.error}`, 'error')
   }
 }
 </script>
