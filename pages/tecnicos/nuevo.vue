@@ -1,40 +1,40 @@
 <template>
-  <div class="min-h-screen bg-gray-50">
+  <div class="min-h-screen bg-[#F3F4F6]">
     <div class="max-w-4xl mx-auto py-8 px-4 sm:px-6">
-      <!-- Header con breadcrumb -->
+      
+      <!-- Header Estilo Terminal / Hardware -->
       <div class="mb-8">
-        <div class="flex items-center gap-2 text-sm text-gray-500 mb-4">
-          <NuxtLink to="/tecnicos" class="hover:text-gray-700 flex items-center gap-1">
+        <div class="flex items-center gap-2 text-[10px] font-mono text-gray-400 uppercase tracking-widest mb-4">
+          <NuxtLink to="/tecnicos" class="hover:text-[#065F46] flex items-center gap-1 transition-colors">
             <i class="ri-group-line"></i>
-            Técnicos
+            TÉCNICOS
           </NuxtLink>
           <i class="ri-arrow-right-s-line text-sm"></i>
-          <span class="text-gray-800 font-medium">Nuevo técnico</span>
+          <span class="text-[#065F46] font-black">NUEVO_REGISTRO</span>
         </div>
         
-        <div class="flex justify-between items-end">
+        <div class="flex items-center gap-3">
+          <div class="h-10 w-1.5 bg-[#10B981] rounded-full"></div>
           <div>
-            <h1 class="text-2xl font-semibold text-gray-900">Nuevo Técnico</h1>
-            <p class="text-gray-500 text-sm mt-1">Complete la información del técnico especialista</p>
-          </div>
-          <div class="text-right">
-            <div class="text-xs text-gray-400">Formulario de registro</div>
+            <h1 class="text-3xl font-black text-[#065F46] tracking-tighter uppercase">Nuevo Técnico</h1>
+            <p class="text-[10px] font-mono text-gray-400 uppercase tracking-widest">Protocolo: TECH_REG_001</p>
           </div>
         </div>
       </div>
 
       <form @submit.prevent="guardarTecnico" class="space-y-6">
-        <!-- Tarjeta principal -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        
+        <!-- Tarjeta principal - Estilo PCB -->
+        <div class="bg-white rounded-2xl shadow-sm border border-[#D1D5DB] overflow-hidden">
           <!-- Header de tarjeta -->
-          <div class="px-6 py-4 bg-gradient-to-r from-blue-50 to-white border-b border-gray-100">
+          <div class="px-6 py-4 bg-[#F8FAFC] border-b border-[#D1D5DB]">
             <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
-                <i class="ri-user-add-line text-blue-600 text-xl"></i>
+              <div class="w-10 h-10 rounded-lg bg-[#ECFDF5] flex items-center justify-center">
+                <i class="ri-user-add-line text-[#10B981] text-xl"></i>
               </div>
               <div>
-                <h2 class="text-base font-semibold text-gray-800">Información personal</h2>
-                <p class="text-xs text-gray-500">Datos básicos del técnico</p>
+                <h2 class="text-[10px] font-black text-[#065F46] uppercase tracking-widest">Ficha_Técnica_Operador</h2>
+                <p class="text-[9px] font-mono text-gray-400">Datos básicos del técnico especialista</p>
               </div>
             </div>
           </div>
@@ -42,9 +42,9 @@
           <!-- Cuerpo del formulario -->
           <div class="p-6 space-y-5">
             <!-- Nombre completo -->
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1.5">
-                Nombre completo <span class="text-red-500">*</span>
+            <div class="space-y-1">
+              <label class="label-circuit">
+                Nombre completo <span class="text-[#F59E0B]">*</span>
               </label>
               <div class="relative">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -54,16 +54,16 @@
                   v-model="form.nombre"
                   type="text"
                   required
-                  class="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm placeholder-gray-400"
-                  placeholder="Ej: Carlos Rodríguez"
+                  class="form-input-circuit pl-10"
+                  placeholder="EJ: CARLOS RODRIGUEZ"
                 />
               </div>
-              <p class="text-xs text-gray-400 mt-1">Nombre completo del técnico especialista</p>
+              <p class="text-[9px] font-mono text-gray-400 mt-1">NOMBRE_COMPLETO_OPERADOR</p>
             </div>
 
             <!-- Especialidad -->
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1.5">
+            <div class="space-y-1">
+              <label class="label-circuit">
                 Especialidad
               </label>
               <div class="relative">
@@ -72,26 +72,26 @@
                 </div>
                 <select
                   v-model="form.especialidad"
-                  class="block w-full pl-10 pr-10 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm appearance-none cursor-pointer bg-white"
+                  class="form-select-circuit"
                 >
-                  <option value="">Seleccionar especialidad</option>
-                  <option value="Celulares">Celulares / Smartphones</option>
-                  <option value="Tablets">Tablets / iPads</option>
-                  <option value="Laptops">Laptops / Notebooks</option>
-                  <option value="PC">PC / Computadoras</option>
-                  <option value="Consolas">Consolas de juegos</option>
-                  <option value="General">General (todas)</option>
+                  <option value="">-- SELECCIONAR ESPECIALIDAD --</option>
+                  <option value="Celulares">📱 SMARTSPHONES</option>
+                  <option value="Tablets">📟 TABLETS / iPADS</option>
+                  <option value="Laptops">💻 LAPTOPS / NOTEBOOKS</option>
+                  <option value="PC">🖥️ PC / COMPUTADORAS</option>
+                  <option value="Consolas">🎮 CONSOLAS DE JUEGOS</option>
+                  <option value="General">🔧 GENERAL (TODAS)</option>
                 </select>
                 <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                  <i class="ri-arrow-down-s-line text-gray-400 text-base"></i>
+                  <i class="ri-arrow-down-s-line text-gray-400"></i>
                 </div>
               </div>
-              <p class="text-xs text-gray-400 mt-1">Área de especialización del técnico</p>
+              <p class="text-[9px] font-mono text-gray-400 mt-1">ÁREA_DE_ESPECIALIZACIÓN</p>
             </div>
 
             <!-- Teléfono -->
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1.5">
+            <div class="space-y-1">
+              <label class="label-circuit">
                 Teléfono / WhatsApp
               </label>
               <div class="relative">
@@ -101,61 +101,67 @@
                 <input
                   v-model="form.telefono"
                   type="tel"
-                  class="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm placeholder-gray-400"
-                  placeholder="Ej: 555-1234"
+                  class="form-input-circuit pl-10"
+                  placeholder="04XX-XXXXXXX"
                 />
               </div>
-              <p class="text-xs text-gray-400 mt-1">Número de contacto del técnico</p>
+              <p class="text-[9px] font-mono text-gray-400 mt-1">CONTACTO_DIRECTO_OPERADOR</p>
             </div>
           </div>
         </div>
 
-        <!-- Tarjeta de información adicional -->
-        <div class="bg-blue-50 rounded-lg border border-blue-100 p-4">
+        <!-- Bloque informativo - Estilo crítico -->
+        <div class="bg-[#065F46] rounded-xl border-l-8 border-[#10B981] p-4">
           <div class="flex items-start gap-3">
-            <i class="ri-information-line text-blue-500 text-lg mt-0.5"></i>
-            <div class="text-sm text-blue-800">
-              <p class="font-medium mb-1">Información importante</p>
-              <p class="text-xs text-blue-700">Los técnicos pueden ser asignados a reparaciones. Una vez que tengan reparaciones asignadas, no podrán ser eliminados.</p>
+            <div class="p-1.5 bg-[#10B981] rounded-lg shadow-inner">
+              <i class="ri-information-line text-white text-sm"></i>
+            </div>
+            <div>
+              <p class="text-[10px] font-black text-white uppercase tracking-widest mb-1">Info_System</p>
+              <p class="text-[11px] text-white/80 leading-relaxed">
+                Los técnicos pueden ser asignados a reparaciones. Una vez que tengan órdenes asignadas, 
+                no podrán ser eliminados del sistema.
+              </p>
             </div>
           </div>
         </div>
 
         <!-- Botones de acción -->
-        <div class="flex justify-end gap-3 pt-4">
-          <NuxtLink
-            to="/tecnicos"
-            class="px-6 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition flex items-center gap-2"
-          >
-            <i class="ri-close-line"></i>
-            Cancelar
-          </NuxtLink>
+        <div class="flex flex-col sm:flex-row justify-end gap-4 pt-6">
           <button
             type="submit"
             :disabled="guardando"
-            class="px-6 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-sm"
+            class="px-10 py-3 bg-[#10B981] text-white rounded-xl hover:bg-[#059669] transition-all disabled:opacity-50 text-xs font-black uppercase tracking-[0.2em] shadow-lg shadow-[#10B981]/20 flex items-center justify-center gap-3"
           >
-            <i v-if="guardando" class="ri-loader-4-line animate-spin"></i>
-            <i v-else class="ri-save-line"></i>
-            {{ guardando ? 'Guardando...' : 'Guardar Técnico' }}
+            <i v-if="guardando" class="ri-loader-4-line animate-spin text-lg"></i>
+            <i v-else class="ri-save-line text-lg"></i>
+            {{ guardando ? 'PROCESANDO...' : 'CONFIRMAR_REGISTRO' }}
           </button>
+          <NuxtLink
+            to="/tecnicos"
+            class="px-8 py-3 bg-white text-gray-400 border-2 border-gray-100 rounded-xl hover:text-red-500 hover:border-red-100 transition-all text-xs font-black uppercase tracking-widest text-center"
+          >
+            Abortar_Registro
+          </NuxtLink>
         </div>
       </form>
     </div>
 
-    <!-- Toast de notificación -->
-    <div v-if="toast.visible" class="fixed bottom-4 right-4 z-50 animate-slide-up">
-      <div :class="[
-        'px-4 py-3 rounded-lg shadow-lg flex items-center gap-3 min-w-[280px]',
-        toast.tipo === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
-      ]">
-        <i :class="toast.tipo === 'success' ? 'ri-checkbox-circle-fill text-xl' : 'ri-alert-fill text-xl'"></i>
-        <span class="flex-1 text-sm">{{ toast.mensaje }}</span>
-        <button @click="toast.visible = false" class="hover:opacity-70">
-          <i class="ri-close-line text-xl"></i>
-        </button>
+    <!-- Notificaciones Toast (Refinado) -->
+    <Transition name="slide-fade">
+      <div v-if="toast.visible" class="fixed bottom-8 right-8 z-50">
+        <div :class="[
+          'px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-4 border-l-8 backdrop-blur-md',
+          toast.tipo === 'success' ? 'bg-[#065F46]/90 text-white border-[#10B981]' : 'bg-red-600/90 text-white border-red-800'
+        ]">
+          <i :class="toast.tipo === 'success' ? 'ri-checkbox-circle-line text-2xl text-[#10B981]' : 'ri-error-warning-line text-2xl text-red-300'"></i>
+          <div>
+            <p class="text-[9px] font-black uppercase tracking-[0.2em] opacity-60 italic">DroidStock_System</p>
+            <p class="text-sm font-bold tracking-tight">{{ toast.mensaje }}</p>
+          </div>
+        </div>
       </div>
-    </div>
+    </Transition>
   </div>
 </template>
 
@@ -196,7 +202,7 @@ const form = reactive({
 const guardarTecnico = async () => {
   // Validar campos requeridos
   if (!form.nombre || form.nombre.trim() === '') {
-    mostrarToast('El nombre del técnico es requerido', 'error')
+    mostrarToast('ERROR: NOMBRE_REQUERIDO', 'error')
     return
   }
 
@@ -206,16 +212,16 @@ const guardarTecnico = async () => {
     const result = await crearTecnico(form)
     
     if (result.success) {
-      mostrarToast('Técnico creado exitosamente', 'success')
+      mostrarToast('REGISTRO_COMPLETADO_EXITOSAMENTE', 'success')
       setTimeout(() => {
         router.push('/tecnicos')
       }, 1500)
     } else {
-      mostrarToast(result.error || 'Error al crear el técnico', 'error')
+      mostrarToast(result.error || 'ERROR_CRÍTICO', 'error')
     }
   } catch (error) {
     console.error('Error:', error)
-    mostrarToast('Error al crear el técnico', 'error')
+    mostrarToast('ERROR_CRÍTICO_AL_GUARDAR', 'error')
   } finally {
     guardando.value = false
   }
@@ -223,31 +229,30 @@ const guardarTecnico = async () => {
 </script>
 
 <style scoped>
-.animate-spin {
-  animation: spin 1s linear infinite;
+.form-input-circuit {
+  @apply w-full px-4 py-2.5 bg-[#F8FAFC] border-2 border-[#D1D5DB] rounded-xl focus:ring-0 focus:border-[#10B981] focus:bg-white transition-all text-sm font-bold text-[#334155] placeholder:text-gray-300 shadow-inner outline-none;
+}
+
+.form-select-circuit {
+  @apply w-full pl-10 pr-10 py-2.5 bg-[#F8FAFC] border-2 border-[#D1D5DB] rounded-xl focus:ring-0 focus:border-[#10B981] focus:bg-white transition-all text-sm font-bold text-[#334155] appearance-none cursor-pointer shadow-inner outline-none;
+}
+
+.label-circuit {
+  @apply text-[9px] font-black text-gray-400 uppercase tracking-widest ml-1;
+}
+
+/* Transiciones */
+.slide-fade-enter-active, .slide-fade-leave-active {
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.slide-fade-enter-from, .slide-fade-leave-to {
+  transform: translateY(30px) scale(0.9);
+  opacity: 0;
 }
 
 @keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
-
-@keyframes slideUp {
-  from {
-    transform: translateY(20px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-.animate-slide-up {
-  animation: slideUp 0.3s ease-out;
-}
+.animate-spin { animation: spin 1s linear infinite; }
 </style>

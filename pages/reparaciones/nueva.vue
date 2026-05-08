@@ -1,281 +1,210 @@
 <template>
-  <div class="max-w-4xl mx-auto">
-    <!-- Header -->
-    <div class="mb-6">
-      <NuxtLink to="/reparaciones" class="text-blue-600 hover:text-blue-700 flex items-center gap-1 text-sm mb-3">
-        <i class="ri-arrow-left-line"></i>
-        Volver a reparaciones
+  <div class="max-w-4xl mx-auto p-4 sm:p-8">
+    <!-- Header Estilo Terminal / Hardware -->
+    <div class="mb-8">
+      <NuxtLink to="/reparaciones" class="group text-gray-400 hover:text-[#065F46] flex items-center gap-2 text-[10px] font-black uppercase tracking-widest mb-4 transition-colors">
+        <i class="ri-arrow-left-line bg-white p-2 rounded-full shadow-sm group-hover:shadow-md transition-all"></i>
+        VOLVER_AL_SECTOR_REPARACIONES
       </NuxtLink>
-      <h1 class="text-2xl font-bold text-gray-900">Nueva Reparación</h1>
-      <p class="text-gray-600 mt-1">Complete los datos del cliente y el equipo</p>
+      <div class="flex items-center gap-3">
+        <div class="h-10 w-1.5 bg-[#10B981] rounded-full"></div>
+        <div>
+          <h1 class="text-3xl font-black text-[#065F46] tracking-tighter uppercase">Nueva Orden de Servicio</h1>
+          <p class="text-[10px] font-mono text-gray-400 uppercase tracking-widest">Protocolo: RECEPT_EQUIP_001</p>
+        </div>
+      </div>
     </div>
 
     <form @submit.prevent="guardarReparacion" class="space-y-6">
-      <!-- Buscar cliente existente - Búsqueda en tiempo real -->
-      <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        <div class="px-5 py-3 bg-gray-50 border-b border-gray-100">
+      
+      <!-- BUSCADOR DE CLIENTES (Módulo de Escaneo) -->
+      <div class="bg-white rounded-2xl shadow-sm border border-[#D1D5DB] overflow-hidden">
+        <div class="px-5 py-3 bg-[#F8FAFC] border-b border-[#D1D5DB] flex justify-between items-center">
           <div class="flex items-center gap-2">
-            <i class="ri-search-line text-blue-500 text-lg"></i>
-            <h2 class="font-medium text-gray-800">Buscar cliente existente</h2>
+            <i class="ri-search-eye-line text-[#10B981] text-lg"></i>
+            <h2 class="text-[10px] font-black text-[#065F46] uppercase tracking-widest">Escaneo_de_Clientes_Existentes</h2>
           </div>
         </div>
-        <div class="p-5">
+        <div class="p-6">
           <div class="relative">
-            <i class="ri-user-search-line absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg"></i>
             <input
               v-model="busquedaCliente"
               type="text"
-              placeholder="Buscar por DNI, nombre o teléfono..."
-              class="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+              placeholder="DNI, NOMBRE O TELÉFONO..."
+              class="form-input-circuit pl-12"
               @input="buscarClientesEnTiempoReal"
             />
-            <div v-if="buscando" class="absolute right-3 top-1/2 transform -translate-y-1/2">
-              <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
+
+            <div v-if="buscando" class="absolute right-4 top-1/2 -translate-y-1/2">
+              <div class="animate-spin h-5 w-5 border-2 border-[#10B981] border-t-transparent rounded-full"></div>
             </div>
           </div>
           
-          <!-- Resultados de búsqueda -->
-          <div v-if="clientesEncontrados.length > 0" class="mt-4 space-y-2 max-h-64 overflow-y-auto">
+          <!-- Resultados con diseño técnico -->
+          <div v-if="clientesEncontrados.length > 0" class="mt-4 space-y-2 max-h-64 overflow-y-auto custom-scrollbar">
             <div
               v-for="cliente in clientesEncontrados"
               :key="cliente.id"
               @click="seleccionarCliente(cliente)"
-              class="p-3 border border-gray-100 rounded-lg hover:border-blue-300 hover:bg-blue-50 cursor-pointer transition-all"
+              class="p-4 border-2 border-gray-50 rounded-xl hover:border-[#10B981] hover:bg-[#F0FDF4] cursor-pointer transition-all group"
             >
               <div class="flex items-center justify-between">
                 <div>
-                  <div class="font-medium text-gray-800 text-sm">{{ cliente.nombre_completo }}</div>
-                  <div class="flex items-center gap-3 mt-1 text-xs text-gray-500">
-                    <span class="flex items-center gap-1"><i class="ri-id-card-line"></i> {{ cliente.dni_cedula }}</span>
-                    <span v-if="cliente.telefono" class="flex items-center gap-1"><i class="ri-phone-line"></i> {{ cliente.telefono }}</span>
-                    <span class="flex items-center gap-1 text-blue-500"><i class="ri-tools-line"></i> {{ cliente.total_reparaciones || 0 }} reparaciones previas</span>
+                  <div class="font-black text-[#065F46] text-sm uppercase tracking-tighter">{{ cliente.nombre_completo }}</div>
+                  <div class="flex items-center gap-4 mt-1">
+                    <span class="text-[10px] font-mono text-gray-400">ID: {{ cliente.dni_cedula }}</span>
+                    <span v-if="cliente.total_reparaciones" class="text-[10px] bg-[#065F46] text-white px-2 py-0.5 rounded italic">
+                      HISTORIAL: {{ cliente.total_reparaciones }} OP.
+                    </span>
                   </div>
                 </div>
-                <div class="text-blue-500 text-sm font-medium flex items-center gap-1">
-                  <i class="ri-add-line"></i>
-                  Seleccionar
+                <div class="flex items-center gap-2 text-[#10B981] font-black text-[10px] uppercase opacity-0 group-hover:opacity-100 transition-opacity">
+                  <span>Seleccionar</span>
+                  <i class="ri-add-circle-fill text-2xl"></i>
                 </div>
               </div>
             </div>
           </div>
-          
-          <!-- Mensaje de no resultados -->
-          <div v-else-if="busquedaRealizada && clientesEncontrados.length === 0 && busquedaCliente" class="mt-4 p-3 bg-yellow-50 border border-yellow-100 rounded-lg text-center text-sm text-yellow-700">
-            <i class="ri-information-line"></i>
-            No se encontraron clientes. Complete el formulario para crear uno nuevo.
-          </div>
-          
-          <!-- Sugerencia para buscar -->
-          <div v-else-if="!busquedaCliente" class="mt-4 p-3 bg-gray-50 rounded-lg text-center text-sm text-gray-500">
-            <i class="ri-information-line"></i>
-            Escriba nombre, DNI o teléfono para buscar clientes existentes
+
+          <div v-else-if="busquedaRealizada && clientesEncontrados.length === 0 && busquedaCliente" class="mt-4 p-4 bg-orange-50 border-2 border-orange-100 rounded-xl text-center">
+            <p class="text-[10px] font-black text-orange-700 uppercase tracking-widest">Sin coincidencias - Inicie registro manual</p>
           </div>
         </div>
       </div>
 
-      <!-- Separador visual -->
-      <div class="relative">
-        <div class="absolute inset-0 flex items-center">
-          <div class="w-full border-t border-gray-200"></div>
-        </div>
-        <div class="relative flex justify-center text-sm">
-          <span class="px-2 bg-gray-50 text-gray-500">O complete los datos manualmente</span>
-        </div>
-      </div>
-
-      <!-- Datos del Cliente -->
-      <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        <div class="px-5 py-3 bg-gray-50 border-b border-gray-100">
-          <div class="flex items-center gap-2">
-            <i class="ri-user-line text-blue-500 text-lg"></i>
-            <h2 class="font-medium text-gray-800">Datos del Cliente</h2>
-            <span v-if="clienteSeleccionadoId" class="ml-2 text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
-              Cliente existente
-            </span>
-            <span v-else class="ml-2 text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">
-              Nuevo cliente
-            </span>
+      <!-- Grid de Módulos: Propietario y Hardware -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        
+        <!-- FICHA DEL PROPIETARIO -->
+        <div class="bg-white rounded-2xl shadow-sm border border-[#D1D5DB] overflow-hidden">
+          <div class="px-5 py-3 bg-[#F8FAFC] border-b border-[#D1D5DB] flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <i class="ri-user-settings-line text-[#10B981]"></i>
+              <h2 class="text-[10px] font-black text-[#065F46] uppercase tracking-widest">Ficha_del_Propietario</h2>
+            </div>
+            <span v-if="clienteSeleccionadoId" class="text-[9px] bg-[#10B981] text-white px-2 py-0.5 rounded-full font-black uppercase">Vinculado</span>
           </div>
-        </div>
-        <div class="p-5">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="md:col-span-2">
-              <label class="block text-sm font-medium text-gray-700 mb-1">Nombre completo *</label>
-              <div class="relative">
-                <i class="ri-user-line absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                <input
-                  v-model="form.cliente_nombre"
-                  type="text"
-                  required
-                  class="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-                  placeholder="Juan Pérez"
-                />
+          <div class="p-6 space-y-4">
+            <div class="space-y-1">
+              <label class="label-circuit">Nombre Completo *</label>
+              <input v-model="form.cliente_nombre" type="text" required class="form-input-circuit" placeholder="EJ: JUAN PEREZ" />
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+              <div class="space-y-1">
+                <label class="label-circuit">DNI / Cédula *</label>
+                <input v-model="form.cliente_dni" type="text" required class="form-input-circuit" />
+              </div>
+              <div class="space-y-1">
+                <label class="label-circuit">Teléfono</label>
+                <input v-model="form.cliente_telefono" type="tel" class="form-input-circuit" placeholder="04XX-XXXXXXX" />
               </div>
             </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">DNI / Cédula *</label>
-              <div class="relative">
-                <i class="ri-id-card-line absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                <input
-                  v-model="form.cliente_dni"
-                  type="text"
-                  required
-                  class="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-                  placeholder="12345678"
-                />
+            <div class="space-y-1">
+              <label class="label-circuit">Ubicación / Dirección</label>
+              <textarea v-model="form.cliente_direccion" rows="2" class="form-input-circuit resize-none"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- ESPECIFICACIONES HARDWARE -->
+        <div class="bg-white rounded-2xl shadow-sm border border-[#D1D5DB] overflow-hidden">
+          <div class="px-5 py-3 bg-[#F8FAFC] border-b border-[#D1D5DB]">
+            <div class="flex items-center gap-2">
+              <i class="ri-cpu-line text-[#10B981]"></i>
+              <h2 class="text-[10px] font-black text-[#065F46] uppercase tracking-widest">Especificaciones_Hardware</h2>
+            </div>
+          </div>
+          <div class="p-6 space-y-4">
+            <div class="grid grid-cols-2 gap-4">
+              <div class="space-y-1">
+                <label class="label-circuit">Tipo de Equipo *</label>
+                <select v-model="form.equipo_tipo" required class="form-input-circuit">
+                  <option value="">SELECCIONAR</option>
+                  <option value="Celular">SMARTPHONE</option>
+                  <option value="Tablet">TABLET</option>
+                  <option value="Laptop">LAPTOP</option>
+                  <option value="PC">DESKTOP PC</option>
+                  <option value="Consola">CONSOLA</option>
+                </select>
+              </div>
+              <div class="space-y-1">
+                <label class="label-circuit">Marca / Modelo *</label>
+                <input v-model="form.equipo_marca_modelo" type="text" required class="form-input-circuit" placeholder="EJ: IPHONE 13" />
               </div>
             </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
-              <div class="relative">
-                <i class="ri-phone-line absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                <input
-                  v-model="form.cliente_telefono"
-                  type="tel"
-                  class="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-                  placeholder="0424-1234567"
-                />
+            <div class="grid grid-cols-2 gap-4">
+              <div class="space-y-1">
+                <label class="label-circuit">Serial / IMEI</label>
+                <input v-model="form.numero_serie" type="text" class="form-input-circuit font-mono" placeholder="S/N: 0000000" />
+              </div>
+              <div class="space-y-1">
+                <label class="label-circuit">Técnico Responsable</label>
+                <select v-model="form.tecnico_id" class="form-input-circuit">
+                  <option :value="null">SIN ASIGNAR</option>
+                  <option v-for="tecnico in tecnicos" :key="tecnico.id" :value="tecnico.id">{{ tecnico.nombre }}</option>
+                </select>
               </div>
             </div>
-            <div class="md:col-span-2">
-              <label class="block text-sm font-medium text-gray-700 mb-1">Dirección</label>
-              <div class="relative">
-                <i class="ri-map-pin-line absolute left-3 top-2 text-gray-400"></i>
-                <textarea
-                  v-model="form.cliente_direccion"
-                  rows="2"
-                  class="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm resize-none"
-                  placeholder="Av. Principal #123"
-                ></textarea>
-              </div>
+            <div class="space-y-1">
+              <label class="label-circuit">Estado Físico al Recibir</label>
+              <textarea v-model="form.caracteristicas_estado" rows="2" class="form-input-circuit resize-none" placeholder="RAYONES, GOLPES, HUMEDAD..."></textarea>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Datos del Equipo -->
-      <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        <div class="px-5 py-3 bg-gray-50 border-b border-gray-100">
-          <div class="flex items-center gap-2">
-            <i class="ri-device-line text-blue-500 text-lg"></i>
-            <h2 class="font-medium text-gray-800">Datos del Equipo</h2>
+      <!-- REPORTE DE AVERÍA (Módulo Crítico) -->
+      <div class="bg-[#065F46] rounded-2xl p-6 shadow-xl border-b-8 border-[#044a37]">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="p-2 bg-[#10B981] rounded-lg shadow-inner">
+            <i class="ri-error-warning-line text-white text-xl"></i>
           </div>
+          <h2 class="text-xs font-black text-white uppercase tracking-[0.2em]">Reporte_de_Avería_Principal</h2>
         </div>
-        <div class="p-5">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de equipo *</label>
-              <select
-                v-model="form.equipo_tipo"
-                required
-                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-              >
-                <option value="">Seleccionar</option>
-                <option value="Celular">Celular / Smartphone</option>
-                <option value="Tablet">Tablet / iPad</option>
-                <option value="Laptop">Laptop / Notebook</option>
-                <option value="PC">PC / Computadora</option>
-                <option value="Consola">Consola de juegos</option>
-                <option value="Otro">Otro</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Marca / Modelo *</label>
-              <input
-                v-model="form.equipo_marca_modelo"
-                type="text"
-                required
-                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-                placeholder="iPhone 12, Samsung S21"
-              />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Número de serie (IMEI/SN)</label>
-              <input
-                v-model="form.numero_serie"
-                type="text"
-                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-                placeholder="Opcional"
-              />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Técnico asignado</label>
-              <select
-                v-model="form.tecnico_id"
-                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-              >
-                <option :value="null">Sin asignar</option>
-                <option v-for="tecnico in tecnicos" :key="tecnico.id" :value="tecnico.id">
-                  {{ tecnico.nombre }}
-                </option>
-              </select>
-            </div>
-            <div class="md:col-span-2">
-              <label class="block text-sm font-medium text-gray-700 mb-1">Condición / Estado del equipo</label>
-              <textarea
-                v-model="form.caracteristicas_estado"
-                rows="2"
-                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm resize-none"
-                placeholder="Golpes, rayones, accesorios incluidos..."
-              ></textarea>
-            </div>
-          </div>
-        </div>
+        <textarea
+          v-model="form.falla_reportada"
+          rows="3"
+          required
+          class="w-full bg-white/10 border-2 border-white/10 rounded-xl p-4 text-white placeholder:text-white/30 focus:bg-white/20 focus:border-[#10B981] transition-all outline-none font-medium"
+          placeholder="DESCRIBA DETALLADAMENTE EL PROBLEMA..."
+        ></textarea>
       </div>
 
-      <!-- Falla Reportada -->
-      <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        <div class="px-5 py-3 bg-gray-50 border-b border-gray-100">
-          <div class="flex items-center gap-2">
-            <i class="ri-alert-line text-red-500 text-lg"></i>
-            <h2 class="font-medium text-gray-800">Falla Reportada</h2>
-          </div>
-        </div>
-        <div class="p-5">
-          <textarea
-            v-model="form.falla_reportada"
-            rows="3"
-            required
-            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm resize-none"
-            placeholder="Describa detalladamente el problema que presenta el equipo..."
-          ></textarea>
-        </div>
-      </div>
-
-      <!-- Botones -->
-      <div class="flex justify-end gap-3 pt-4">
-        <NuxtLink
-          to="/reparaciones"
-          class="px-5 py-2 text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition text-sm font-medium flex items-center gap-1"
-        >
-          <i class="ri-close-line"></i>
-          Cancelar
-        </NuxtLink>
+      <!-- Botones de Acción -->
+      <div class="flex flex-col sm:flex-row justify-end gap-4 pt-6">
         <button
           type="submit"
           :disabled="guardando"
-          class="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50 text-sm font-medium flex items-center gap-1"
+          class="px-10 py-3 bg-[#10B981] text-white rounded-xl hover:bg-[#059669] transition-all disabled:opacity-50 text-xs font-black uppercase tracking-[0.2em] shadow-lg shadow-[#10B981]/20 flex items-center justify-center gap-3"
         >
-          <i v-if="guardando" class="ri-loader-4-line animate-spin"></i>
-          <i v-else class="ri-save-line"></i>
-          {{ guardando ? 'Guardando...' : 'Crear Reparación' }}
+          <i v-if="guardando" class="ri-loader-4-line animate-spin text-lg"></i>
+          <i v-else class="ri-shield-check-line text-lg"></i>
+          {{ guardando ? 'PROCESANDO...' : 'CONFIRMAR_REGISTRO' }}
         </button>
+                <NuxtLink
+          to="/reparaciones"
+          class="px-8 py-3 bg-white text-gray-400 border-2 border-gray-100 rounded-xl hover:text-red-500 hover:border-red-100 transition-all text-xs font-black uppercase tracking-widest text-center"
+        >
+          Abortar_Registro
+        </NuxtLink>
       </div>
     </form>
 
-    <!-- Toast de notificación -->
-    <div v-if="toast.visible" class="fixed bottom-4 right-4 z-50 animate-slide-up">
-      <div :class="[
-        'px-4 py-3 rounded-lg shadow-lg flex items-center gap-3 min-w-[280px]',
-        toast.tipo === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
-      ]">
-        <i :class="toast.tipo === 'success' ? 'ri-checkbox-circle-fill text-xl' : 'ri-alert-fill text-xl'"></i>
-        <span class="flex-1 text-sm">{{ toast.mensaje }}</span>
-        <button @click="toast.visible = false" class="hover:opacity-70">
-          <i class="ri-close-line text-xl"></i>
-        </button>
+    <!-- Notificaciones Toast (Refinado) -->
+    <Transition name="slide-fade">
+      <div v-if="toast.visible" class="fixed bottom-8 right-8 z-50">
+        <div :class="[
+          'px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-4 border-l-8 backdrop-blur-md',
+          toast.tipo === 'success' ? 'bg-[#065F46]/90 text-white border-[#10B981]' : 'bg-red-600/90 text-white border-red-800'
+        ]">
+          <i :class="toast.tipo === 'success' ? 'ri-checkbox-circle-line text-2xl text-[#10B981]' : 'ri-error-warning-line text-2xl text-red-300'"></i>
+          <div>
+            <p class="text-[9px] font-black uppercase tracking-[0.2em] opacity-60 italic">DroidStock_System</p>
+            <p class="text-sm font-bold tracking-tight">{{ toast.mensaje }}</p>
+          </div>
+        </div>
       </div>
-    </div>
+    </Transition>
   </div>
 </template>
 
@@ -292,7 +221,6 @@ const busquedaRealizada = ref(false)
 const clienteSeleccionadoId = ref(null)
 const buscando = ref(false)
 
-// Toast
 const toast = ref({
   visible: false,
   mensaje: '',
@@ -300,17 +228,10 @@ const toast = ref({
 })
 
 const mostrarToast = (mensaje, tipo = 'success') => {
-  toast.value = {
-    visible: true,
-    mensaje,
-    tipo
-  }
-  setTimeout(() => {
-    toast.value.visible = false
-  }, 3000)
+  toast.value = { visible: true, mensaje, tipo }
+  setTimeout(() => { toast.value.visible = false }, 3000)
 }
 
-// Timeout para debounce
 let timeoutBuscador = null
 
 const form = reactive({
@@ -327,11 +248,8 @@ const form = reactive({
   falla_reportada: ''
 })
 
-// Buscar clientes en tiempo real (con debounce)
 const buscarClientesEnTiempoReal = async () => {
-  if (timeoutBuscador) {
-    clearTimeout(timeoutBuscador)
-  }
+  if (timeoutBuscador) clearTimeout(timeoutBuscador)
   
   if (!busquedaCliente.value || busquedaCliente.value.length < 2) {
     clientesEncontrados.value = []
@@ -342,7 +260,6 @@ const buscarClientesEnTiempoReal = async () => {
   timeoutBuscador = setTimeout(async () => {
     buscando.value = true
     busquedaRealizada.value = true
-    
     try {
       const clientes = await $fetch('/api/clientes')
       const termino = busquedaCliente.value.toLowerCase().trim()
@@ -358,15 +275,13 @@ const buscarClientesEnTiempoReal = async () => {
         cliente.total_reparaciones = reparaciones?.length || 0
       }
     } catch (error) {
-      console.error('Error al buscar clientes:', error)
-      mostrarToast('Error al buscar clientes', 'error')
+      mostrarToast('Fallo en el escaneo de base de datos', 'error')
     } finally {
       buscando.value = false
     }
-  }, 300)
+  }, 400)
 }
 
-// Seleccionar un cliente existente
 const seleccionarCliente = (cliente) => {
   form.cliente_nombre = cliente.nombre_completo
   form.cliente_dni = cliente.dni_cedula
@@ -374,89 +289,51 @@ const seleccionarCliente = (cliente) => {
   form.cliente_email = cliente.email || ''
   form.cliente_direccion = cliente.direccion || ''
   clienteSeleccionadoId.value = cliente.id
-  
   clientesEncontrados.value = []
   busquedaCliente.value = ''
   busquedaRealizada.value = false
-  
-  mostrarToast(`Cliente "${cliente.nombre_completo}" seleccionado`, 'success')
+  mostrarToast(`Vínculo establecido: ${cliente.nombre_completo}`)
 }
 
 const cargarTecnicos = async () => {
   try {
     tecnicos.value = await $fetch('/api/tecnicos')
   } catch (error) {
-    console.error('Error al cargar técnicos:', error)
-    mostrarToast('Error al cargar técnicos', 'error')
+    mostrarToast('No se pudo sincronizar la lista de técnicos', 'error')
   }
 }
 
 const guardarReparacion = async () => {
-  // Validaciones
-  if (!form.cliente_nombre || !form.cliente_dni) {
-    mostrarToast('Complete los datos del cliente', 'error')
-    return
-  }
-  
-  if (!form.equipo_tipo || !form.equipo_marca_modelo) {
-    mostrarToast('Complete los datos del equipo', 'error')
-    return
-  }
-  
-  if (!form.falla_reportada) {
-    mostrarToast('Describa la falla reportada', 'error')
+  if (!form.cliente_nombre || !form.cliente_dni || !form.equipo_tipo || !form.falla_reportada) {
+    mostrarToast('Faltan parámetros obligatorios', 'error')
     return
   }
   
   guardando.value = true
-  
   try {
-    let clienteId
+    let clienteId = clienteSeleccionadoId.value
     
-    if (clienteSeleccionadoId.value) {
-      clienteId = clienteSeleccionadoId.value
-      
+    if (clienteId) {
       await $fetch(`/api/clientes/${clienteId}`, {
         method: 'PUT',
         body: {
           nombre_completo: form.cliente_nombre,
           dni_cedula: form.cliente_dni,
           telefono: form.cliente_telefono,
-          email: form.cliente_email,
           direccion: form.cliente_direccion
         }
       })
     } else {
-      const clientes = await $fetch('/api/clientes')
-      const clienteExistente = clientes.find(c => c.dni_cedula === form.cliente_dni)
-      
-      if (clienteExistente) {
-        clienteId = clienteExistente.id
-        await $fetch(`/api/clientes/${clienteId}`, {
-          method: 'PUT',
-          body: {
-            nombre_completo: form.cliente_nombre,
-            dni_cedula: form.cliente_dni,
-            telefono: form.cliente_telefono,
-            email: form.cliente_email,
-            direccion: form.cliente_direccion
-          }
-        })
-        mostrarToast(`Cliente actualizado: ${form.cliente_nombre}`, 'success')
-      } else {
-        const nuevoCliente = await $fetch('/api/clientes', {
-          method: 'POST',
-          body: {
-            nombre_completo: form.cliente_nombre,
-            dni_cedula: form.cliente_dni,
-            telefono: form.cliente_telefono,
-            email: form.cliente_email,
-            direccion: form.cliente_direccion
-          }
-        })
-        clienteId = nuevoCliente.data.id
-        mostrarToast(`Cliente creado: ${form.cliente_nombre}`, 'success')
-      }
+      const nuevoCliente = await $fetch('/api/clientes', {
+        method: 'POST',
+        body: {
+          nombre_completo: form.cliente_nombre,
+          dni_cedula: form.cliente_dni,
+          telefono: form.cliente_telefono,
+          direccion: form.cliente_direccion
+        }
+      })
+      clienteId = nuevoCliente.data.id
     }
     
     await $fetch('/api/reparaciones', {
@@ -472,50 +349,45 @@ const guardarReparacion = async () => {
       }
     })
     
-    mostrarToast('Reparación creada exitosamente', 'success')
-    
-    setTimeout(() => {
-      navigateTo('/reparaciones')
-    }, 1500)
+    mostrarToast('REGISTRO COMPLETADO EXITOSAMENTE')
+    setTimeout(() => navigateTo('/reparaciones'), 1500)
   } catch (error) {
-    console.error('Error al guardar:', error)
-    mostrarToast(error.data?.message || 'Error al crear la reparación', 'error')
+    mostrarToast('ERROR CRÍTICO AL GUARDAR', 'error')
   } finally {
     guardando.value = false
   }
 }
 
-onMounted(() => {
-  cargarTecnicos()
-})
+onMounted(cargarTecnicos)
 </script>
 
 <style scoped>
-.animate-spin {
-  animation: spin 1s linear infinite;
+.form-input-circuit {
+  @apply w-full px-4 py-2.5 bg-gray-50 border-2 border-gray-100 rounded-xl focus:ring-0 focus:border-[#10B981] focus:bg-white transition-all text-sm font-bold text-[#334155] placeholder:text-gray-300 shadow-inner outline-none;
 }
 
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.label-circuit {
+  @apply text-[9px] font-black text-gray-400 uppercase tracking-widest ml-1;
 }
 
-@keyframes slideUp {
-  from {
-    transform: translateY(20px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  @apply bg-gray-100 rounded-full;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  @apply bg-[#10B981] rounded-full;
 }
 
-.animate-slide-up {
-  animation: slideUp 0.3s ease-out;
+.slide-fade-enter-active, .slide-fade-leave-active {
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
+.slide-fade-enter-from, .slide-fade-leave-to {
+  transform: translateY(30px) scale(0.9);
+  opacity: 0;
+}
+
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+.animate-spin { animation: spin 1s linear infinite; }
 </style>

@@ -19,6 +19,23 @@ export default defineNuxtConfig({
   // Módulos (Tailwind CSS ya incluido)
   modules: ['@nuxtjs/tailwindcss'],
 
+  // Configuración de Tailwind CSS
+  tailwindcss: {
+    config: {
+      theme: {
+        extend: {
+          screens: {
+            'xs': '475px', // Custom breakpoint for very small screens
+          },
+          spacing: {
+            '18': '4.5rem',
+            '88': '22rem',
+          }
+        }
+      }
+    }
+  },
+
   // Configuración de variables de entorno (Runtime Config)
   runtimeConfig: {
     // Las variables dentro de 'public' están disponibles en el cliente y servidor

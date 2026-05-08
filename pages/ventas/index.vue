@@ -1,240 +1,224 @@
 <template>
-  <div>
-    <!-- Header -->
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-      <div>
-        <h1 class="text-2xl font-bold text-gray-900">Ventas de Repuestos</h1>
-        <p class="text-gray-600 mt-1">Registro de ventas a clientes y técnicos externos</p>
-      </div>
-      <NuxtLink
-        to="/ventas/nueva"
-        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center gap-2 shadow-sm"
-      >
-        <i class="ri-add-line"></i>
-        Nueva Venta
-      </NuxtLink>
-    </div>
-
-    <!-- Filtros -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+  <!-- Fondo Gris Técnico #F3F4F6 -->
+  <div class="min-h-screen bg-[#F3F4F6] p-4 sm:p-8">
+    <div class="max-w-7xl mx-auto">
+      
+      <!-- Header Estilo Industrial -->
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-8">
         <div>
-          <label class="block text-xs font-medium text-gray-700 mb-1">Buscar</label>
-          <div class="relative">
-            <i class="ri-search-line absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-            <input
-              v-model="filtros.busqueda"
-              type="text"
-              placeholder="Cliente, repuesto o DNI..."
-              class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
+          <div class="flex items-center gap-2 mb-1">
+            <span class="h-2 w-2 bg-[#10B981] rounded-full animate-pulse"></span>
+            <span class="text-[10px] font-mono text-gray-500 uppercase tracking-widest">Sales_Monitor_v1.0</span>
           </div>
+          <h1 class="text-3xl font-black text-[#065F46] tracking-tight uppercase">Ventas de Repuestos</h1>
+          <p class="text-gray-500 text-sm">Registro de ventas a clientes y técnicos externos</p>
         </div>
-        <div>
-          <label class="block text-xs font-medium text-gray-700 mb-1">Período</label>
-          <select 
-            v-model="filtros.periodo" 
-            @change="aplicarPeriodo"
-            class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          >
-            <option value="">Todos</option>
-            <option value="hoy">Hoy</option>
-            <option value="ultima_semana">Última semana</option>
-            <option value="ultimo_mes">Último mes</option>
-            <option value="ultimo_ano">Último año</option>
-          </select>
-        </div>
-        <div class="flex items-end">
-          <button 
-            @click="limpiarFiltros" 
-            class="px-4 py-2 text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition text-sm flex items-center gap-1"
-          >
-            <i class="ri-refresh-line"></i>
-            Limpiar filtros
-          </button>
-        </div>
+        <NuxtLink
+          to="/ventas/nueva"
+          class="px-6 py-3 bg-[#065F46] text-white font-bold rounded-lg hover:bg-[#054a37] transition-all flex items-center gap-2 shadow-lg hover:shadow-[#065F46]/20 border-b-4 border-[#033a2b] active:border-b-0 active:translate-y-1"
+        >
+          <i class="ri-add-circle-fill text-lg"></i>
+          NUEVA VENTA
+        </NuxtLink>
       </div>
-    </div>
 
-    <!-- Tarjetas de resumen -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-      <div class="bg-gradient-to-r from-blue-50 to-white rounded-xl border border-blue-100 p-4">
-        <div class="flex items-center justify-between">
+      <!-- Filtros - Control Panel Style -->
+      <div class="bg-white rounded-xl shadow-md border border-[#D1D5DB] p-5 mb-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <div>
-            <p class="text-xs text-gray-500">Total ventas</p>
-            <p class="text-2xl font-bold text-gray-900">{{ totalVentasMostradas }}</p>
+            <label class="block text-[10px] font-black text-[#334155] mb-2 uppercase tracking-widest">Búsqueda Técnica</label>
+            <div class="relative group">
+              <i class="ri-search-2-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#10B981]"></i>
+              <input
+                v-model="filtros.busqueda"
+                type="text"
+                placeholder="Cliente, repuesto o DNI..."
+                class="w-full pl-10 pr-4 py-2.5 bg-[#F8FAFC] border border-[#D1D5DB] rounded-lg focus:ring-2 focus:ring-[#10B981] focus:border-[#10B981] text-sm transition-all"
+              />
+            </div>
           </div>
-          <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-            <i class="ri-shopping-cart-line text-blue-600"></i>
-          </div>
-        </div>
-      </div>
-      <div class="bg-gradient-to-r from-green-50 to-white rounded-xl border border-green-100 p-4">
-        <div class="flex items-center justify-between">
+
           <div>
-            <p class="text-xs text-gray-500">Unidades vendidas</p>
-            <p class="text-2xl font-bold text-gray-900">{{ totalUnidadesMostradas }}</p>
-          </div>
-          <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-            <i class="ri-stack-line text-green-600"></i>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Loading -->
-    <div v-if="cargando" class="flex justify-center py-12">
-      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-    </div>
-
-    <!-- Empty state -->
-    <div v-else-if="ventasFiltradas.length === 0" class="bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center">
-      <i class="ri-shopping-cart-line text-5xl text-gray-300 mb-3 block"></i>
-      <h3 class="text-lg font-medium text-gray-700 mb-1">No hay ventas registradas</h3>
-      <p class="text-gray-500 text-sm mb-4">Registra tu primera venta de repuesto</p>
-      <NuxtLink
-        to="/ventas/nueva"
-        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition inline-flex items-center gap-2"
-      >
-        <i class="ri-add-line"></i>
-        Nueva Venta
-      </NuxtLink>
-    </div>
-
-    <!-- Tabla de ventas CON PAGINACIÓN (7 registros por página) -->
-    <div v-else class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-      <!-- Controles de paginación superior -->
-      <div class="px-4 sm:px-6 py-3 border-b border-gray-100 bg-gray-50/50 flex flex-col sm:flex-row justify-between items-center gap-3">
-        <div class="text-sm text-gray-500">
-          Mostrando <span class="font-medium">{{ inicioMostrando }}</span> - <span class="font-medium">{{ finMostrando }}</span> de <span class="font-medium">{{ ventasFiltradas.length }}</span> ventas
-        </div>
-        <div class="flex items-center gap-2">
-          <button 
-            @click="paginaAnterior" 
-            :disabled="paginaActual === 1"
-            class="p-2 rounded-lg border disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 transition"
-          >
-            <i class="ri-arrow-left-s-line"></i>
-          </button>
-          <div class="flex gap-1">
-            <button 
-              v-for="pagina in paginasMostradas" 
-              :key="pagina"
-              @click="irPagina(pagina)"
-              :class="[
-                'w-8 h-8 rounded-lg text-sm font-medium transition',
-                paginaActual === pagina 
-                  ? 'bg-blue-600 text-white' 
-                  : 'text-gray-700 hover:bg-gray-100'
-              ]"
+            <label class="block text-[10px] font-black text-[#334155] mb-2 uppercase tracking-widest">Período</label>
+            <select 
+              v-model="filtros.periodo" 
+              @change="aplicarPeriodo"
+              class="w-full px-3 py-2.5 bg-[#F8FAFC] border border-[#D1D5DB] rounded-lg focus:ring-2 focus:ring-[#10B981] text-sm font-medium"
             >
-              {{ pagina }}
+              <option value="">TODOS</option>
+              <option value="hoy">📅 HOY</option>
+              <option value="ultima_semana">📆 ÚLTIMA SEMANA</option>
+              <option value="ultimo_mes">📆 ÚLTIMO MES</option>
+              <option value="ultimo_ano">📆 ÚLTIMO AÑO</option>
+            </select>
+          </div>
+
+          <div class="flex items-end">
+            <button 
+              @click="limpiarFiltros" 
+              class="w-full sm:w-auto px-6 py-2.5 text-[#334155] font-bold bg-white border border-[#D1D5DB] rounded-lg hover:bg-gray-50 transition-all text-xs flex items-center justify-center gap-2"
+            >
+              <i class="ri-refresh-line"></i>
+              RESET FILTROS
             </button>
           </div>
-          <button 
-            @click="paginaSiguiente" 
-            :disabled="paginaActual === totalPaginas"
-            class="p-2 rounded-lg border disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 transition"
-          >
-            <i class="ri-arrow-right-s-line"></i>
-          </button>
         </div>
       </div>
 
-      <div class="overflow-x-auto">
-        <table class="min-w-[900px] w-full">
-          <thead class="bg-gray-50 border-b border-gray-200">
-            <tr>
-              <th class="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Fecha</th>
-              <th class="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Cliente</th>
-              <th class="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Repuesto</th>
-              <th class="px-4 sm:px-6 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Cant.</th>
-              <th class="px-4 sm:px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Montaje</th>
-              <th class="px-4 sm:px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Total</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-gray-100">
-            <tr v-for="venta in ventasPaginadas" :key="venta.id" class="hover:bg-gray-50 transition-colors">
-              <td class="px-4 sm:px-6 py-3 text-sm text-gray-500">{{ formatearFecha(venta.created_at) }}</td>
-              <td class="px-4 sm:px-6 py-3">
-                <div class="font-medium text-gray-900">{{ venta.clientes?.nombre_completo }}</div>
-                <div class="text-xs text-gray-500">{{ venta.clientes?.dni_cedula }}</div>
-              </td>
-              <td class="px-4 sm:px-6 py-3">
-                <span class="text-sm text-gray-800">{{ venta.stock_repuestos?.nombre_repuesto }}</span>
-              </td>
-              <td class="px-4 sm:px-6 py-3 text-center">
-                <span class="inline-flex items-center justify-center px-2 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded-full">
-                  {{ venta.cantidad }} uds
-                </span>
-              </td>
-              <td class="px-4 sm:px-6 py-3 text-right">
-                <div v-if="venta.incluye_montaje" class="space-y-1">
-                  <span class="inline-flex items-center gap-1 text-xs text-blue-600">
-                    <i class="ri-tools-line"></i> Incluido
-                  </span>
-                  <div class="text-xs text-gray-500">
-                    +${{ formatearTotal((venta.stock_repuestos?.precio_montaje || 0) * venta.cantidad) }}
+      <!-- Indicadores de Placa Base (Stats) -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+        <div class="bg-white p-4 rounded-xl border border-[#D1D5DB] shadow-sm relative overflow-hidden group">
+          <div class="flex items-center justify-between relative z-10">
+            <div>
+              <p class="text-[10px] font-black text-gray-400 uppercase tracking-tighter">TOTAL VENTAS</p>
+              <p class="text-3xl font-black text-[#334155]">{{ totalVentasMostradas }}</p>
+            </div>
+            <div class="w-12 h-12 rounded-lg flex items-center justify-center bg-green-50 border border-green-100">
+              <i class="ri-shopping-cart-line text-2xl text-[#10B981]"></i>
+            </div>
+          </div>
+          <div class="absolute bottom-0 left-0 h-1 w-full bg-green-500 opacity-20"></div>
+        </div>
+
+        <div class="bg-white p-4 rounded-xl border border-[#D1D5DB] shadow-sm relative overflow-hidden group">
+          <div class="flex items-center justify-between relative z-10">
+            <div>
+              <p class="text-[10px] font-black text-gray-400 uppercase tracking-tighter">UNIDADES VENDIDAS</p>
+              <p class="text-3xl font-black text-[#334155]">{{ totalUnidadesMostradas }}</p>
+            </div>
+            <div class="w-12 h-12 rounded-lg flex items-center justify-center bg-blue-50 border border-blue-100">
+              <i class="ri-stack-line text-2xl text-blue-500"></i>
+            </div>
+          </div>
+          <div class="absolute bottom-0 left-0 h-1 w-full bg-blue-500 opacity-20"></div>
+        </div>
+
+        <div class="bg-white p-4 rounded-xl border border-[#D1D5DB] shadow-sm relative overflow-hidden group">
+          <div class="flex items-center justify-between relative z-10">
+            <div>
+              <p class="text-[10px] font-black text-gray-400 uppercase tracking-tighter">INGRESOS TOTALES</p>
+              <p class="text-3xl font-black text-[#F59E0B]">${{ totalIngresosMostrados }}</p>
+            </div>
+            <div class="w-12 h-12 rounded-lg flex items-center justify-center bg-amber-50 border border-amber-100">
+              <i class="ri-money-dollar-circle-line text-2xl text-amber-500"></i>
+            </div>
+          </div>
+          <div class="absolute bottom-0 left-0 h-1 w-full bg-amber-500 opacity-20"></div>
+        </div>
+      </div>
+
+      <!-- Tabla Principal: Estética PCB -->
+      <div class="bg-white rounded-xl shadow-lg border border-[#D1D5DB] overflow-hidden">
+        <!-- Pagination Bar Superior -->
+        <div class="px-6 py-4 bg-[#F8FAFC] border-b border-[#D1D5DB] flex flex-col md:flex-row justify-between items-center gap-4">
+          <span class="text-xs font-mono text-gray-500">
+            DATA_STREAM: <span class="text-[#065F46] font-bold">{{ inicioMostrando }}-{{ finMostrando }}</span> / TOTAL: {{ ventasFiltradas.length }}
+          </span>
+          <div class="flex items-center gap-2">
+            <button @click="paginaAnterior" :disabled="paginaActual === 1" class="pagination-btn"><i class="ri-arrow-left-s-line"></i></button>
+            <div class="flex gap-1">
+              <button v-for="p in paginasMostradas" :key="p" @click="irPagina(p)" :class="['page-num', paginaActual === p ? 'active' : '']">{{ p }}</button>
+            </div>
+            <button @click="paginaSiguiente" :disabled="paginaActual === totalPaginas" class="pagination-btn"><i class="ri-arrow-right-s-line"></i></button>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-[#065F46]">
+                <th class="th-tech">FECHA</th>
+                <th class="th-tech">CLIENTE</th>
+                <th class="th-tech">REPUESTO</th>
+                <th class="th-tech text-center">CANT.</th>
+                <th class="th-tech text-right">MONTAJE</th>
+                <th class="th-tech text-right">TOTAL</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[#D1D5DB]">
+              <tr v-if="cargando">
+                <td colspan="6" class="py-20 text-center">
+                  <div class="flex flex-col items-center gap-3">
+                    <div class="w-12 h-12 border-4 border-[#10B981] border-t-transparent rounded-full animate-spin"></div>
+                    <span class="text-xs font-mono text-gray-400 uppercase">Loading_Database...</span>
                   </div>
-                </div>
-                <span v-else class="text-xs text-gray-400">Sin montaje</span>
-              </td>
-              <td class="px-4 sm:px-6 py-3 text-right">
-                <span class="text-base font-bold text-green-600">${{ formatearTotal(venta.total) }}</span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- Paginación inferior -->
-      <div class="px-4 sm:px-6 py-3 border-t border-gray-100 bg-gray-50/50 flex flex-col sm:flex-row justify-between items-center gap-3">
-        <div class="text-sm text-gray-500">
-          Página {{ paginaActual }} de {{ totalPaginas }}
-        </div>
-        <div class="flex items-center gap-2">
-          <button 
-            @click="paginaAnterior" 
-            :disabled="paginaActual === 1"
-            class="px-3 py-1.5 rounded-lg border disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 transition text-sm"
-          >
-            Anterior
-          </button>
-          <button 
-            @click="paginaSiguiente" 
-            :disabled="paginaActual === totalPaginas"
-            class="px-3 py-1.5 rounded-lg border disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 transition text-sm"
-          >
-            Siguiente
-          </button>
+                </td>
+              </tr>
+              <tr v-else-if="ventasPaginadas.length === 0">
+                <td colspan="6" class="py-20 text-center">
+                  <i class="ri-shopping-cart-line text-5xl text-gray-200 mb-4 block"></i>
+                  <p class="text-gray-400 font-medium">No se encontraron registros en este sector.</p>
+                </td>
+              </tr>
+              <tr v-for="venta in ventasPaginadas" :key="venta.id" class="hover:bg-[#F0FDF4]/50 transition-colors group">
+                <td class="px-6 py-4 font-mono text-[11px] text-gray-500">
+                  {{ formatearFecha(venta.created_at) }}
+                </td>
+                <td class="px-6 py-4">
+                  <div class="font-bold text-[#334155]">{{ venta.clientes?.nombre_completo || 'Cliente General' }}</div>
+                  <div class="text-[10px] font-mono text-gray-500">{{ venta.clientes?.dni_cedula || 'DNI_NULL' }}</div>
+                </td>
+                <td class="px-6 py-4">
+                  <span class="text-sm font-bold text-[#065F46]">{{ venta.stock_repuestos?.nombre_repuesto || 'N/A' }}</span>
+                </td>
+                <td class="px-6 py-4 text-center">
+                  <span class="inline-flex items-center justify-center px-2 py-1 text-[10px] font-black rounded-full bg-gray-100 text-[#065F46]">
+                    {{ venta.cantidad }} uds
+                  </span>
+                </td>
+                <td class="px-6 py-4 text-right">
+                  <div v-if="venta.incluye_montaje" class="space-y-1">
+                    <span class="inline-flex items-center gap-1 text-[11px] font-bold text-[#10B981]">
+                      <i class="ri-tools-line"></i> INCLUIDO
+                    </span>
+                    <div class="text-[10px] text-gray-500">
+                      +${{ formatearTotal((venta.stock_repuestos?.precio_montaje || 0) * venta.cantidad) }}
+                    </div>
+                  </div>
+                  <span v-else class="text-[10px] text-gray-400 uppercase">SIN MONTAJE</span>
+                </td>
+                <td class="px-6 py-4 text-right">
+                  <span class="text-base font-black text-[#10B981]">${{ formatearTotal(venta.total) }}</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
 
-    <!-- Toast -->
-    <div v-if="toast.visible" class="fixed bottom-4 right-4 z-50 animate-slide-up">
+    <!-- Toast Notificación -->
+    <div v-if="toast.visible" class="fixed bottom-6 right-6 z-50 animate-slide-up">
       <div :class="[
-        'px-4 py-3 rounded-lg shadow-lg flex items-center gap-3 min-w-[280px]',
-        toast.tipo === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
+        'px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3 min-w-[300px] border-l-4',
+        toast.tipo === 'success' ? 'bg-[#065F46] border-[#10B981] text-white' : 'bg-red-900 border-red-500 text-white'
       ]">
-        <i :class="toast.tipo === 'success' ? 'ri-checkbox-circle-fill' : 'ri-alert-fill'"></i>
-        <span class="text-sm">{{ toast.mensaje }}</span>
-        <button @click="toast.visible = false" class="hover:opacity-70">×</button>
+        <i :class="toast.tipo === 'success' ? 'ri-shield-check-fill text-[#10B981]' : 'ri-error-warning-fill text-white'" class="text-2xl"></i>
+        <div class="flex-1">
+          <p class="text-[9px] uppercase font-bold opacity-60">System_Msg</p>
+          <p class="text-xs font-medium">{{ toast.mensaje }}</p>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, reactive, computed, onMounted, watch } from 'vue'
 
 definePageMeta({
   layout: 'dashboard'
 })
 
+// Acceso al composable de ventas
 const { ventas, cargando, obtenerVentas } = useVentas()
 
 const toast = ref({ visible: false, mensaje: '', tipo: 'success' })
+
+const mostrarNotificacion = (mensaje, tipo = 'success') => {
+  toast.value = { visible: true, mensaje, tipo }
+  setTimeout(() => toast.value.visible = false, 3000)
+}
 
 // Filtros
 const filtros = reactive({
@@ -245,12 +229,12 @@ const filtros = reactive({
 })
 
 // ========== PAGINACIÓN ==========
-const ITEMS_POR_PAGINA = 7  // Cambiado de 10 a 7
+const ITEMS_POR_PAGINA = 7
 const paginaActual = ref(1)
 
-// Ventas filtradas (sin paginación)
+// Ventas filtradas (sin paginación aplicada aún)
 const ventasFiltradas = computed(() => {
-  let resultado = ventas.value
+  let resultado = [...ventas.value]
 
   if (filtros.busqueda) {
     const termino = filtros.busqueda.toLowerCase()
@@ -274,12 +258,12 @@ const ventasFiltradas = computed(() => {
   return resultado
 })
 
-// Total de páginas
+// Total de páginas basado en los filtros
 const totalPaginas = computed(() => {
-  return Math.ceil(ventasFiltradas.value.length / ITEMS_POR_PAGINA)
+  return Math.max(1, Math.ceil(ventasFiltradas.value.length / ITEMS_POR_PAGINA))
 })
 
-// Ventas paginadas
+// Ventas que se ven en la tabla actual
 const ventasPaginadas = computed(() => {
   const inicio = (paginaActual.value - 1) * ITEMS_POR_PAGINA
   const fin = inicio + ITEMS_POR_PAGINA
@@ -297,7 +281,7 @@ const finMostrando = computed(() => {
   return Math.min(fin, ventasFiltradas.value.length)
 })
 
-// Números de página a mostrar (máximo 5)
+// Array de números de página
 const paginasMostradas = computed(() => {
   const total = totalPaginas.value
   const actual = paginaActual.value
@@ -317,24 +301,20 @@ const paginasMostradas = computed(() => {
   return Array.from({ length: fin - inicio + 1 }, (_, i) => inicio + i)
 })
 
-// Navegación de páginas
+// Navegación
 const paginaAnterior = () => {
-  if (paginaActual.value > 1) {
-    paginaActual.value--
-  }
+  if (paginaActual.value > 1) paginaActual.value--
 }
 
 const paginaSiguiente = () => {
-  if (paginaActual.value < totalPaginas.value) {
-    paginaActual.value++
-  }
+  if (paginaActual.value < totalPaginas.value) paginaActual.value++
 }
 
 const irPagina = (pagina) => {
   paginaActual.value = pagina
 }
 
-// Reiniciar paginación al cambiar filtros
+// Reiniciar página si cambian los filtros
 watch([() => filtros.busqueda, () => filtros.fecha_inicio, () => filtros.fecha_fin], () => {
   paginaActual.value = 1
 })
@@ -356,9 +336,9 @@ const totalIngresosMostrados = computed(() => {
   })
 })
 
-// ========== FUNCIONES ==========
+// ========== UTILIDADES ==========
 const formatearFecha = (fecha) => {
-  if (!fecha) return '-'
+  if (!fecha) return '--/--/----'
   return new Date(fecha).toLocaleDateString('es-ES', {
     day: '2-digit',
     month: '2-digit',
@@ -367,7 +347,7 @@ const formatearFecha = (fecha) => {
 }
 
 const formatearTotal = (total) => {
-  return Number(total).toLocaleString('es-ES', {
+  return Number(total || 0).toLocaleString('es-ES', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2
   })
@@ -380,9 +360,7 @@ const aplicarPeriodo = () => {
   switch (filtros.periodo) {
     case 'hoy':
       filtros.fecha_inicio = hoy.toISOString().split('T')[0]
-      const finHoy = new Date(hoy)
-      finHoy.setHours(23, 59, 59)
-      filtros.fecha_fin = finHoy.toISOString().split('T')[0]
+      filtros.fecha_fin = hoy.toISOString().split('T')[0]
       break
     case 'ultima_semana':
       const inicioSemana = new Date(hoy)
@@ -413,21 +391,42 @@ const limpiarFiltros = () => {
   filtros.periodo = ''
   filtros.fecha_inicio = ''
   filtros.fecha_fin = ''
+  mostrarNotificacion('Filtros reiniciados', 'success')
 }
 
-onMounted(() => {
-  obtenerVentas()
+onMounted(async () => {
+  await obtenerVentas()
 })
 </script>
 
 <style scoped>
-.animate-spin {
-  animation: spin 1s linear infinite;
+.th-tech {
+  @apply px-6 py-4 text-[10px] font-black text-white uppercase tracking-widest border-x border-white/5;
+}
+
+.pagination-btn {
+  @apply p-2 rounded-lg border border-[#D1D5DB] bg-white hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-[#334155];
+}
+
+.page-num {
+  @apply w-8 h-8 rounded-lg text-xs font-mono font-bold transition-all border border-transparent;
+}
+
+.page-num.active {
+  @apply bg-[#065F46] text-white shadow-md;
+}
+
+.page-num:not(.active) {
+  @apply text-[#334155] hover:bg-[#F0FDF4] hover:text-[#065F46];
 }
 
 @keyframes spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
 }
 
 @keyframes slideUp {
@@ -436,6 +435,15 @@ onMounted(() => {
 }
 
 .animate-slide-up {
-  animation: slideUp 0.3s ease-out;
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
 }
 </style>

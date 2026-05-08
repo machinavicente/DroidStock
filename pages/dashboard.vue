@@ -1,7 +1,7 @@
 <template>
   <div class="space-y-6 sm:space-y-8">
-    <!-- Bienvenida con fecha y hora -->
-    <div class="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl shadow-lg p-5 sm:p-6 text-white">
+    <!-- Header - Bienvenida Estilo Industrial -->
+    <div class="bg-gradient-to-r from-[#065F46] to-[#10B981] rounded-2xl shadow-lg p-5 sm:p-6 text-white" style="background: linear-gradient(135deg, #065F46, #10B981)">
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <div class="flex items-center gap-3">
@@ -9,217 +9,241 @@
               <i class="ri-tools-line text-2xl text-white"></i>
             </div>
             <div>
-              <h2 class="text-xl sm:text-2xl font-bold">¡Bienvenido, {{ usuarioNombre }}! 👋</h2>
-              <p class="text-blue-100 text-sm mt-0.5">Aquí está el resumen de tu taller</p>
+              <div class="flex items-center gap-2 mb-1">
+                <span class="h-1.5 w-1.5 bg-white rounded-full animate-pulse"></span>
+                <span class="text-[9px] font-mono text-white/70 uppercase tracking-widest">Session_Active</span>
+              </div>
+              <h2 class="text-xl sm:text-2xl font-black uppercase tracking-tighter">¡Bienvenido, {{ usuarioNombre }}!</h2>
+              <p class="text-white/80 text-sm mt-0.5">Panel de control técnico del taller</p>
             </div>
           </div>
         </div>
         <div class="flex flex-col items-end">
-          <div class="flex items-center gap-2 text-blue-100">
-            <i class="ri-calendar-line"></i>
-            <span class="text-sm">{{ fechaActual }}</span>
+          <div class="flex items-center gap-2 text-white/80">
+            <i class="ri-calendar-line text-sm"></i>
+            <span class="text-xs font-mono uppercase">{{ fechaActual }}</span>
           </div>
-          <div class="flex items-center gap-2 text-blue-100 mt-1">
-            <i class="ri-time-line"></i>
-            <span class="text-sm">{{ horaActual }}</span>
+          <div class="flex items-center gap-2 text-white/80 mt-1">
+            <i class="ri-time-line text-sm"></i>
+            <span class="text-xs font-mono">{{ horaActual }}</span>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Botones de acción rápida -->
+    <!-- Botones de acción rápida - Estilo Técnico -->
     <div class="flex flex-wrap gap-3">
-      <NuxtLink to="/reparaciones/nueva" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center gap-2 text-sm shadow-sm">
-        <i class="ri-add-line"></i>
-        Nueva Reparación
+      <NuxtLink to="/reparaciones/nueva" class="px-4 py-2.5 bg-[#065F46] text-white font-bold rounded-xl hover:bg-[#054a37] transition-all flex items-center gap-2 text-xs sm:text-sm border-b-4 border-[#033a2b] active:border-b-0 active:translate-y-1 shadow-md">
+        <i class="ri-add-line text-sm sm:text-base"></i>
+        NUEVA REPARACIÓN
       </NuxtLink>
-      <NuxtLink to="/ventas/nueva" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition flex items-center gap-2 text-sm shadow-sm">
-        <i class="ri-shopping-cart-line"></i>
-        Nueva Venta
+      <NuxtLink to="/ventas/nueva" class="px-4 py-2.5 bg-[#10B981] text-white font-bold rounded-xl hover:bg-[#059669] transition-all flex items-center gap-2 text-xs sm:text-sm border-b-4 border-[#047857] active:border-b-0 active:translate-y-1 shadow-md">
+        <i class="ri-shopping-cart-line text-sm sm:text-base"></i>
+        NUEVA VENTA
       </NuxtLink>
-      <NuxtLink to="/repuestos/nuevo" class="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition flex items-center gap-2 text-sm shadow-sm">
-        <i class="ri-stack-line"></i>
-        Agregar Repuesto
+      <NuxtLink to="/repuestos/nuevo" class="px-4 py-2.5 bg-[#F59E0B] text-white font-bold rounded-xl hover:bg-[#D97706] transition-all flex items-center gap-2 text-xs sm:text-sm border-b-4 border-[#B45309] active:border-b-0 active:translate-y-1 shadow-md">
+        <i class="ri-stack-line text-sm sm:text-base"></i>
+        AGREGAR REPUESTO
       </NuxtLink>
-      <button @click="refrescarDashboard" :disabled="refrescando" class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition flex items-center gap-2 text-sm shadow-sm">
-        <i :class="refrescando ? 'ri-loader-4-line animate-spin' : 'ri-refresh-line'"></i>
-        {{ refrescando ? 'Actualizando...' : 'Actualizar' }}
+      <button @click="refrescarDashboard" :disabled="refrescando" class="px-4 py-2.5 bg-[#334155] text-white font-bold rounded-xl hover:bg-[#1E293B] transition-all flex items-center gap-2 text-xs sm:text-sm border-b-4 border-[#1E293B] active:border-b-0 active:translate-y-1 shadow-md disabled:opacity-50">
+        <i :class="refrescando ? 'ri-loader-4-line animate-spin' : 'ri-refresh-line'" class="text-sm sm:text-base"></i>
+        {{ refrescando ? 'ACTUALIZANDO...' : 'ACTUALIZAR' }}
       </button>
     </div>
 
-    <!-- Tarjetas de estadísticas (colores originales) -->
+    <!-- Tarjetas de estadísticas - Estilo PCB -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-      <div class="bg-gradient-to-r from-blue-50 to-white rounded-xl shadow-sm p-6 border border-blue-100 cursor-pointer hover:shadow-md transition" @click="irAReparaciones()">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-sm text-gray-500">Reparaciones activas</p>
-            <p class="text-2xl font-bold text-gray-900">{{ estadisticas.reparacionesActivas }}</p>
-            <p class="text-xs text-green-600 mt-2">
-              <i class="ri-arrow-up-line"></i> +{{ estadisticas.nuevasHoy || 0 }} hoy
-            </p>
-          </div>
-          <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-            <i class="ri-tools-line text-xl text-blue-600"></i>
+      <!-- Reparaciones Activas -->
+      <div class="bg-white rounded-xl border border-[#D1D5DB] shadow-sm hover:shadow-md transition-all cursor-pointer overflow-hidden group" @click="irAReparaciones()">
+        <div class="p-5">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-[10px] font-black text-gray-400 uppercase tracking-wider">REPARACIONES ACTIVAS</p>
+              <p class="text-3xl font-black text-[#065F46]">{{ estadisticas.reparacionesActivas }}</p>
+              <p class="text-[10px] font-mono text-[#10B981] mt-2">
+                <i class="ri-arrow-up-line"></i> +{{ estadisticas.nuevasHoy || 0 }} hoy
+              </p>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center border border-blue-100">
+              <i class="ri-tools-line text-xl text-[#065F46]"></i>
+            </div>
           </div>
         </div>
+        <div class="h-1 bg-[#065F46] w-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
       </div>
 
-      <div class="bg-gradient-to-r from-green-50 to-white rounded-xl shadow-sm p-6 border border-green-100 cursor-pointer hover:shadow-md transition" @click="irARepuestos()">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-sm text-gray-500">Repuestos en stock</p>
-            <p class="text-2xl font-bold text-gray-900">{{ estadisticas.totalRepuestos }}</p>
-            <p class="text-xs text-gray-500 mt-2">{{ estadisticas.repuestosNuevosMes || 0 }} nuevos este mes</p>
-          </div>
-          <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-            <i class="ri-stack-line text-xl text-green-600"></i>
+      <!-- Repuestos en Stock -->
+      <div class="bg-white rounded-xl border border-[#D1D5DB] shadow-sm hover:shadow-md transition-all cursor-pointer overflow-hidden group" @click="irARepuestos()">
+        <div class="p-5">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-[10px] font-black text-gray-400 uppercase tracking-wider">REPUESTOS EN STOCK</p>
+              <p class="text-3xl font-black text-[#065F46]">{{ estadisticas.totalRepuestos }}</p>
+               <p class="text-[10px] font-mono text-gray-500 mt-2">Tipos diferentes</p>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-green-50 flex items-center justify-center border border-green-100">
+              <i class="ri-stack-line text-xl text-[#10B981]"></i>
+            </div>
           </div>
         </div>
+        <div class="h-1 bg-[#10B981] w-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
       </div>
 
-      <div class="bg-gradient-to-r from-purple-50 to-white rounded-xl shadow-sm p-6 border border-purple-100 cursor-pointer hover:shadow-md transition" @click="irATecnicos()">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-sm text-gray-500">Técnicos en taller</p>
-            <p class="text-2xl font-bold text-gray-900">{{ estadisticas.totalTecnicos }}</p>
-            <p class="text-xs text-gray-500 mt-2">Activos hoy</p>
-          </div>
-          <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
-            <i class="ri-user-settings-line text-xl text-purple-600"></i>
+      <!-- Técnicos en Taller -->
+      <div class="bg-white rounded-xl border border-[#D1D5DB] shadow-sm hover:shadow-md transition-all cursor-pointer overflow-hidden group" @click="irATecnicos()">
+        <div class="p-5">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-[10px] font-black text-gray-400 uppercase tracking-wider">TÉCNICOS ACTIVOS</p>
+              <p class="text-3xl font-black text-[#065F46]">{{ estadisticas.totalTecnicos }}</p>
+              <p class="text-[10px] font-mono text-gray-500 mt-2">Activos hoy</p>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-purple-50 flex items-center justify-center border border-purple-100">
+              <i class="ri-user-settings-line text-xl text-purple-600"></i>
+            </div>
           </div>
         </div>
+        <div class="h-1 bg-purple-500 w-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
       </div>
 
-      <div class="bg-gradient-to-r from-red-50 to-white rounded-xl shadow-sm p-6 border border-red-100 cursor-pointer hover:shadow-md transition" @click="irADefectuosos()">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-sm text-gray-500">Repuestos defectuosos</p>
-            <p class="text-2xl font-bold text-gray-900">{{ totalUnidadesDefectuosas }}</p>
-            <p class="text-xs text-red-600 mt-2">
-              <i class="ri-alert-line"></i> {{ tiposDefectuosos.length }} tipos diferentes
-            </p>
-          </div>
-          <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
-            <i class="ri-error-warning-line text-xl text-red-600"></i>
+      <!-- Repuestos Defectuosos -->
+      <div class="bg-white rounded-xl border border-[#D1D5DB] shadow-sm hover:shadow-md transition-all cursor-pointer overflow-hidden group" @click="irADefectuosos()">
+        <div class="p-5">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-[10px] font-black text-gray-400 uppercase tracking-wider">REPUESTOS DEFECTUOSOS</p>
+              <p class="text-3xl font-black text-[#DC2626]">{{ totalUnidadesDefectuosas }}</p>
+              <p class="text-[10px] font-mono text-red-600 mt-2">{{ tiposDefectuosos.length }} tipos diferentes</p>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-red-50 flex items-center justify-center border border-red-100">
+              <i class="ri-error-warning-line text-xl text-[#DC2626]"></i>
+            </div>
           </div>
         </div>
+        <div class="h-1 bg-[#DC2626] w-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
       </div>
     </div>
 
-    <!-- Tarjeta de repuestos defectuosos por tipo -->
-    <div class="bg-gradient-to-r from-red-50 to-orange-50 rounded-xl shadow-sm border border-red-100 p-5">
-      <div class="flex items-center justify-between mb-4">
+    <!-- Tarjeta de repuestos defectuosos por tipo - Estilo Técnico -->
+    <div class="bg-white rounded-xl border border-[#D1D5DB] shadow-sm overflow-hidden">
+      <div class="px-5 py-3 bg-[#F8FAFC] border-b border-[#D1D5DB] flex justify-between items-center">
         <div class="flex items-center gap-2">
-          <div class="w-8 h-8 bg-red-500 rounded-lg flex items-center justify-center">
-            <i class="ri-error-warning-line text-white text-sm"></i>
+          <div class="w-7 h-7 bg-[#DC2626] rounded-lg flex items-center justify-center">
+            <i class="ri-error-warning-line text-white text-xs"></i>
           </div>
-          <h3 class="font-semibold text-gray-900">Repuestos Defectuosos por Tipo</h3>
+          <h3 class="text-[10px] font-black text-[#065F46] uppercase tracking-widest">Análisis de Mermas por Tipo</h3>
         </div>
-        <NuxtLink to="/reportes/defectuosos" class="text-xs text-red-600 hover:text-red-700 font-medium">
-          Ver detalle →
+        <NuxtLink to="/reportes/defectuosos" class="text-[10px] font-mono text-[#DC2626] hover:text-red-700 transition-all uppercase tracking-wider">
+          VER_DETALLE →
         </NuxtLink>
       </div>
       
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-        <div v-for="tipo in tiposDefectuosos" :key="tipo.motivo" 
-             class="bg-white rounded-lg p-3 shadow-sm border border-gray-100">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-2">
-              <div class="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center">
-                <i class="ri-alert-line text-red-600 text-sm"></i>
+      <div class="p-5">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div v-for="tipo in tiposDefectuosos.slice(0, 6)" :key="tipo.motivo" 
+               class="bg-[#F8FAFC] rounded-lg p-3 border border-[#D1D5DB] hover:border-[#DC2626] transition-all">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <div class="w-7 h-7 bg-red-100 rounded-lg flex items-center justify-center">
+                  <i class="ri-alert-line text-red-600 text-xs"></i>
+                </div>
+                <div>
+                  <p class="text-xs font-black text-[#065F46] uppercase tracking-tighter">{{ tipo.motivo }}</p>
+                  <p class="text-[10px] font-mono text-gray-500">{{ tipo.cantidad }} unidades</p>
+                </div>
               </div>
-              <div>
-                <p class="text-sm font-medium text-gray-900">{{ tipo.motivo }}</p>
-                <p class="text-xs text-gray-500">{{ tipo.cantidad }} unidades</p>
-              </div>
+              <span class="text-xs font-black text-[#DC2626]">{{ tipo.porcentaje }}%</span>
             </div>
-            <span class="text-xs font-bold text-red-600">{{ tipo.porcentaje }}%</span>
-          </div>
-          <div class="mt-2 h-1.5 bg-gray-100 rounded-full overflow-hidden">
-            <div class="h-full bg-red-500 rounded-full" :style="{ width: tipo.porcentaje + '%' }"></div>
+            <div class="mt-2 h-1.5 bg-gray-200 rounded-full overflow-hidden">
+              <div class="h-full bg-gradient-to-r from-red-500 to-red-600 rounded-full" :style="{ width: tipo.porcentaje + '%' }"></div>
+            </div>
           </div>
         </div>
-      </div>
-      
-      <div class="mt-3 text-center text-xs text-gray-500">
-        Total de repuestos defectuosos registrados: {{ totalUnidadesDefectuosas }} unidades
-      </div>
-    </div>
-
-    <!-- Resumen de hoy (calculado usando la fecha del estado actual) -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
-      <div class="flex items-center gap-2 mb-4">
-        <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
-          <i class="ri-calendar-check-line text-white text-sm"></i>
-        </div>
-        <h3 class="font-semibold text-gray-900">Movimiento del Día</h3>
-        <span class="text-xs text-gray-400">(según fecha de cambio de estado)</span>
-      </div>
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div class="text-center p-3 bg-blue-50 rounded-lg">
-          <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-1">
-            <i class="ri-inbox-line text-blue-600 text-sm"></i>
-          </div>
-          <p class="text-xs text-gray-500">Recibidas</p>
-          <p class="text-lg font-bold text-gray-900">{{ resumenHoy.recibidas }}</p>
-        </div>
-        <div class="text-center p-3 bg-yellow-50 rounded-lg">
-          <div class="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-1">
-            <i class="ri-time-line text-yellow-600 text-sm"></i>
-          </div>
-          <p class="text-xs text-gray-500">En Proceso</p>
-          <p class="text-lg font-bold text-gray-900">{{ resumenHoy.enProceso }}</p>
-        </div>
-        <div class="text-center p-3 bg-green-50 rounded-lg">
-          <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-1">
-            <i class="ri-checkbox-circle-line text-green-600 text-sm"></i>
-          </div>
-          <p class="text-xs text-gray-500">Finalizadas</p>
-          <p class="text-lg font-bold text-gray-900">{{ resumenHoy.finalizadas }}</p>
-        </div>
-        <div class="text-center p-3 bg-gray-50 rounded-lg">
-          <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-1">
-            <i class="ri-hand-heart-line text-gray-600 text-sm"></i>
-          </div>
-          <p class="text-xs text-gray-500">Entregadas</p>
-          <p class="text-lg font-bold text-gray-900">{{ resumenHoy.entregadas }}</p>
+        
+        <div class="mt-4 pt-3 border-t border-[#D1D5DB] text-center">
+          <p class="text-[9px] font-mono text-gray-400 uppercase tracking-wider">
+            Total unidades defectuosas: {{ totalUnidadesDefectuosas }} uds
+          </p>
         </div>
       </div>
     </div>
 
-    <!-- Sección de reparaciones por estado (con fecha CORRECTA según estado) -->
+    <!-- Resumen de hoy - Panel de Movimiento -->
+    <div class="bg-white rounded-xl border border-[#D1D5DB] shadow-sm overflow-hidden">
+      <div class="px-5 py-3 bg-[#F8FAFC] border-b border-[#D1D5DB] flex items-center gap-2">
+        <div class="w-7 h-7 bg-[#10B981] rounded-lg flex items-center justify-center">
+          <i class="ri-calendar-check-line text-white text-xs"></i>
+        </div>
+        <h3 class="text-[10px] font-black text-[#065F46] uppercase tracking-widest">Movimiento del Día</h3>
+        <span class="text-[8px] font-mono text-gray-400">(fecha de cambio de estado)</span>
+      </div>
+      <div class="p-5">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div class="text-center p-3 bg-[#ECFDF5] rounded-xl border border-[#D1FAE5]">
+            <div class="w-9 h-9 bg-[#D1FAE5] rounded-lg flex items-center justify-center mx-auto mb-1">
+              <i class="ri-inbox-line text-[#065F46] text-sm"></i>
+            </div>
+            <p class="text-[9px] font-mono text-gray-500 uppercase tracking-wider">RECIBIDAS</p>
+            <p class="text-xl font-black text-[#065F46]">{{ resumenHoy.recibidas }}</p>
+          </div>
+          <div class="text-center p-3 bg-amber-50 rounded-xl border border-amber-100">
+            <div class="w-9 h-9 bg-amber-100 rounded-lg flex items-center justify-center mx-auto mb-1">
+              <i class="ri-time-line text-amber-600 text-sm"></i>
+            </div>
+            <p class="text-[9px] font-mono text-gray-500 uppercase tracking-wider">EN PROCESO</p>
+            <p class="text-xl font-black text-[#D97706]">{{ resumenHoy.enProceso }}</p>
+          </div>
+          <div class="text-center p-3 bg-green-50 rounded-xl border border-green-100">
+            <div class="w-9 h-9 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-1">
+              <i class="ri-checkbox-circle-line text-green-600 text-sm"></i>
+            </div>
+            <p class="text-[9px] font-mono text-gray-500 uppercase tracking-wider">FINALIZADAS</p>
+            <p class="text-xl font-black text-[#10B981]">{{ resumenHoy.finalizadas }}</p>
+          </div>
+          <div class="text-center p-3 bg-gray-50 rounded-xl border border-gray-200">
+            <div class="w-9 h-9 bg-gray-200 rounded-lg flex items-center justify-center mx-auto mb-1">
+              <i class="ri-hand-heart-line text-gray-600 text-sm"></i>
+            </div>
+            <p class="text-[9px] font-mono text-gray-500 uppercase tracking-wider">ENTREGADAS</p>
+            <p class="text-xl font-black text-gray-600">{{ resumenHoy.entregadas }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección de reparaciones por estado -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <!-- Reparaciones Recibidas -->
-      <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        <div class="px-6 py-4 border-b border-gray-100 bg-blue-50/30">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-2">
-              <i class="ri-inbox-line text-blue-600 text-xl"></i>
-              <h3 class="text-lg font-semibold text-gray-900">Recibidas</h3>
-              <span class="px-2 py-0.5 text-xs bg-blue-100 text-blue-700 rounded-full">{{ reparacionesRecibidas.length }}</span>
-            </div>
-            <NuxtLink to="/reparaciones?estado=Recibido" class="text-xs text-blue-600 hover:text-blue-700">
-              Ver todas
-            </NuxtLink>
+      <div class="bg-white rounded-xl border border-[#D1D5DB] overflow-hidden">
+        <div class="px-5 py-3 bg-[#ECFDF5] border-b border-[#D1D5DB] flex justify-between items-center">
+          <div class="flex items-center gap-2">
+            <i class="ri-inbox-line text-[#065F46] text-lg"></i>
+            <h3 class="text-[10px] font-black text-[#065F46] uppercase tracking-widest">RECIBIDAS</h3>
+            <span class="px-2 py-0.5 text-[9px] font-black bg-[#D1FAE5] text-[#065F46] rounded-full">{{ reparacionesRecibidas.length }}</span>
           </div>
+          <NuxtLink to="/reparaciones?estado=Recibido" class="text-[9px] font-mono text-[#10B981] hover:text-[#065F46] transition-all uppercase tracking-wider">
+            VER_TODAS →
+          </NuxtLink>
         </div>
-        <div class="max-h-64 overflow-y-auto">
+        <div class="max-h-64 overflow-y-auto custom-scrollbar">
           <table class="w-full">
-            <thead class="bg-gray-50 sticky top-0">
-              <tr>
-                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Cliente</th>
-                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Equipo</th>
-                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Fecha Cambio</th>
+            <thead class="bg-[#F8FAFC] sticky top-0">
+              <tr class="border-b border-[#D1D5DB]">
+                <th class="px-4 py-2 text-left text-[9px] font-mono text-gray-500 uppercase tracking-wider">CLIENTE</th>
+                <th class="px-4 py-2 text-left text-[9px] font-mono text-gray-500 uppercase tracking-wider">EQUIPO</th>
+                <th class="px-4 py-2 text-left text-[9px] font-mono text-gray-500 uppercase tracking-wider">FECHA</th>
               </tr>
             </thead>
-            <tbody class="divide-y divide-gray-100">
-              <tr v-for="rep in reparacionesRecibidas" :key="rep.id" class="hover:bg-gray-50">
-                <td class="px-4 py-3 text-sm text-gray-900">{{ rep.clientes?.nombre_completo || '-' }}</td>
-                <td class="px-4 py-3 text-sm text-gray-600">{{ rep.equipo_marca_modelo || '-' }}</td>
-                <td class="px-4 py-3 text-sm text-gray-500">{{ formatearFechaHora(obtenerFechaPorEstado(rep)) }}</td>
+            <tbody class="divide-y divide-[#D1D5DB]">
+              <tr v-for="rep in reparacionesRecibidas" :key="rep.id" class="hover:bg-[#F0FDF4] transition-colors">
+                <td class="px-4 py-2 text-xs font-bold text-[#065F46]">{{ truncarNombre(rep.clientes?.nombre_completo || '-', 20) }}</td>
+                <td class="px-4 py-2 text-[11px] text-gray-600">{{ rep.equipo_marca_modelo || '-' }}</td>
+                <td class="px-4 py-2 text-[10px] font-mono text-gray-400">{{ formatearFechaHora(obtenerFechaPorEstado(rep)) }}</td>
               </tr>
               <tr v-if="reparacionesRecibidas.length === 0">
-                <td colspan="3" class="px-4 py-8 text-center text-gray-500">Sin reparaciones recibidas</td>
+                <td colspan="3" class="px-4 py-8 text-center">
+                  <span class="text-[9px] font-mono text-gray-400 uppercase">SIN_REGISTROS</span>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -227,36 +251,36 @@
       </div>
 
       <!-- Reparaciones En Proceso -->
-      <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        <div class="px-6 py-4 border-b border-gray-100 bg-yellow-50/30">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-2">
-              <i class="ri-time-line text-yellow-600 text-xl"></i>
-              <h3 class="text-lg font-semibold text-gray-900">En Proceso</h3>
-              <span class="px-2 py-0.5 text-xs bg-yellow-100 text-yellow-700 rounded-full">{{ reparacionesEnProceso.length }}</span>
-            </div>
-            <NuxtLink to="/reparaciones?estado=En reparacion" class="text-xs text-blue-600 hover:text-blue-700">
-              Ver todas
-            </NuxtLink>
+      <div class="bg-white rounded-xl border border-[#D1D5DB] overflow-hidden">
+        <div class="px-5 py-3 bg-amber-50 border-b border-[#D1D5DB] flex justify-between items-center">
+          <div class="flex items-center gap-2">
+            <i class="ri-time-line text-amber-600 text-lg"></i>
+            <h3 class="text-[10px] font-black text-[#D97706] uppercase tracking-widest">EN PROCESO</h3>
+            <span class="px-2 py-0.5 text-[9px] font-black bg-amber-100 text-amber-700 rounded-full">{{ reparacionesEnProceso.length }}</span>
           </div>
+          <NuxtLink to="/reparaciones?estado=En reparacion" class="text-[9px] font-mono text-[#10B981] hover:text-[#065F46] transition-all uppercase tracking-wider">
+            VER_TODAS →
+          </NuxtLink>
         </div>
-        <div class="max-h-64 overflow-y-auto">
+        <div class="max-h-64 overflow-y-auto custom-scrollbar">
           <table class="w-full">
-            <thead class="bg-gray-50 sticky top-0">
-              <tr>
-                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Cliente</th>
-                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Equipo</th>
-                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Fecha Cambio</th>
+            <thead class="bg-[#F8FAFC] sticky top-0">
+              <tr class="border-b border-[#D1D5DB]">
+                <th class="px-4 py-2 text-left text-[9px] font-mono text-gray-500 uppercase tracking-wider">CLIENTE</th>
+                <th class="px-4 py-2 text-left text-[9px] font-mono text-gray-500 uppercase tracking-wider">EQUIPO</th>
+                <th class="px-4 py-2 text-left text-[9px] font-mono text-gray-500 uppercase tracking-wider">FECHA</th>
               </tr>
             </thead>
-            <tbody class="divide-y divide-gray-100">
-              <tr v-for="rep in reparacionesEnProceso" :key="rep.id" class="hover:bg-gray-50">
-                <td class="px-4 py-3 text-sm text-gray-900">{{ rep.clientes?.nombre_completo || '-' }}</td>
-                <td class="px-4 py-3 text-sm text-gray-600">{{ rep.equipo_marca_modelo || '-' }}</td>
-                <td class="px-4 py-3 text-sm text-gray-500">{{ formatearFechaHora(obtenerFechaPorEstado(rep)) }}</td>
+            <tbody class="divide-y divide-[#D1D5DB]">
+              <tr v-for="rep in reparacionesEnProceso" :key="rep.id" class="hover:bg-amber-50/30 transition-colors">
+                <td class="px-4 py-2 text-xs font-bold text-[#065F46]">{{ truncarNombre(rep.clientes?.nombre_completo || '-', 20) }}</td>
+                <td class="px-4 py-2 text-[11px] text-gray-600">{{ rep.equipo_marca_modelo || '-' }}</td>
+                <td class="px-4 py-2 text-[10px] font-mono text-gray-400">{{ formatearFechaHora(obtenerFechaPorEstado(rep)) }}</td>
               </tr>
               <tr v-if="reparacionesEnProceso.length === 0">
-                <td colspan="3" class="px-4 py-8 text-center text-gray-500">Sin reparaciones en proceso</td>
+                <td colspan="3" class="px-4 py-8 text-center">
+                  <span class="text-[9px] font-mono text-gray-400 uppercase">SIN_REGISTROS</span>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -266,36 +290,36 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <!-- Reparaciones Finalizadas -->
-      <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        <div class="px-6 py-4 border-b border-gray-100 bg-green-50/30">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-2">
-              <i class="ri-checkbox-circle-line text-green-600 text-xl"></i>
-              <h3 class="text-lg font-semibold text-gray-900">Finalizadas</h3>
-              <span class="px-2 py-0.5 text-xs bg-green-100 text-green-700 rounded-full">{{ reparacionesFinalizadas.length }}</span>
-            </div>
-            <NuxtLink to="/reparaciones?estado=Finalizado" class="text-xs text-blue-600 hover:text-blue-700">
-              Ver todas
-            </NuxtLink>
+      <div class="bg-white rounded-xl border border-[#D1D5DB] overflow-hidden">
+        <div class="px-5 py-3 bg-green-50 border-b border-[#D1D5DB] flex justify-between items-center">
+          <div class="flex items-center gap-2">
+            <i class="ri-checkbox-circle-line text-[#10B981] text-lg"></i>
+            <h3 class="text-[10px] font-black text-[#10B981] uppercase tracking-widest">FINALIZADAS</h3>
+            <span class="px-2 py-0.5 text-[9px] font-black bg-green-100 text-green-700 rounded-full">{{ reparacionesFinalizadas.length }}</span>
           </div>
+          <NuxtLink to="/reparaciones?estado=Finalizado" class="text-[9px] font-mono text-[#10B981] hover:text-[#065F46] transition-all uppercase tracking-wider">
+            VER_TODAS →
+          </NuxtLink>
         </div>
-        <div class="max-h-64 overflow-y-auto">
+        <div class="max-h-64 overflow-y-auto custom-scrollbar">
           <table class="w-full">
-            <thead class="bg-gray-50 sticky top-0">
-              <tr>
-                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Cliente</th>
-                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Equipo</th>
-                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Fecha Finalización</th>
+            <thead class="bg-[#F8FAFC] sticky top-0">
+              <tr class="border-b border-[#D1D5DB]">
+                <th class="px-4 py-2 text-left text-[9px] font-mono text-gray-500 uppercase tracking-wider">CLIENTE</th>
+                <th class="px-4 py-2 text-left text-[9px] font-mono text-gray-500 uppercase tracking-wider">EQUIPO</th>
+                <th class="px-4 py-2 text-left text-[9px] font-mono text-gray-500 uppercase tracking-wider">FECHA</th>
               </tr>
             </thead>
-            <tbody class="divide-y divide-gray-100">
-              <tr v-for="rep in reparacionesFinalizadas" :key="rep.id" class="hover:bg-gray-50">
-                <td class="px-4 py-3 text-sm text-gray-900">{{ rep.clientes?.nombre_completo || '-' }}</td>
-                <td class="px-4 py-3 text-sm text-gray-600">{{ rep.equipo_marca_modelo || '-' }}</td>
-                <td class="px-4 py-3 text-sm text-gray-500">{{ formatearFechaHora(obtenerFechaPorEstado(rep)) }}</td>
+            <tbody class="divide-y divide-[#D1D5DB]">
+              <tr v-for="rep in reparacionesFinalizadas" :key="rep.id" class="hover:bg-green-50/30 transition-colors">
+                <td class="px-4 py-2 text-xs font-bold text-[#065F46]">{{ truncarNombre(rep.clientes?.nombre_completo || '-', 20) }}</td>
+                <td class="px-4 py-2 text-[11px] text-gray-600">{{ rep.equipo_marca_modelo || '-' }}</td>
+                <td class="px-4 py-2 text-[10px] font-mono text-gray-400">{{ formatearFechaHora(obtenerFechaPorEstado(rep)) }}</td>
               </tr>
               <tr v-if="reparacionesFinalizadas.length === 0">
-                <td colspan="3" class="px-4 py-8 text-center text-gray-500">Sin reparaciones finalizadas</td>
+                <td colspan="3" class="px-4 py-8 text-center">
+                  <span class="text-[9px] font-mono text-gray-400 uppercase">SIN_REGISTROS</span>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -303,190 +327,152 @@
       </div>
 
       <!-- Reparaciones Entregadas -->
-      <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        <div class="px-6 py-4 border-b border-gray-100 bg-gray-50/30">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-2">
-              <i class="ri-hand-heart-line text-gray-600 text-xl"></i>
-              <h3 class="text-lg font-semibold text-gray-900">Entregadas</h3>
-              <span class="px-2 py-0.5 text-xs bg-gray-200 text-gray-700 rounded-full">{{ reparacionesEntregadas.length }}</span>
-            </div>
-            <NuxtLink to="/reparaciones?estado=Entregado" class="text-xs text-blue-600 hover:text-blue-700">
-              Ver todas
-            </NuxtLink>
+      <div class="bg-white rounded-xl border border-[#D1D5DB] overflow-hidden">
+        <div class="px-5 py-3 bg-gray-50 border-b border-[#D1D5DB] flex justify-between items-center">
+          <div class="flex items-center gap-2">
+            <i class="ri-hand-heart-line text-gray-600 text-lg"></i>
+            <h3 class="text-[10px] font-black text-gray-600 uppercase tracking-widest">ENTREGADAS</h3>
+            <span class="px-2 py-0.5 text-[9px] font-black bg-gray-200 text-gray-700 rounded-full">{{ reparacionesEntregadas.length }}</span>
           </div>
+          <NuxtLink to="/reparaciones?estado=Entregado" class="text-[9px] font-mono text-[#10B981] hover:text-[#065F46] transition-all uppercase tracking-wider">
+            VER_TODAS →
+          </NuxtLink>
         </div>
-        <div class="max-h-64 overflow-y-auto">
+        <div class="max-h-64 overflow-y-auto custom-scrollbar">
           <table class="w-full">
-            <thead class="bg-gray-50 sticky top-0">
-              <tr>
-                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Cliente</th>
-                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Equipo</th>
-                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Fecha Entrega</th>
+            <thead class="bg-[#F8FAFC] sticky top-0">
+              <tr class="border-b border-[#D1D5DB]">
+                <th class="px-4 py-2 text-left text-[9px] font-mono text-gray-500 uppercase tracking-wider">CLIENTE</th>
+                <th class="px-4 py-2 text-left text-[9px] font-mono text-gray-500 uppercase tracking-wider">EQUIPO</th>
+                <th class="px-4 py-2 text-left text-[9px] font-mono text-gray-500 uppercase tracking-wider">FECHA</th>
               </tr>
             </thead>
-            <tbody class="divide-y divide-gray-100">
-              <tr v-for="rep in reparacionesEntregadas" :key="rep.id" class="hover:bg-gray-50">
-                <td class="px-4 py-3 text-sm text-gray-900">{{ rep.clientes?.nombre_completo || '-' }}</td>
-                <td class="px-4 py-3 text-sm text-gray-600">{{ rep.equipo_marca_modelo || '-' }}</td>
-                <td class="px-4 py-3 text-sm text-gray-500">{{ formatearFechaHora(obtenerFechaPorEstado(rep)) }}</td>
+            <tbody class="divide-y divide-[#D1D5DB]">
+              <tr v-for="rep in reparacionesEntregadas" :key="rep.id" class="hover:bg-gray-50 transition-colors">
+                <td class="px-4 py-2 text-xs font-bold text-[#065F46]">{{ truncarNombre(rep.clientes?.nombre_completo || '-', 20) }}</td>
+                <td class="px-4 py-2 text-[11px] text-gray-600">{{ rep.equipo_marca_modelo || '-' }}</td>
+                <td class="px-4 py-2 text-[10px] font-mono text-gray-400">{{ formatearFechaHora(obtenerFechaPorEstado(rep)) }}</td>
               </tr>
               <tr v-if="reparacionesEntregadas.length === 0">
-                <td colspan="3" class="px-4 py-8 text-center text-gray-500">Sin reparaciones entregadas</td>
+                <td colspan="3" class="px-4 py-8 text-center">
+                  <span class="text-[9px] font-mono text-gray-400 uppercase">SIN_REGISTROS</span>
+                </td>
               </tr>
             </tbody>
-        </table>
+          </table>
         </div>
       </div>
     </div>
 
     <!-- Últimas Ventas CON PAGINACIÓN -->
-    <div>
-      <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+    <div class="bg-white rounded-xl border border-[#D1D5DB] overflow-hidden">
+      <div class="px-5 py-3 bg-[#F8FAFC] border-b border-[#D1D5DB] flex justify-between items-center flex-wrap gap-2">
         <div class="flex items-center gap-2">
-          <i class="ri-shopping-cart-line text-blue-600 text-xl"></i>
-          <h3 class="text-lg font-semibold text-gray-900">Últimas Ventas</h3>
+          <i class="ri-shopping-cart-line text-[#10B981] text-lg"></i>
+          <h3 class="text-[10px] font-black text-[#065F46] uppercase tracking-widest">ÚLTIMAS VENTAS</h3>
         </div>
         <div class="flex items-center gap-3">
-          <span class="text-xs text-gray-500">Mostrando {{ ventasInicio }} - {{ ventasFin }} de {{ ultimasVentas.length }}</span>
+          <span class="text-[9px] font-mono text-gray-400">DATA_STREAM: {{ ventasInicio }}-{{ ventasFin }}/{{ ultimasVentas.length }}</span>
           <div class="flex gap-1">
-            <button 
-              @click="ventasPaginaAnterior" 
-              :disabled="ventasPaginaActual === 1"
-              class="p-1 rounded border disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100"
-            >
-              <i class="ri-arrow-left-s-line"></i>
+            <button @click="ventasPaginaAnterior" :disabled="ventasPaginaActual === 1" class="p-1.5 rounded-lg border border-[#D1D5DB] bg-white hover:bg-gray-100 disabled:opacity-30 transition-all">
+              <i class="ri-arrow-left-s-line text-xs"></i>
             </button>
-            <button 
-              @click="ventasPaginaSiguiente" 
-              :disabled="ventasPaginaActual === ventasTotalPaginas"
-              class="p-1 rounded border disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100"
-            >
-              <i class="ri-arrow-right-s-line"></i>
+            <button @click="ventasPaginaSiguiente" :disabled="ventasPaginaActual === ventasTotalPaginas" class="p-1.5 rounded-lg border border-[#D1D5DB] bg-white hover:bg-gray-100 disabled:opacity-30 transition-all">
+              <i class="ri-arrow-right-s-line text-xs"></i>
             </button>
           </div>
-          <NuxtLink to="/ventas" class="text-xs text-blue-600 hover:text-blue-700">
-            Ver todas
+          <NuxtLink to="/ventas" class="text-[9px] font-mono text-[#10B981] hover:text-[#065F46] transition-all uppercase tracking-wider">
+            VER_TODAS →
           </NuxtLink>
         </div>
       </div>
-      <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        <div class="overflow-x-auto">
-          <table class="min-w-[600px] w-full">
-            <thead class="bg-gray-50">
-              <tr>
-                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Fecha</th>
-                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Cliente</th>
-                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Repuesto</th>
-                <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Cant.</th>
-                <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Total</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-100">
-              <tr v-for="venta in ventasPaginadas" :key="venta.id" class="hover:bg-gray-50">
-                <td class="px-4 py-3 text-sm text-gray-500">{{ formatearFecha(venta.created_at) }}</td>
-                <td class="px-4 py-3 text-sm text-gray-900">{{ venta.clientes?.nombre_completo || '-' }}</td>
-                <td class="px-4 py-3 text-sm text-gray-600">{{ venta.stock_repuestos?.nombre_repuesto || '-' }}</td>
-                <td class="px-4 py-3 text-center text-sm">{{ venta.cantidad }}</td>
-                <td class="px-4 py-3 text-right text-sm font-bold text-green-600">${{ venta.total?.toFixed(2) || 0 }}</td>
-              </tr>
-              <tr v-if="ventasPaginadas.length === 0">
-                <td colspan="5" class="px-4 py-8 text-center text-gray-500">No hay ventas registradas</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <!-- Paginación inferior - Ventas -->
-        <div v-if="ventasTotalPaginas > 1" class="px-4 py-3 border-t border-gray-100 bg-gray-50 flex justify-center gap-1 flex-wrap">
-          <button 
-            v-for="pagina in ventasTotalPaginas" 
-            :key="pagina"
-            @click="ventasIrPagina(pagina)"
-            :class="[
-              'px-3 py-1 text-sm rounded transition',
-              ventasPaginaActual === pagina 
-                ? 'bg-blue-600 text-white' 
-                : 'bg-white text-gray-700 hover:bg-gray-100 border'
-            ]"
-          >
-            {{ pagina }}
-          </button>
-        </div>
+      <div class="overflow-x-auto">
+        <table class="min-w-[600px] w-full">
+          <thead class="bg-[#F8FAFC]">
+            <tr class="border-b border-[#D1D5DB]">
+              <th class="px-4 py-2 text-left text-[9px] font-mono text-gray-500 uppercase tracking-wider">FECHA</th>
+              <th class="px-4 py-2 text-left text-[9px] font-mono text-gray-500 uppercase tracking-wider">CLIENTE</th>
+              <th class="px-4 py-2 text-left text-[9px] font-mono text-gray-500 uppercase tracking-wider">REPUESTO</th>
+              <th class="px-4 py-2 text-center text-[9px] font-mono text-gray-500 uppercase tracking-wider">CANT.</th>
+              <th class="px-4 py-2 text-right text-[9px] font-mono text-gray-500 uppercase tracking-wider">TOTAL</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-[#D1D5DB]">
+            <tr v-for="venta in ventasPaginadas" :key="venta.id" class="hover:bg-[#F0FDF4] transition-colors">
+              <td class="px-4 py-2 text-[10px] font-mono text-gray-500">{{ formatearFecha(venta.created_at) }}</td>
+              <td class="px-4 py-2 text-xs font-bold text-[#065F46]">{{ truncarNombre(venta.clientes?.nombre_completo || '-', 20) }}</td>
+              <td class="px-4 py-2 text-[11px] text-gray-600">{{ venta.stock_repuestos?.nombre_repuesto || '-' }}</td>
+              <td class="px-4 py-2 text-center text-[11px] font-mono text-gray-600">{{ venta.cantidad }}</td>
+              <td class="px-4 py-2 text-right text-sm font-black text-[#10B981]">${{ venta.total?.toFixed(2) || 0 }}</td>
+            </tr>
+            <tr v-if="ventasPaginadas.length === 0">
+              <td colspan="5" class="px-4 py-8 text-center">
+                <span class="text-[9px] font-mono text-gray-400 uppercase">SIN_REGISTROS</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div v-if="ventasTotalPaginas > 1" class="px-4 py-2 border-t border-[#D1D5DB] bg-[#F8FAFC] flex justify-center gap-1 flex-wrap">
+        <button v-for="pagina in ventasTotalPaginas" :key="pagina" @click="ventasIrPagina(pagina)" :class="['px-3 py-1 text-[10px] font-mono rounded transition-all', ventasPaginaActual === pagina ? 'bg-[#065F46] text-white' : 'bg-white text-gray-600 hover:bg-gray-100 border border-[#D1D5DB]']">
+          {{ pagina }}
+        </button>
       </div>
     </div>
 
     <!-- Repuestos con stock bajo CON PAGINACIÓN -->
-    <div>
-      <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+    <div class="bg-white rounded-xl border border-[#D1D5DB] overflow-hidden">
+      <div class="px-5 py-3 bg-[#FEF3C7] border-b border-[#FDE68A] flex justify-between items-center flex-wrap gap-2">
         <div class="flex items-center gap-2">
-          <i class="ri-alert-line text-yellow-600 text-xl"></i>
-          <h3 class="text-lg font-semibold text-gray-900">Repuestos con Stock Bajo</h3>
+          <i class="ri-alert-line text-[#F59E0B] text-lg"></i>
+          <h3 class="text-[10px] font-black text-[#D97706] uppercase tracking-widest">STOCK CRÍTICO</h3>
         </div>
         <div class="flex items-center gap-3">
-          <span class="text-xs text-gray-500">Mostrando {{ stockInicio }} - {{ stockFin }} de {{ repuestosStockBajo.length }}</span>
+          <span class="text-[9px] font-mono text-gray-500">DATA_STREAM: {{ stockInicio }}-{{ stockFin }}/{{ repuestosStockBajo.length }}</span>
           <div class="flex gap-1">
-            <button 
-              @click="stockPaginaAnterior" 
-              :disabled="stockPaginaActual === 1"
-              class="p-1 rounded border disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100"
-            >
-              <i class="ri-arrow-left-s-line"></i>
+            <button @click="stockPaginaAnterior" :disabled="stockPaginaActual === 1" class="p-1.5 rounded-lg border border-[#D1D5DB] bg-white hover:bg-gray-100 disabled:opacity-30 transition-all">
+              <i class="ri-arrow-left-s-line text-xs"></i>
             </button>
-            <button 
-              @click="stockPaginaSiguiente" 
-              :disabled="stockPaginaActual === stockTotalPaginas"
-              class="p-1 rounded border disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100"
-            >
-              <i class="ri-arrow-right-s-line"></i>
+            <button @click="stockPaginaSiguiente" :disabled="stockPaginaActual === stockTotalPaginas" class="p-1.5 rounded-lg border border-[#D1D5DB] bg-white hover:bg-gray-100 disabled:opacity-30 transition-all">
+              <i class="ri-arrow-right-s-line text-xs"></i>
             </button>
           </div>
-          <NuxtLink to="/repuestos" class="text-xs text-blue-600 hover:text-blue-700">
-            Ver todos
+          <NuxtLink to="/repuestos" class="text-[9px] font-mono text-[#10B981] hover:text-[#065F46] transition-all uppercase tracking-wider">
+            VER_TODAS →
           </NuxtLink>
         </div>
       </div>
-      <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        <div class="overflow-x-auto">
-          <table class="min-w-[600px] w-full">
-            <thead class="bg-gray-50">
-              <tr>
-                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Repuesto</th>
-                <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Stock</th>
-                <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Precio Venta</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-100">
-              <tr v-for="repuesto in stockPaginados" :key="repuesto.id" class="hover:bg-gray-50">
-                <td class="px-4 py-3 text-sm text-gray-900">{{ repuesto.nombre_repuesto }}</td>
-                <td class="px-4 py-3 text-center">
-                  <span class="inline-flex px-2 py-1 text-xs font-medium bg-yellow-100 text-yellow-700 rounded-full">
-                    {{ repuesto.cantidad_disponible }} uds
-                  </span>
-                </td>
-                <td class="px-4 py-3 text-right text-sm text-gray-600">${{ repuesto.precio_venta || 0 }}</td>
-              </tr>
-              <tr v-if="stockPaginados.length === 0">
-                <td colspan="3" class="px-4 py-8 text-center text-gray-500">No hay repuestos con stock bajo</td>
-              </tr>
-            </tbody>
+      <div class="overflow-x-auto">
+        <table class="min-w-[600px] w-full">
+          <thead class="bg-[#F8FAFC]">
+            <tr class="border-b border-[#D1D5DB]">
+              <th class="px-4 py-2 text-left text-[9px] font-mono text-gray-500 uppercase tracking-wider">REPUESTO</th>
+              <th class="px-4 py-2 text-center text-[9px] font-mono text-gray-500 uppercase tracking-wider">STOCK</th>
+              <th class="px-4 py-2 text-right text-[9px] font-mono text-gray-500 uppercase tracking-wider">PRECIO VENTA</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-[#D1D5DB]">
+            <tr v-for="repuesto in stockPaginados" :key="repuesto.id" class="hover:bg-amber-50/30 transition-colors">
+              <td class="px-4 py-2 text-xs font-bold text-[#065F46]">{{ truncarNombre(repuesto.nombre_repuesto, 30) }}</td>
+              <td class="px-4 py-2 text-center">
+                <span class="inline-flex px-2 py-0.5 text-[9px] font-black bg-amber-100 text-amber-700 rounded-full border border-amber-200">
+                  {{ repuesto.cantidad_disponible }} UDS
+                </span>
+              </td>
+              <td class="px-4 py-2 text-right text-sm font-black text-[#10B981]">${{ repuesto.precio_venta || 0 }}</td>
+            </tr>
+            <tr v-if="stockPaginados.length === 0">
+              <td colspan="3" class="px-4 py-8 text-center">
+                <span class="text-[9px] font-mono text-gray-400 uppercase">SIN_REGISTROS</span>
+              </td>
+            </tr>
+          </tbody>
         </table>
-        </div>
-        <!-- Paginación inferior - Stock -->
-        <div v-if="stockTotalPaginas > 1" class="px-4 py-3 border-t border-gray-100 bg-gray-50 flex justify-center gap-1 flex-wrap">
-          <button 
-            v-for="pagina in stockTotalPaginas" 
-            :key="pagina"
-            @click="stockIrPagina(pagina)"
-            :class="[
-              'px-3 py-1 text-sm rounded transition',
-              stockPaginaActual === pagina 
-                ? 'bg-blue-600 text-white' 
-                : 'bg-white text-gray-700 hover:bg-gray-100 border'
-            ]"
-          >
-            {{ pagina }}
-          </button>
-        </div>
+      </div>
+      <div v-if="stockTotalPaginas > 1" class="px-4 py-2 border-t border-[#D1D5DB] bg-[#F8FAFC] flex justify-center gap-1 flex-wrap">
+        <button v-for="pagina in stockTotalPaginas" :key="pagina" @click="stockIrPagina(pagina)" :class="['px-3 py-1 text-[10px] font-mono rounded transition-all', stockPaginaActual === pagina ? 'bg-[#065F46] text-white' : 'bg-white text-gray-600 hover:bg-gray-100 border border-[#D1D5DB]']">
+          {{ pagina }}
+        </button>
       </div>
     </div>
   </div>
@@ -605,6 +591,13 @@ const stockPaginaSiguiente = () => {
 
 const stockIrPagina = (pagina) => {
   stockPaginaActual.value = pagina
+}
+
+// Función para truncar nombres largos
+const truncarNombre = (nombre, maxLength) => {
+  if (!nombre) return 'N/A'
+  if (nombre.length <= maxLength) return nombre
+  return nombre.substring(0, maxLength) + '...'
 }
 
 // Reiniciar paginación
@@ -838,12 +831,33 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #F3F4F6;
+  border-radius: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #10B981;
+  border-radius: 4px;
+}
+
 .animate-spin {
   animation: spin 1s linear infinite;
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 @keyframes spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
 }
 </style>

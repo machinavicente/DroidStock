@@ -1,164 +1,182 @@
 <template>
-  <div>
-    <!-- Header -->
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-      <div>
-        <h1 class="text-xl sm:text-2xl font-bold text-gray-900">Técnicos</h1>
-        <p class="text-sm sm:text-base text-gray-600 mt-1">Gestiona el equipo de trabajo del taller</p>
+  <!-- Fondo Gris Técnico #F3F4F6 -->
+  <div class="min-h-screen bg-[#F3F4F6] p-4 sm:p-8">
+    <div class="max-w-7xl mx-auto">
+      
+      <!-- Header Estilo Industrial -->
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-8">
+        <div>
+          <div class="flex items-center gap-2 mb-1">
+            <span class="h-2 w-2 bg-[#10B981] rounded-full animate-pulse"></span>
+            <span class="text-[10px] font-mono text-gray-500 uppercase tracking-widest">Team_Management_v1.0</span>
+          </div>
+          <h1 class="text-3xl font-black text-[#065F46] tracking-tight uppercase">Técnicos</h1>
+          <p class="text-gray-500 text-sm">Gestión del equipo técnico del taller</p>
+        </div>
+        <NuxtLink
+          to="/tecnicos/nuevo"
+          class="px-6 py-3 bg-[#065F46] text-white font-bold rounded-lg hover:bg-[#054a37] transition-all flex items-center gap-2 shadow-lg hover:shadow-[#065F46]/20 border-b-4 border-[#033a2b] active:border-b-0 active:translate-y-1"
+        >
+          <i class="ri-add-circle-fill text-lg"></i>
+          NUEVO TÉCNICO
+        </NuxtLink>
       </div>
-      <NuxtLink
-        to="/tecnicos/nuevo"
-        class="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center justify-center gap-2 text-sm"
-      >
-        <i class="ri-add-line"></i>
-        Nuevo Técnico
-      </NuxtLink>
-    </div>
 
-    <!-- Loading -->
-    <div v-if="cargando" class="flex justify-center py-12">
-      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-    </div>
+      <!-- Loading -->
+      <div v-if="cargando" class="flex flex-col items-center justify-center py-20 bg-white rounded-xl border border-[#D1D5DB]">
+        <div class="w-12 h-12 border-4 border-[#10B981] border-t-transparent rounded-full animate-spin mb-4"></div>
+        <span class="text-xs font-mono text-gray-400 uppercase">Loading_Team_Data...</span>
+      </div>
 
-    <!-- Empty state (responsivo) -->
-    <div v-else-if="tecnicos.length === 0" class="bg-white rounded-xl shadow-sm border border-gray-100 p-8 sm:p-12 text-center">
-      <i class="ri-user-settings-line text-4xl sm:text-5xl text-gray-300 mb-3 block"></i>
-      <h3 class="text-base sm:text-lg font-medium text-gray-700 mb-1">No hay técnicos activos</h3>
-      <p class="text-sm text-gray-500 mb-4">Agrega tu primer técnico para comenzar</p>
-      <NuxtLink
-        to="/tecnicos/nuevo"
-        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition inline-flex items-center gap-2 text-sm"
-      >
-        <i class="ri-add-line"></i>
-        Agregar Técnico
-      </NuxtLink>
-    </div>
-
-    <!-- Grid de tarjetas (responsivo) -->
-    <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
-      <div
-        v-for="tecnico in tecnicos"
-        :key="tecnico.id"
-        class="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200"
-      >
-        <!-- Card header -->
-        <div class="p-4 sm:p-5 border-b border-gray-100">
-          <div class="flex items-start justify-between">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center text-white font-semibold text-base sm:text-lg shadow-sm">
-                {{ tecnico.nombre.charAt(0).toUpperCase() }}
-              </div>
-              <div class="flex-1 min-w-0">
-                <h3 class="font-semibold text-gray-900 text-sm sm:text-base truncate">{{ tecnico.nombre }}</h3>
-                <span class="inline-block px-2 py-0.5 bg-blue-100 text-blue-700 rounded-full text-xs mt-1">
-                  {{ tecnico.especialidad || 'General' }}
-                </span>
-              </div>
-            </div>
-            <div class="flex gap-1 flex-shrink-0">
-              <NuxtLink
-                :to="`/tecnicos/editar/${tecnico.id}`"
-                class="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition"
-                title="Editar técnico"
-              >
-                <i class="ri-edit-line text-base sm:text-lg"></i>
-              </NuxtLink>
-              <button
-                @click="confirmarDesactivar(tecnico)"
-                class="p-1.5 text-gray-500 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition"
-                title="Desactivar técnico"
-              >
-                <i class="ri-user-unfollow-line text-base sm:text-lg"></i>
-              </button>
-            </div>
-          </div>
+      <!-- Empty state técnico -->
+      <div v-else-if="tecnicos.length === 0" class="bg-white rounded-xl border-2 border-dashed border-[#D1D5DB] p-16 text-center">
+        <div class="w-20 h-20 bg-[#ECFDF5] rounded-full flex items-center justify-center mx-auto mb-4">
+          <i class="ri-user-settings-line text-4xl text-[#10B981]"></i>
         </div>
+        <h3 class="text-xl font-black text-[#065F46]">SIN TÉCNICOS REGISTRADOS</h3>
+        <p class="text-gray-500 mt-2 max-w-sm mx-auto">No hay personal técnico activo en el sistema</p>
+        <NuxtLink
+          to="/tecnicos/nuevo"
+          class="mt-6 inline-flex px-6 py-3 bg-[#10B981] text-white rounded-xl hover:bg-[#059669] transition-all text-xs font-black uppercase tracking-[0.2em] shadow-lg shadow-[#10B981]/20 items-center gap-2"
+        >
+          <i class="ri-add-line"></i>
+          REGISTRAR_PRIMER_TÉCNICO
+        </NuxtLink>
+      </div>
 
-        <!-- Card body -->
-        <div class="p-4 sm:p-5 space-y-2 sm:space-y-3">
-          <div class="flex items-center gap-2 text-xs sm:text-sm">
-            <i class="ri-phone-line text-gray-400"></i>
-            <span class="text-gray-600 break-all">{{ tecnico.telefono || 'Sin teléfono registrado' }}</span>
-          </div>
-          <div class="flex items-center gap-2 text-xs sm:text-sm">
-            <i class="ri-tools-line text-gray-400"></i>
-            <span class="text-gray-600">
-              <span class="font-medium">{{ tecnico.total_reparaciones || 0 }}</span> reparaciones asignadas
-            </span>
-          </div>
-          <div v-if="tecnico.reparaciones_activas > 0" class="mt-2 pt-2 border-t border-gray-100">
-            <div class="flex items-center gap-2 text-xs sm:text-sm text-amber-600">
-              <i class="ri-time-line"></i>
-              <span>{{ tecnico.reparaciones_activas }} reparaciones en curso</span>
+      <!-- Grid de tarjetas (Estilo PCB) -->
+      <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div
+          v-for="tecnico in tecnicos"
+          :key="tecnico.id"
+          class="bg-white rounded-xl border border-[#D1D5DB] shadow-sm hover:shadow-md transition-all duration-200 hover:border-[#10B981] overflow-hidden group"
+        >
+          <!-- Card header -->
+          <div class="p-5 border-b border-[#D1D5DB] bg-[#F8FAFC]">
+            <div class="flex items-start justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-[#065F46] to-[#10B981] flex items-center justify-center text-white font-black text-xl shadow-md">
+                  {{ tecnico.nombre.charAt(0).toUpperCase() }}
+                </div>
+                <div>
+                  <h3 class="font-black text-[#065F46] text-base uppercase tracking-tighter">{{ truncarNombre(tecnico.nombre, 25) }}</h3>
+                  <span class="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-black uppercase bg-[#ECFDF5] text-[#065F46] rounded-full mt-1">
+                    <i class="ri-price-tag-line text-[9px]"></i>
+                    {{ tecnico.especialidad || 'GENERAL' }}
+                  </span>
+                </div>
+              </div>
+              <div class="flex gap-1">
+                <NuxtLink
+                  :to="`/tecnicos/editar/${tecnico.id}`"
+                  class="p-2 text-gray-400 hover:text-[#10B981] hover:bg-[#ECFDF5] rounded-lg transition-all"
+                  title="Editar técnico"
+                >
+                  <i class="ri-edit-line text-base"></i>
+                </NuxtLink>
+                <button
+                  @click="confirmarDesactivar(tecnico)"
+                  class="p-2 text-gray-400 hover:text-[#F59E0B] hover:bg-amber-50 rounded-lg transition-all"
+                  title="Desactivar técnico"
+                >
+                  <i class="ri-user-unfollow-line text-base"></i>
+                </button>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- Card footer -->
-        <div class="px-4 sm:px-5 py-2 sm:py-3 bg-gray-50 rounded-b-xl border-t border-gray-100">
-          <NuxtLink
-            :to="`/reparaciones?tecnico=${tecnico.id}`"
-            class="text-xs text-blue-600 hover:text-blue-700 flex items-center gap-1"
-          >
-            <i class="ri-eye-line"></i>
-            Ver sus reparaciones
-          </NuxtLink>
+          <!-- Card body - Datos técnicos -->
+          <div class="p-5 space-y-3">
+            <div class="flex items-center gap-3 text-sm">
+              <div class="w-8 h-8 rounded-lg bg-[#F3F4F6] flex items-center justify-center">
+                <i class="ri-phone-line text-[#065F46] text-sm"></i>
+              </div>
+              <span class="text-gray-600 font-mono text-[11px]">{{ tecnico.telefono || 'SIN_CONTACTO' }}</span>
+            </div>
+            <div class="flex items-center gap-3 text-sm">
+              <div class="w-8 h-8 rounded-lg bg-[#F3F4F6] flex items-center justify-center">
+                <i class="ri-tools-line text-[#065F46] text-sm"></i>
+              </div>
+              <span class="text-gray-600">
+                <span class="font-black text-[#065F46]">{{ tecnico.total_reparaciones || 0 }}</span> reparaciones asignadas
+              </span>
+            </div>
+            <div v-if="tecnico.reparaciones_activas > 0" class="flex items-center gap-3 text-sm">
+              <div class="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center">
+                <i class="ri-time-line text-[#F59E0B] text-sm"></i>
+              </div>
+              <span class="text-[#F59E0B] font-bold text-[11px] uppercase">{{ tecnico.reparaciones_activas }} EN_CURSO</span>
+            </div>
+          </div>
+
+          <!-- Card footer - Acción técnica -->
+          <div class="px-5 py-3 bg-[#F8FAFC] border-t border-[#D1D5DB]">
+            <NuxtLink
+              :to="`/reparaciones?tecnico=${tecnico.id}`"
+              class="text-[10px] font-black uppercase tracking-widest text-[#065F46] hover:text-[#10B981] flex items-center gap-2 transition-colors group"
+            >
+              <i class="ri-eye-line text-sm group-hover:scale-110 transition-transform"></i>
+              VER_REPARACIONES_ASIGNADAS
+            </NuxtLink>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Modal de confirmación para desactivar (responsivo) -->
+    <!-- Modal de confirmación para desactivar (Estilo Técnico) -->
     <div v-if="modalDesactivarVisible" class="fixed inset-0 z-50 overflow-y-auto">
       <div class="flex items-center justify-center min-h-screen px-4 py-6">
-        <div class="fixed inset-0 bg-gray-900 bg-opacity-50 transition-opacity" @click="modalDesactivarVisible = false"></div>
+        <div class="fixed inset-0 bg-[#065F46]/40 backdrop-blur-sm transition-opacity" @click="modalDesactivarVisible = false"></div>
         
-        <div class="relative bg-white rounded-xl shadow-xl max-w-md w-full mx-auto p-4 sm:p-6 transform transition-all">
-          <div class="text-center">
-            <!-- Icono de advertencia -->
-            <div class="mx-auto flex items-center justify-center h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-orange-100 mb-4">
-              <i class="ri-user-unfollow-line text-xl sm:text-2xl text-orange-600"></i>
+        <div class="relative bg-white rounded-2xl shadow-2xl max-w-md w-full mx-auto overflow-hidden border border-[#D1D5DB] animate-slide-up">
+          <!-- Header del modal -->
+          <div class="bg-[#065F46] px-6 py-4">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-[#F59E0B]/20 flex items-center justify-center">
+                <i class="ri-user-unfollow-line text-[#F59E0B] text-xl"></i>
+              </div>
+              <div>
+                <h3 class="text-base font-black text-white uppercase tracking-wider">Desactivar Técnico</h3>
+                <p class="text-[9px] font-mono text-white/60 uppercase tracking-widest">Confirmación_Requerida</p>
+              </div>
             </div>
-            
-            <!-- Título -->
-            <h3 class="text-base sm:text-lg font-semibold text-gray-900 mb-2">
-              Desactivar Técnico
-            </h3>
-            
-            <!-- Mensaje principal -->
-            <p class="text-sm text-gray-500 mb-4">
+          </div>
+          
+          <div class="p-6 space-y-4">
+            <p class="text-sm text-gray-600">
               ¿Estás seguro que deseas desactivar a 
-              <span class="font-semibold text-gray-700">{{ tecnicoADesactivar?.nombre }}</span>?
+              <span class="font-black text-[#065F46] uppercase">{{ tecnicoADesactivar?.nombre }}</span>?
             </p>
             
             <!-- Información sobre reparaciones -->
-            <div class="bg-blue-50 border border-blue-100 rounded-lg p-3 mb-4">
-              <div class="flex items-start gap-2 text-blue-700 text-xs sm:text-sm">
-                <i class="ri-information-line text-base mt-0.5"></i>
-                <span class="text-left text-xs">El técnico tiene {{ tecnicoADesactivar?.total_reparaciones || 0 }} reparaciones asignadas. Al desactivarlo, dejará de aparecer en el sistema pero sus reparaciones históricas se conservarán.</span>
+            <div class="bg-[#F0FDF4] border-l-4 border-[#10B981] p-3 rounded-r-lg">
+              <div class="flex items-start gap-2">
+                <i class="ri-information-line text-[#10B981] text-base mt-0.5"></i>
+                <div class="text-[11px] text-[#065F46]">
+                  <span class="font-bold">{{ tecnicoADesactivar?.total_reparaciones || 0 }}</span> reparaciones asignadas.
+                  Al desactivarlo, dejará de aparecer en el sistema pero sus reparaciones históricas se conservarán.
+                </div>
               </div>
             </div>
             
-            <!-- Advertencia de acción -->
-            <p class="text-xs text-gray-400 mb-6">
-              Puedes reactivarlo más tarde si es necesario.
-            </p>
+            <p class="text-[9px] font-mono text-gray-400 uppercase tracking-widest">* Puedes reactivarlo más tarde si es necesario.</p>
             
             <!-- Botones -->
-            <div class="flex gap-3">
+            <div class="flex gap-3 pt-2">
               <button
                 @click="modalDesactivarVisible = false"
-                class="flex-1 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition"
+                class="flex-1 px-4 py-2.5 text-xs font-black uppercase tracking-wider text-gray-500 bg-white border-2 border-gray-100 rounded-xl hover:bg-gray-50 transition-all"
               >
                 Cancelar
               </button>
               <button
                 @click="desactivarTecnicoConfirmado"
                 :disabled="desactivando"
-                class="flex-1 px-4 py-2 text-sm font-medium text-white bg-orange-600 rounded-lg hover:bg-orange-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                class="flex-1 px-4 py-2.5 text-xs font-black uppercase tracking-wider text-white bg-[#F59E0B] rounded-xl hover:bg-[#D97706] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg shadow-[#F59E0B]/20"
               >
                 <i v-if="desactivando" class="ri-loader-4-line animate-spin"></i>
                 <i v-else class="ri-user-unfollow-line"></i>
-                {{ desactivando ? 'Desactivando...' : 'Desactivar' }}
+                {{ desactivando ? 'PROCESANDO...' : 'DESACTIVAR' }}
               </button>
             </div>
           </div>
@@ -166,19 +184,21 @@
       </div>
     </div>
 
-    <!-- Toast de notificación (responsivo) -->
-    <div v-if="toast.visible" class="fixed bottom-4 right-4 z-50 animate-slide-up">
-      <div :class="[
-        'px-3 sm:px-4 py-2 sm:py-3 rounded-lg shadow-lg flex items-center gap-2 sm:gap-3 min-w-[250px] sm:min-w-[280px]',
-        toast.tipo === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
-      ]">
-        <i :class="toast.tipo === 'success' ? 'ri-checkbox-circle-fill text-lg sm:text-xl' : 'ri-alert-fill text-lg sm:text-xl'"></i>
-        <span class="flex-1 text-xs sm:text-sm">{{ toast.mensaje }}</span>
-        <button @click="toast.visible = false" class="hover:opacity-70">
-          <i class="ri-close-line text-lg sm:text-xl"></i>
-        </button>
+    <!-- Toast Notificación (Estilo Sistema) -->
+    <Transition name="slide-fade">
+      <div v-if="toast.visible" class="fixed bottom-8 right-8 z-50">
+        <div :class="[
+          'px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-4 border-l-8 backdrop-blur-md',
+          toast.tipo === 'success' ? 'bg-[#065F46]/90 text-white border-[#10B981]' : 'bg-red-600/90 text-white border-red-800'
+        ]">
+          <i :class="toast.tipo === 'success' ? 'ri-checkbox-circle-line text-2xl text-[#10B981]' : 'ri-error-warning-line text-2xl text-red-300'"></i>
+          <div>
+            <p class="text-[9px] font-black uppercase tracking-[0.2em] opacity-60 italic">DroidStock_System</p>
+            <p class="text-sm font-bold tracking-tight">{{ toast.mensaje }}</p>
+          </div>
+        </div>
       </div>
-    </div>
+    </Transition>
   </div>
 </template>
 
@@ -211,6 +231,12 @@ const mostrarToast = (mensaje, tipo = 'success') => {
   }, 3000)
 }
 
+const truncarNombre = (nombre, maxLength) => {
+  if (!nombre) return 'N/A'
+  if (nombre.length <= maxLength) return nombre
+  return nombre.substring(0, maxLength) + '...'
+}
+
 onMounted(() => {
   obtenerTecnicos()
 })
@@ -228,14 +254,15 @@ const desactivarTecnicoConfirmado = async () => {
     
     if (result.success) {
       modalDesactivarVisible.value = false
+      const nombreTecnico = tecnicoADesactivar.value?.nombre
       tecnicoADesactivar.value = null
-      mostrarToast(`Técnico "${tecnicoADesactivar?.nombre}" desactivado correctamente`, 'success')
+      mostrarToast(`TÉCNICO "${nombreTecnico}" DESACTIVADO`, 'success')
     } else {
-      mostrarToast(result.error || 'Error al desactivar el técnico', 'error')
+      mostrarToast(result.error || 'ERROR_AL_DESACTIVAR', 'error')
     }
   } catch (error) {
     console.error('Error:', error)
-    mostrarToast('Error al desactivar el técnico', 'error')
+    mostrarToast('ERROR_CRÍTICO', 'error')
   } finally {
     desactivando.value = false
   }
@@ -243,47 +270,34 @@ const desactivarTecnicoConfirmado = async () => {
 </script>
 
 <style scoped>
-.animate-spin {
-  animation: spin 1s linear infinite;
+/* Transiciones */
+.slide-fade-enter-active, .slide-fade-leave-active {
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.slide-fade-enter-from, .slide-fade-leave-to {
+  transform: translateY(30px) scale(0.9);
+  opacity: 0;
 }
 
 @keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.animate-spin { animation: spin 1s linear infinite; }
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
 }
 
 @keyframes slideUp {
-  from {
-    transform: translateY(20px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
-
 .animate-slide-up {
-  animation: slideUp 0.3s ease-out;
-}
-
-/* Breakpoint para pantallas extra pequeñas */
-@media (max-width: 480px) {
-  .xs\:inline {
-    display: inline;
-  }
-  .xs\:hidden {
-    display: none;
-  }
-  .xs\:flex-row {
-    flex-direction: row;
-  }
-  .xs\:w-auto {
-    width: auto;
-  }
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 </style>
