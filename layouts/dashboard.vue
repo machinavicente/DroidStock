@@ -292,14 +292,6 @@
               <i class="ri-menu-line text-2xl"></i>
             </button>
 
-            <!-- Espacio para mantener el título centrado en móvil -->
-            <div class="w-10 lg:hidden"></div>
-
-            <!-- Título de la página -->
-            <h1 class="text-base font-bold tracking-tight text-gray-900 sm:text-xl">
-              {{ tituloPagina }}
-            </h1>
-
             <!-- Info del taller -->
             <div class="flex items-center space-x-2 sm:space-x-4">
               <div class="text-right">

@@ -1,156 +1,193 @@
 <template>
-  <div class="max-w-2xl mx-auto">
-    <!-- Header -->
-    <div class="mb-6">
-      <NuxtLink to="/repuestos" class="text-blue-600 hover:text-blue-700 flex items-center gap-1 text-sm mb-3">
-        <i class="ri-arrow-left-line"></i>
-        Volver a repuestos
-      </NuxtLink>
-      <h1 class="text-2xl font-bold text-gray-900">Editar Repuesto</h1>
-      <p class="text-gray-600 mt-1">Actualice los datos del repuesto</p>
-    </div>
-
-    <div v-if="cargando" class="flex justify-center py-12">
-      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-    </div>
-
-    <form v-else @submit.prevent="handleActualizar" class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-      <div class="p-6 space-y-5">
-        <!-- Nombre del repuesto -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">
-            Nombre del repuesto <span class="text-red-500">*</span>
-          </label>
-          <div class="relative">
-            <i class="ri-stack-line absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-            <input
-              v-model="form.nombre_repuesto"
-              type="text"
-              required
-              class="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-              placeholder="Ej: Batería iPhone 12"
-            />
-          </div>
-        </div>
-
-        <!-- Cantidad disponible -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">
-            Cantidad disponible
-          </label>
-          <div class="relative">
-            <i class="ri-number-line absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-            <input
-              v-model.number="form.cantidad_disponible"
-              type="number"
-              min="0"
-              class="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-              placeholder="0"
-            />
-          </div>
-        </div>
-
-        <!-- Precio Costo (Proveedor) -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">
-            Precio costo (proveedor)
-          </label>
-          <div class="relative">
-            <i class="ri-shopping-cart-line absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-            <input
-              v-model.number="form.precio_costo"
-              type="number"
-              step="0.01"
-              min="0"
-              class="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-              placeholder="0.00"
-            />
-          </div>
-          <p class="text-xs text-gray-400 mt-1">Precio pagado al proveedor</p>
-        </div>
-
-        <!-- Precio Venta (Taller) -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">
-            Precio venta (taller)
-          </label>
-          <div class="relative">
-            <i class="ri-money-dollar-circle-line absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-            <input
-              v-model.number="form.precio_venta"
-              type="number"
-              step="0.01"
-              min="0"
-              class="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-              placeholder="0.00"
-            />
-          </div>
-          <p class="text-xs text-gray-400 mt-1">Precio de venta del repuesto (sin instalación)</p>
-        </div>
-
-        <!-- Precio Montaje (Servicio) - NUEVO CAMPO -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">
-            Precio montaje / Servicio
-          </label>
-          <div class="relative">
-            <i class="ri-tools-line absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-            <input
-              v-model.number="form.precio_montaje"
-              type="number"
-              step="0.01"
-              min="0"
-              class="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-              placeholder="0.00"
-            />
-          </div>
-          <p class="text-xs text-gray-400 mt-1">Costo de instalación/montaje del repuesto</p>
-        </div>
-      </div>
-
-      <!-- Tarjeta de información adicional -->
-      <div class="mx-6 mb-4 p-3 bg-blue-50 rounded-lg border border-blue-100">
-        <div class="flex items-start gap-2">
-          <i class="ri-information-line text-blue-500 text-sm mt-0.5"></i>
-          <p class="text-xs text-blue-700">Ganancia potencial por unidad (venta - costo): <span class="font-bold">${{ gananciaPotencial }}</span></p>
-        </div>
-        <div class="flex items-start gap-2 mt-2">
-          <i class="ri-tools-line text-blue-500 text-sm mt-0.5"></i>
-          <p class="text-xs text-blue-700">Ingreso por montaje: <span class="font-bold">${{ form.precio_montaje || 0 }}</span></p>
-        </div>
-      </div>
-
-      <div class="px-6 py-4 border-t border-gray-100 bg-gray-50 flex justify-end gap-3">
-        <NuxtLink
-          to="/repuestos"
-          class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition"
-        >
-          Cancelar
+  <div class="min-h-screen bg-[#F3F4F6] p-4 sm:p-8">
+    <div class="max-w-2xl mx-auto">
+      <!-- Header Estilo Industrial -->
+      <div class="mb-8">
+        <NuxtLink to="/repuestos" class="group text-gray-400 hover:text-[#065F46] flex items-center gap-2 text-[10px] font-black uppercase tracking-widest mb-4 transition-colors">
+          <i class="ri-arrow-left-line bg-white p-2 rounded-full shadow-sm group-hover:shadow-md transition-all text-xs"></i>
+          VOLVER_AL_INVENTARIO
         </NuxtLink>
-        <button
-          type="submit"
-          :disabled="guardando"
-          class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition disabled:opacity-50 flex items-center gap-2"
-        >
-          <i v-if="guardando" class="ri-loader-4-line animate-spin"></i>
-          <i v-else class="ri-save-line"></i>
-          {{ guardando ? 'Guardando...' : 'Actualizar Repuesto' }}
-        </button>
+        <div class="flex items-center gap-3">
+          <div class="h-10 w-1.5 bg-[#10B981] rounded-full"></div>
+          <div>
+            <h1 class="text-3xl font-black text-[#065F46] tracking-tighter uppercase">Editar Repuesto</h1>
+            <p class="text-[10px] font-mono text-gray-400 uppercase tracking-widest">Protocolo: INV_EDIT_001</p>
+          </div>
+        </div>
       </div>
-    </form>
 
-    <!-- Toast de notificación -->
-    <div v-if="toast.visible" class="fixed bottom-4 right-4 z-50 animate-slide-up">
-      <div :class="[
-        'px-4 py-3 rounded-lg shadow-lg flex items-center gap-3 min-w-[280px]',
-        toast.tipo === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
-      ]">
-        <i :class="toast.tipo === 'success' ? 'ri-checkbox-circle-fill text-xl' : 'ri-alert-fill text-xl'"></i>
-        <span class="flex-1 text-sm">{{ toast.mensaje }}</span>
-        <button @click="toast.visible = false" class="hover:opacity-70">
-          <i class="ri-close-line text-xl"></i>
-        </button>
+      <div v-if="cargando" class="flex flex-col items-center justify-center py-20 bg-white rounded-xl border border-[#D1D5DB]">
+        <div class="w-12 h-12 border-4 border-[#10B981] border-t-transparent rounded-full animate-spin mb-4"></div>
+        <span class="text-xs font-mono text-gray-400 uppercase">Loading_Inventory_Data...</span>
       </div>
+
+      <form v-else @submit.prevent="handleActualizar" class="bg-white rounded-2xl shadow-sm border border-[#D1D5DB] overflow-hidden">
+        <div class="p-6 space-y-5">
+          <!-- Nombre del repuesto -->
+          <div class="space-y-1">
+            <label class="label-circuit">
+              Nombre del repuesto <span class="text-[#F59E0B]">*</span>
+            </label>
+            <div class="relative group">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+               
+              </div>
+              <input
+                v-model="form.nombre_repuesto"
+                type="text"
+                required
+                class="form-input-circuit pl-9"
+                placeholder="EJ: BATERÍA IPHONE 12"
+              />
+            </div>
+            <p class="text-[9px] font-mono text-gray-400">IDENTIFICADOR_DEL_COMPONENTE</p>
+          </div>
+
+          <!-- Cantidad disponible -->
+          <div class="space-y-1">
+            <label class="label-circuit">
+              Cantidad disponible
+            </label>
+            <div class="relative group">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                
+              </div>
+              <input
+                v-model.number="form.cantidad_disponible"
+                type="number"
+                min="0"
+                class="form-input-circuit pl-9"
+                placeholder="0"
+              />
+            </div>
+            <p class="text-[9px] font-mono text-gray-400">STOCK_ACTUAL_EN_UNIDADES</p>
+          </div>
+
+          <!-- Precio Costo (Proveedor) -->
+          <div class="space-y-1">
+            <label class="label-circuit">
+              Precio costo (proveedor)
+            </label>
+            <div class="relative group">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                
+              </div>
+              <input
+                v-model.number="form.precio_costo"
+                type="number"
+                step="0.01"
+                min="0"
+                class="form-input-circuit pl-9"
+                placeholder="0.00"
+              />
+            </div>
+            <p class="text-[9px] font-mono text-gray-400">PRECIO_PAGADO_AL_PROVEEDOR</p>
+          </div>
+
+          <!-- Precio Venta (Taller) -->
+          <div class="space-y-1">
+            <label class="label-circuit">
+              Precio venta (taller)
+            </label>
+            <div class="relative group">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                
+              </div>
+              <input
+                v-model.number="form.precio_venta"
+                type="number"
+                step="0.01"
+                min="0"
+                class="form-input-circuit pl-9"
+                placeholder="0.00"
+              />
+            </div>
+            <p class="text-[9px] font-mono text-gray-400">PRECIO_DE_VENTA_SIN_INSTALACIÓN</p>
+          </div>
+
+          <!-- Precio Montaje (Servicio) -->
+          <div class="space-y-1">
+            <label class="label-circuit">
+              Precio montaje / Servicio
+            </label>
+            <div class="relative group">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                
+              </div>
+              <input
+                v-model.number="form.precio_montaje"
+                type="number"
+                step="0.01"
+                min="0"
+                class="form-input-circuit pl-9"
+                placeholder="0.00"
+              />
+            </div>
+            <p class="text-[9px] font-mono text-gray-400">COSTO_DE_INSTALACIÓN_MONTAJE</p>
+          </div>
+        </div>
+
+        <!-- Tarjeta de información financiera - Estilo técnico -->
+        <div class="mx-6 mb-4 p-4 bg-[#F8FAFC] rounded-xl border border-[#D1D5DB]">
+          <div class="flex items-center gap-2 mb-3">
+            <div class="w-6 h-6 bg-[#10B981] rounded-lg flex items-center justify-center">
+              <i class="ri-calculator-line text-white text-[10px]"></i>
+            </div>
+            <span class="text-[9px] font-black text-[#065F46] uppercase tracking-widest">Análisis_Financiero</span>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div class="p-2 bg-white rounded-lg border border-[#D1D5DB]">
+              <p class="text-[8px] font-mono text-gray-400 uppercase tracking-wider">GANANCIA POR UNIDAD</p>
+              <p class="text-base font-black text-[#10B981]">${{ gananciaPotencial }}</p>
+            </div>
+            <div class="p-2 bg-white rounded-lg border border-[#D1D5DB]">
+              <p class="text-[8px] font-mono text-gray-400 uppercase tracking-wider">INGRESO POR MONTAJE</p>
+              <p class="text-base font-black text-[#F59E0B]">${{ form.precio_montaje || 0 }}</p>
+            </div>
+          </div>
+          <div class="mt-3 p-2 bg-gradient-to-r from-[#065F46] to-[#10B981] rounded-lg">
+            <div class="flex justify-between items-center">
+              <p class="text-[8px] font-mono text-white/80 uppercase tracking-wider">PRECIO FINAL AL CLIENTE</p>
+              <p class="text-sm font-black text-white">${{ precioFinal }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Botones de acción -->
+        <div class="px-6 py-4 border-t border-[#D1D5DB] bg-[#F8FAFC] flex justify-end gap-3">
+          <NuxtLink
+            to="/repuestos"
+            class="px-5 py-2.5 text-xs font-black uppercase tracking-wider text-gray-500 bg-white border-2 border-gray-200 rounded-xl hover:bg-gray-50 transition-all"
+          >
+            Cancelar
+          </NuxtLink>
+          <button
+            type="submit"
+            :disabled="guardando"
+            class="px-6 py-2.5 text-xs font-black uppercase tracking-wider text-white bg-[#10B981] rounded-xl hover:bg-[#059669] transition-all disabled:opacity-50 flex items-center gap-2 shadow-lg shadow-[#10B981]/20 border-b-4 border-[#047857] active:border-b-0 active:translate-y-1"
+          >
+            <i v-if="guardando" class="ri-loader-4-line animate-spin text-sm"></i>
+            <i v-else class="ri-save-line text-sm"></i>
+            {{ guardando ? 'PROCESANDO...' : 'ACTUALIZAR REPUESTO' }}
+          </button>
+        </div>
+      </form>
+
+      <!-- Toast Notificación -->
+      <Transition name="slide-fade">
+        <div v-if="toast.visible" class="fixed bottom-8 right-8 z-50">
+          <div :class="[
+            'px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-4 border-l-8 backdrop-blur-md',
+            toast.tipo === 'success' ? 'bg-[#065F46]/90 text-white border-[#10B981]' : 'bg-red-600/90 text-white border-red-800'
+          ]">
+            <i :class="toast.tipo === 'success' ? 'ri-checkbox-circle-line text-2xl text-[#10B981]' : 'ri-error-warning-line text-2xl text-red-300'"></i>
+            <div>
+              <p class="text-[9px] font-black uppercase tracking-[0.2em] opacity-60 italic">DroidStock_System</p>
+              <p class="text-sm font-bold tracking-tight">{{ toast.mensaje }}</p>
+            </div>
+          </div>
+        </div>
+      </Transition>
     </div>
   </div>
 </template>
@@ -190,7 +227,7 @@ const form = reactive({
   cantidad_disponible: 0,
   precio_costo: null,
   precio_venta: null,
-  precio_montaje: null  // NUEVO CAMPO
+  precio_montaje: null
 })
 
 // Calcular ganancia potencial
@@ -199,6 +236,13 @@ const gananciaPotencial = computed(() => {
     return (form.precio_venta - form.precio_costo).toFixed(2)
   }
   return '0.00'
+})
+
+// Calcular precio final al cliente
+const precioFinal = computed(() => {
+  const venta = form.precio_venta || 0
+  const montaje = form.precio_montaje || 0
+  return (venta + montaje).toFixed(2)
 })
 
 onMounted(async () => {
@@ -212,13 +256,15 @@ onMounted(async () => {
       form.cantidad_disponible = repuesto.cantidad_disponible || 0
       form.precio_costo = repuesto.precio_costo || null
       form.precio_venta = repuesto.precio_venta || null
-      form.precio_montaje = repuesto.precio_montaje || null  // NUEVO
+      form.precio_montaje = repuesto.precio_montaje || null
     } else {
-      router.push('/repuestos')
+      mostrarToast('REPUESTO_NO_ENCONTRADO', 'error')
+      setTimeout(() => router.push('/repuestos'), 1500)
     }
   } catch (error) {
     console.error('Error al cargar repuesto:', error)
-    router.push('/repuestos')
+    mostrarToast('ERROR_AL_CARGAR_DATOS', 'error')
+    setTimeout(() => router.push('/repuestos'), 1500)
   } finally {
     cargando.value = false
   }
@@ -227,57 +273,68 @@ onMounted(async () => {
 const handleActualizar = async () => {
   // Validar campos requeridos
   if (!form.nombre_repuesto || form.nombre_repuesto.trim() === '') {
-    mostrarToast('El nombre del repuesto es requerido', 'error')
+    mostrarToast('ERROR: NOMBRE_REQUERIDO', 'error')
     return
   }
 
   guardando.value = true
   const result = await actualizarRepuesto(repuestoId, {
     nombre_repuesto: form.nombre_repuesto,
-    cantidad_disponible: form.cantidad_disponible,
-    precio_costo: form.precio_costo,
-    precio_venta: form.precio_venta,
-    precio_montaje: form.precio_montaje  // NUEVO
+    cantidad_disponible: form.cantidad_disponible || 0,
+    precio_costo: form.precio_costo || 0,
+    precio_venta: form.precio_venta || 0,
+    precio_montaje: form.precio_montaje || 0
   })
   guardando.value = false
   
   if (result.success) {
-    mostrarToast('Repuesto actualizado correctamente', 'success')
+    mostrarToast('REPUESTO_ACTUALIZADO_EXITOSAMENTE', 'success')
     setTimeout(() => {
       router.push('/repuestos')
     }, 1500)
   } else {
-    mostrarToast(result.error || 'Error al actualizar el repuesto', 'error')
+    mostrarToast(result.error || 'ERROR_AL_ACTUALIZAR', 'error')
   }
 }
 </script>
 
 <style scoped>
-.animate-spin {
-  animation: spin 1s linear infinite;
+.form-input-circuit {
+  @apply w-full px-4 py-2.5 bg-[#F8FAFC] border-2 border-[#D1D5DB] rounded-xl focus:ring-0 focus:border-[#10B981] focus:bg-white transition-all text-sm font-bold text-[#334155] placeholder:text-gray-300 shadow-inner outline-none;
+}
+
+.label-circuit {
+  @apply text-[9px] font-black text-gray-400 uppercase tracking-widest flex items-center gap-1;
+}
+
+/* Transiciones */
+.slide-fade-enter-active, .slide-fade-leave-active {
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.slide-fade-enter-from, .slide-fade-leave-to {
+  transform: translateY(30px) scale(0.9);
+  opacity: 0;
 }
 
 @keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.animate-spin { animation: spin 1s linear infinite; }
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
 }
 
 @keyframes slideUp {
-  from {
-    transform: translateY(20px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
-
 .animate-slide-up {
-  animation: slideUp 0.3s ease-out;
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 </style>
