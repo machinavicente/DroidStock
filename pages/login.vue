@@ -53,19 +53,30 @@
           </label>
           <div class="relative group">
             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+             
             </div>
             <input
+              ref="slugInput"
               v-model="form.slug"
               type="text"
               required
-              class="form-input-circuit pl-9"
+              class="form-input-circuit pl-9 lowercase"
               placeholder="mi-taller"
               :disabled="cargando"
+              @keydown="manejarTecla"
+              @paste="manejarPegar"
             />
+            <div v-if="form.slug && !slugEsValido" class="absolute inset-y-0 right-0 pr-3 flex items-center">
+              <i class="ri-error-warning-line text-[#DC2626] text-base"></i>
+            </div>
+            <div v-else-if="form.slug && slugEsValido && form.slug.length > 0" class="absolute inset-y-0 right-0 pr-3 flex items-center">
+              <i class="ri-checkbox-circle-line text-[#10B981] text-base"></i>
+            </div>
           </div>
           <p class="text-[9px] font-mono text-gray-400">
-            Terminal: droidstock.com/<span class="text-[#10B981]">{{ form.slug || 'mi-taller' }}</span>
+            Terminal: droidstock.com/<span class="text-[#10B981]">{{ form.slug || 'tu-taller' }}</span>
           </p>
+          <p class="text-[8px] font-mono text-gray-400">[REQUISITOS: mínimo 3 caracteres, máximo 30 | SIN ESPACIOS]</p>
         </div>
 
         <!-- Contraseña -->
@@ -76,6 +87,7 @@
           </label>
           <div class="relative group">
             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              
             </div>
             <input
               v-model="form.password"
@@ -91,8 +103,8 @@
         <!-- Botón de login - Estilo Técnico -->
         <button
           type="submit"
-          :disabled="cargando"
-          class="w-full py-3 bg-[#065F46] text-white font-bold rounded-xl hover:bg-[#054a37] transition-all disabled:opacity-50 flex items-center justify-center gap-2 shadow-lg hover:shadow-[#065F46]/20 border-b-4 border-[#033a2b] active:border-b-0 active:translate-y-1 text-xs sm:text-sm tracking-wider uppercase mt-6"
+          :disabled="cargando || !formularioValido"
+          class="w-full py-3 bg-[#065F46] text-white font-bold rounded-xl hover:bg-[#054a37] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg hover:shadow-[#065F46]/20 border-b-4 border-[#033a2b] active:border-b-0 active:translate-y-1 text-xs sm:text-sm tracking-wider uppercase mt-6"
         >
           <i v-if="cargando" class="ri-loader-4-line animate-spin text-base"></i>
           <i v-else class="ri-login-circle-line text-base"></i>
@@ -118,17 +130,89 @@
 
 <script setup>
 // Usar el composable de autenticación
-const { login, verificarSesion } = useAuth()
+const { login } = useAuth()
 const router = useRouter()
 
 const cargando = ref(false)
 const errorMessage = ref('')
 const successMessage = ref('')
+const slugInput = ref(null)
 
 const form = reactive({
   slug: '',
   password: ''
 })
+
+// Validación del slug en tiempo real
+const slugEsValido = computed(() => {
+  if (!form.slug) return false
+  return form.slug.length >= 3 && form.slug.length <= 30
+})
+
+// Computed para validar el formulario completo
+const formularioValido = computed(() => {
+  return form.slug && slugEsValido.value && form.password && form.password.length >= 1
+})
+
+/**
+ * Filtra los caracteres permitidos en tiempo real
+ * Solo permite: a-z, 0-9, guiones
+ */
+const filtrarCaracteresPermitidos = (texto) => {
+  if (!texto) return ''
+  
+  // Convertir espacios a guiones y eliminar cualquier otro caracter no permitido
+  // Convertir a minúsculas automáticamente
+  let filtrado = texto.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
+  
+  // Reemplazar múltiples guiones por uno solo
+  filtrado = filtrado.replace(/-+/g, '-')
+  
+  // Eliminar guiones al inicio y final
+  filtrado = filtrado.replace(/^-+|-+$/g, '')
+  
+  // Limitar a 30 caracteres
+  if (filtrado.length > 30) {
+    filtrado = filtrado.substring(0, 30)
+    filtrado = filtrado.replace(/-+$/, '')
+  }
+  
+  return filtrado
+}
+
+/**
+ * Maneja el input del usuario en tiempo real
+ */
+const manejarInputSlug = (event) => {
+  let valor = event.target.value
+  
+  // Filtrar caracteres no permitidos y convertir a minúsculas
+  let filtrado = filtrarCaracteresPermitidos(valor)
+  
+  // Actualizar el valor
+  form.slug = filtrado
+}
+
+
+/**
+ * Previene solo el ingreso de espacios
+ */
+const manejarTecla = (event) => {
+  // Prevenir solo la tecla ESPACIO
+  if (event.key === ' ' || event.key === 'Space' || event.code === 'Space') {
+    event.preventDefault()
+  }
+}
+
+/**
+ * Maneja el pegado de texto (limpia el contenido pegado)
+ */
+const manejarPegar = (event) => {
+  event.preventDefault()
+  const textoPegado = event.clipboardData.getData('text')
+  const textoLimpio = filtrarCaracteresPermitidos(textoPegado)
+  form.slug = textoLimpio
+}
 
 // Función para obtener mensajes de error en formato técnico
 const obtenerMensajeError = (error) => {
@@ -163,14 +247,26 @@ const handleLogin = async () => {
   errorMessage.value = ''
   successMessage.value = ''
 
+  // Validar campos requeridos
   if (!form.slug || !form.password) {
     errorMessage.value = '[ERR_VALID] CAMPOS_REQUERIDOS'
     cargando.value = false
     return
   }
 
+  // Validar longitud mínima
+  if (!form.slug || form.slug.length < 3) {
+    errorMessage.value = '[ERR_VALID] USUARIO_INVALIDO_MINIMO_3_CARACTERES'
+    cargando.value = false
+    return
+  }
+
   try {
-    const result = await login(form)
+    // Enviar el slug
+    const result = await login({ 
+      slug: form.slug, 
+      password: form.password 
+    })
     
     if (result.success) {
       successMessage.value = '[OK] LOGIN_EXITOSO - REDIRIGIENDO...'
@@ -193,6 +289,14 @@ const handleLogin = async () => {
 <style scoped>
 .form-input-circuit {
   @apply w-full px-4 py-2.5 bg-[#F8FAFC] border-2 border-[#D1D5DB] rounded-xl focus:ring-0 focus:border-[#10B981] focus:bg-white transition-all text-sm font-bold text-[#334155] placeholder:text-gray-300 shadow-inner outline-none;
+}
+
+.form-input-circuit.lowercase {
+  text-transform: lowercase;
+}
+
+.form-input-circuit.lowercase::placeholder {
+  text-transform: none;
 }
 
 .label-circuit {

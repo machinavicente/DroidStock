@@ -76,6 +76,46 @@ export default defineEventHandler(async (event) => {
       console.log('Delete API - Repuesto used in finalized reparaciones:', reparacionesFinalizadas.length)
     }
 
+    // Check if repuesto has references in repuestos_defectuosos
+    const { data: repuestosDefectuosos, error: defectuososError } = await supabase
+      .from('repuestos_defectuosos')
+      .select('*')
+      .eq('repuesto_id', id)
+
+    if (defectuososError) {
+      console.error('Delete API - Error checking repuestos_defectuosos:', defectuososError)
+    } else if (repuestosDefectuosos && repuestosDefectuosos.length > 0) {
+      console.log('Delete API - Found references in repuestos_defectuosos:', repuestosDefectuosos.length)
+    }
+
+    // Update defectuosos records to preserve history using new columns
+    if (repuestosDefectuosos && repuestosDefectuosos.length > 0) {
+      console.log('Delete API - Preserving defectuosos records with new columns')
+      
+      // Update each record to save repuesto info and mark as eliminated
+      const { error: updateDefectuososError } = await supabase
+        .from('repuestos_defectuosos')
+        .update({
+          repuesto_id: null, // Now allowed thanks to schema change
+          nombre_repuesto_guardado: existingRepuesto.nombre_repuesto,
+          precio_costo_guardado: existingRepuesto.precio_costo,
+          precio_venta_guardado: existingRepuesto.precio_venta,
+          repuesto_eliminado: true,
+          fecha_eliminacion_repuesto: new Date().toISOString()
+        })
+        .eq('repuesto_id', id)
+
+      if (updateDefectuososError) {
+        console.error('Delete API - Error updating defectuosos records:', updateDefectuososError)
+        throw createError({
+          statusCode: 500,
+          message: 'Error al preservar registros de repuestos defectuosos: ' + updateDefectuososError.message
+        })
+      }
+
+      console.log(`Delete API - Successfully preserved ${repuestosDefectuosos.length} defectuosos records`)
+    }
+
     // Delete references from finalized reparaciones first
     if (reparacionesFinalizadas && reparacionesFinalizadas.length > 0) {
       console.log('Delete API - Removing references from finalized reparaciones')

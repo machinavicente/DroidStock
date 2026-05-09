@@ -48,7 +48,7 @@
               </label>
               <div class="relative">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <i class="ri-user-line text-gray-400 text-base"></i>
+                  
                 </div>
                 <input
                   v-model="form.nombre"
@@ -68,7 +68,7 @@
               </label>
               <div class="relative">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <i class="ri-price-tag-line text-gray-400 text-base"></i>
+                  
                 </div>
                 <select
                   v-model="form.especialidad"
@@ -96,7 +96,7 @@
               </label>
               <div class="relative">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <i class="ri-phone-line text-gray-400 text-base"></i>
+                  
                 </div>
                 <input
                   v-model="form.telefono"

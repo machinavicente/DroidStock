@@ -45,60 +45,47 @@
 
       <!-- Formulario de Registro -->
       <form @submit.prevent="handleRegistro" class="space-y-5 px-6 sm:px-8">
-        <!-- Nombre del taller -->
+        <!-- NOMBRE/SLUG DEL TALLER - CAMPO ÚNICO -->
         <div class="space-y-1">
           <label class="label-circuit">
             <i class="ri-store-2-line mr-1 text-[#10B981]"></i>
-            NOMBRE DEL TALLER
+            NOMBRE / USUARIO DEL TALLER
           </label>
           <div class="relative group">
             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              
             </div>
             <input
-              v-model="form.nombre_tienda"
+              ref="nombreInput"
+              v-model="nombreTaller"
               type="text"
               required
               class="form-input-circuit pl-9"
-              placeholder="TALLER ELECTRÓNICO PÉREZ"
+              placeholder="EJ: taller-electronico"
+              @input="manejarInputNombre"
+              @keydown="manejarTecla"
+              @paste="manejarPegar"
             />
-          </div>
-          <p class="text-[9px] font-mono text-gray-400">IDENTIFICADOR_PRINCIPAL</p>
-        </div>
-
-        <!-- Slug del taller -->
-        <div class="space-y-1">
-          <label class="label-circuit">
-            <i class="ri-link-mr-1 text-[#10B981]"></i>
-            USUARIO DEL TALLER
-          </label>
-          <div class="relative group">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              
+            <div v-if="nombreTaller && !esValido" class="absolute inset-y-0 right-0 pr-3 flex items-center">
+              <i class="ri-error-warning-line text-[#DC2626] text-base"></i>
             </div>
-            <input
-              v-model="form.configuracion_slug"
-              type="text"
-              required
-              class="form-input-circuit pl-9"
-              placeholder="taller-perez"
-            />
+            <div v-else-if="nombreTaller && esValido && nombreTaller.length > 0" class="absolute inset-y-0 right-0 pr-3 flex items-center">
+              <i class="ri-checkbox-circle-line text-[#10B981] text-base"></i>
+            </div>
           </div>
           <p class="text-[9px] font-mono text-gray-400">
-            TERMINAL: droidstock.com/<span class="text-[#10B981]">{{ form.configuracion_slug || 'taller-perez' }}</span>
+            TERMINAL: droidstock.com/<span class="text-[#10B981]">{{ slugLive || 'tu-taller' }}</span>
           </p>
-          <p class="text-[8px] font-mono text-gray-400">[REQUISITOS: minúsculas, números, guiones]</p>
+          <p class="text-[8px] font-mono text-gray-400">[REQUISITOS: letras, números, guiones | SIN ESPACIOS | TODO MINÚSCULAS]</p>
         </div>
 
         <!-- Nombre completo -->
         <div class="space-y-1">
           <label class="label-circuit">
             <i class="ri-user-line mr-1 text-[#10B981]"></i>
-            NOMBRE COMPLETO
+            RESPONSABLE_DEL_TALLER
           </label>
           <div class="relative group">
             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            
             </div>
             <input
               v-model="form.nombre_apellido"
@@ -119,7 +106,6 @@
           </label>
           <div class="relative group">
             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-             
             </div>
             <input
               v-model="form.email"
@@ -127,9 +113,10 @@
               required
               class="form-input-circuit pl-9"
               placeholder="juan@tallerperez.com"
+              @input="form.email = form.email.toLowerCase()"
             />
           </div>
-          <p class="text-[9px] font-mono text-gray-400">CREDENCIAL_DE_ACCESO_PRINCIPAL</p>
+          <p class="text-[9px] font-mono text-gray-400">CREDENCIAL_DE_CONTACTO</p>
         </div>
 
         <!-- Contraseña -->
@@ -140,7 +127,6 @@
           </label>
           <div class="relative group">
             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              
             </div>
             <input
               v-model="form.password"
@@ -157,8 +143,8 @@
         <!-- Botón de registro - Estilo Técnico -->
         <button
           type="submit"
-          :disabled="cargando"
-          class="w-full py-3 bg-[#065F46] text-white font-bold rounded-xl hover:bg-[#054a37] transition-all disabled:opacity-50 flex items-center justify-center gap-2 shadow-lg hover:shadow-[#065F46]/20 border-b-4 border-[#033a2b] active:border-b-0 active:translate-y-1 text-xs sm:text-sm tracking-wider uppercase mt-6"
+          :disabled="cargando || !formularioValido"
+          class="w-full py-3 bg-[#065F46] text-white font-bold rounded-xl hover:bg-[#054a37] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg hover:shadow-[#065F46]/20 border-b-4 border-[#033a2b] active:border-b-0 active:translate-y-1 text-xs sm:text-sm tracking-wider uppercase mt-6"
         >
           <i v-if="cargando" class="ri-loader-4-line animate-spin text-base"></i>
           <i v-else class="ri-user-add-line text-base"></i>
@@ -189,14 +175,116 @@ const { registrar } = useAuth()
 const cargando = ref(false)
 const errorMessage = ref('')
 const successMessage = ref('')
+const nombreTaller = ref('')
+const nombreInput = ref(null)
+
+// Slug generado automáticamente (para vista previa)
+const slugLive = computed(() => {
+  return normalizarParaSlug(nombreTaller.value) || 'tu-taller'
+})
+
+// Validación en tiempo real
+const esValido = computed(() => {
+  if (!nombreTaller.value) return false
+  const regex = /^[a-z0-9-]+$/
+  return regex.test(nombreTaller.value)
+})
+
+// Computed para validar el formulario completo
+const formularioValido = computed(() => {
+  return nombreTaller.value &&
+         esValido.value &&
+         form.nombre_apellido &&
+         form.email &&
+         form.password.length >= 6
+})
 
 const form = reactive({
-  nombre_tienda: '',
-  configuracion_slug: '',
   nombre_apellido: '',
   email: '',
   password: ''
 })
+
+/**
+ * Normaliza un texto para convertirlo en slug
+ * Elimina espacios, acentos, caracteres especiales y convierte a minúsculas
+ */
+const normalizarParaSlug = (texto) => {
+  if (!texto) return ''
+  
+  let normalizado = texto
+    .toLowerCase()                                    // Convertir a minúsculas
+    .normalize('NFD')                                 // Separar acentos de letras
+    .replace(/[\u0300-\u036f]/g, '')                  // Eliminar acentos
+    .replace(/[^a-z0-9]+/g, '-')                      // Reemplazar caracteres no válidos con guiones
+    .replace(/^-+|-+$/g, '')                          // Eliminar guiones al inicio/final
+    .replace(/-+/g, '-')                              // Reemplazar múltiples guiones por uno solo
+  
+  // Limitar a 30 caracteres
+  if (normalizado.length > 30) {
+    normalizado = normalizado.substring(0, 30)
+    normalizado = normalizado.replace(/-+$/, '')
+  }
+  
+  return normalizado
+}
+
+/**
+ * Filtra los caracteres permitidos en tiempo real
+ * Solo permite: a-z, 0-9, guiones
+ */
+const filtrarCaracteresPermitidos = (texto) => {
+  // Eliminar cualquier caracter que no sea alfanumérico (a-z, 0-9) o guión
+  // Convertir a minúsculas automáticamente
+  let filtrado = texto.toLowerCase().replace(/[^a-z0-9-]/g, '')
+  
+  // Reemplazar múltiples guiones por uno solo
+  filtrado = filtrado.replace(/-+/g, '-')
+  
+  // Eliminar guiones al inicio y final
+  filtrado = filtrado.replace(/^-+|-+$/g, '')
+  
+  // Limitar a 30 caracteres
+  if (filtrado.length > 30) {
+    filtrado = filtrado.substring(0, 30)
+    filtrado = filtrado.replace(/-+$/, '')
+  }
+  
+  return filtrado
+}
+
+/**
+ * Maneja el input del usuario en tiempo real
+ */
+const manejarInputNombre = (event) => {
+  let valor = event.target.value
+  
+  // Filtrar caracteres no permitidos y convertir a minúsculas
+  let filtrado = filtrarCaracteresPermitidos(valor)
+  
+  // Actualizar el valor
+  nombreTaller.value = filtrado
+}
+
+/**
+ * Previene SOLO el ingreso de espacios
+ */
+const manejarTecla = (event) => {
+  // Solo prevenir la tecla ESPACIO
+  if (event.key === ' ' || event.key === 'Space' || event.code === 'Space') {
+    event.preventDefault()
+  }
+}
+
+/**
+ * Maneja el pegado de texto (limpia el contenido pegado)
+ */
+const manejarPegar = (event) => {
+  event.preventDefault()
+  const textoPegado = event.clipboardData.getData('text')
+  const textoLimpio = filtrarCaracteresPermitidos(textoPegado)
+  nombreTaller.value = textoLimpio
+}
 
 // Función para obtener mensajes de error en formato técnico
 const obtenerMensajeError = (error) => {
@@ -228,8 +316,39 @@ const handleRegistro = async () => {
   errorMessage.value = ''
   successMessage.value = ''
 
+  // Validar que el nombre del taller no esté vacío
+  if (!nombreTaller.value || nombreTaller.value.trim() === '') {
+    errorMessage.value = '[ERR_VALID] NOMBRE_DEL_TALLER_REQUERIDO'
+    cargando.value = false
+    return
+  }
+
+  // Validar que el nombre tenga al menos 3 caracteres
+  if (nombreTaller.value.length < 3) {
+    errorMessage.value = '[ERR_VALID] NOMBRE_MINIMO_3_CARACTERES'
+    cargando.value = false
+    return
+  }
+
+  // Validar que solo tenga caracteres permitidos
+  const regexValido = /^[a-z0-9-]+$/
+  if (!regexValido.test(nombreTaller.value)) {
+    errorMessage.value = '[ERR_VALID] CARACTERES_NO_PERMITIDOS'
+    cargando.value = false
+    return
+  }
+
+  // Generar el slug a partir del nombre ingresado
+  const slugGenerado = normalizarParaSlug(nombreTaller.value)
+  
+  if (!slugGenerado || slugGenerado.length < 3) {
+    errorMessage.value = '[ERR_VALID] SLUG_INVALIDO_MINIMO_3_CARACTERES'
+    cargando.value = false
+    return
+  }
+
   // Validar campos requeridos
-  if (!form.nombre_tienda || !form.configuracion_slug || !form.nombre_apellido || !form.email || !form.password) {
+  if (!form.nombre_apellido || !form.email || !form.password) {
     errorMessage.value = '[ERR_VALID] CAMPOS_REQUERIDOS'
     cargando.value = false
     return
@@ -242,17 +361,18 @@ const handleRegistro = async () => {
     return
   }
 
-  // Validar formato del slug (solo minúsculas, números, guiones)
-  const slugRegex = /^[a-z0-9-]+$/
-  if (!slugRegex.test(form.configuracion_slug)) {
-    errorMessage.value = '[ERR_VALID] SLUG_FORMATO_INVALIDO'
-    cargando.value = false
-    return
+  // Preparar datos para enviar - ENVIAR AMBOS CAMPOS POR SEPARADO
+  const datosRegistro = {
+    nombre_tienda: nombreTaller.value,           // El nombre (con guiones, minúsculas)
+    configuracion_slug: slugGenerado,            // El slug normalizado
+    nombre_apellido: form.nombre_apellido.trim(),
+    email: form.email.trim().toLowerCase(),
+    password: form.password
   }
 
   // Usar la función registrar del composable
   try {
-    const result = await registrar(form)
+    const result = await registrar(datosRegistro)
     
     if (result.success) {
       successMessage.value = '[OK] REGISTRO_EXITOSO - REDIRIGIENDO...'

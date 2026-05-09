@@ -159,7 +159,7 @@
           <div class="p-2 bg-[#10B981] rounded-lg shadow-inner">
             <i class="ri-error-warning-line text-white text-xl"></i>
           </div>
-          <h2 class="text-xs font-black text-white uppercase tracking-[0.2em]">Reporte_de_Avería_Principal</h2>
+          <h2 class="text-xs font-black text-white uppercase tracking-[0.2em]">Reporte_de_Avería</h2>
         </div>
         <textarea
           v-model="form.falla_reportada"

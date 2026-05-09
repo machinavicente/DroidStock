@@ -21,6 +21,23 @@ export default defineEventHandler(async (event) => {
     .eq('tienda_id', tiendaId)
     .order('created_at', { ascending: false })
 
+  // Process results to handle deleted repuestos using saved columns
+  const procesados = defectuosos?.map(item => {
+    if (item.repuesto_id === null && item.repuesto_eliminado) {
+      // Use saved data for deleted repuestos
+      return {
+        ...item,
+        stock_repuestos: {
+          id: null,
+          nombre_repuesto: item.nombre_repuesto_guardado || 'Repuesto eliminado',
+          precio_costo: item.precio_costo_guardado || 0,
+          precio_venta: item.precio_venta_guardado || 0
+        }
+      }
+    }
+    return item
+  }) || []
+
   if (error) {
     throw createError({
       statusCode: 500,
@@ -28,5 +45,5 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  return defectuosos || []
+  return procesados
 })

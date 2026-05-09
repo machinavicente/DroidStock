@@ -152,7 +152,6 @@
                   <p class="text-[10px] font-mono text-gray-500">{{ tipo.cantidad }} unidades</p>
                 </div>
               </div>
-              <span class="text-xs font-black text-[#DC2626]">{{ tipo.porcentaje }}%</span>
             </div>
             <div class="mt-2 h-1.5 bg-gray-200 rounded-full overflow-hidden">
               <div class="h-full bg-gradient-to-r from-red-500 to-red-600 rounded-full" :style="{ width: tipo.porcentaje + '%' }"></div>
