@@ -196,28 +196,21 @@
             </p>
           </div>
 
-          <div>
-            <label class="block text-[10px] font-black text-[#334155] mb-2 uppercase tracking-widest">Seleccionar Componente</label>
-            <select v-model="repuestoSeleccionado" class="w-full p-3 bg-[#F8FAFC] border border-[#D1D5DB] rounded-lg text-sm font-medium focus:ring-2 focus:ring-[#10B981]">
-              <option :value="null">-- HARDWARE_ID --</option>
-              <option v-for="r in repuestosDisponibles" :key="r.id" :value="r">
-                {{ r.nombre_repuesto }} [STK: {{ r.cantidad_disponible }}]
-              </option>
-            </select>
-          </div>
-          
-          <div class="flex gap-3">
-            <div class="flex-1">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-[10px] font-black text-[#334155] mb-2 uppercase tracking-widest">Seleccionar Componente</label>
+              <select v-model="repuestoSeleccionado" class="w-full p-3 bg-[#F8FAFC] border border-[#D1D5DB] rounded-lg text-sm font-medium focus:ring-2 focus:ring-[#10B981]">
+                <option :value="null">-- HARDWARE_ID --</option>
+                <option v-for="r in repuestosDisponibles" :key="r.id" :value="r">
+                  {{ r.nombre_repuesto }} [STK: {{ r.cantidad_disponible }}]
+                </option>
+              </select>
+            </div>
+            
+            <div>
               <label class="block text-[10px] font-black text-[#334155] mb-2 uppercase tracking-widest">Unidades</label>
               <input v-model.number="cantidadRepuesto" type="number" min="1" class="w-full p-3 bg-[#F8FAFC] border border-[#D1D5DB] rounded-lg text-sm" />
             </div>
-            <button 
-              @click="agregarRepuestoALista"
-              :disabled="!repuestoSeleccionado"
-              class="self-end px-4 py-3 bg-[#10B981] text-white rounded-lg hover:bg-[#059669] disabled:opacity-30 transition-all shadow-md"
-            >
-              <i class="ri-add-fill text-xl"></i>
-            </button>
           </div>
 
           <div v-if="repuestosTemp.length > 0" class="bg-gray-50 rounded-lg p-3 border border-[#D1D5DB]">
@@ -360,6 +353,9 @@ const abrirModalRepuestos = async (reparacion) => {
 }
 
 const agregarRepuestoALista = () => {
+  if (!repuestoSeleccionado.value || !cantidadRepuesto.value || cantidadRepuesto.value <= 0) {
+    return
+  }
   if (cantidadRepuesto.value > repuestoSeleccionado.value.cantidad_disponible) {
     return mostrarNotificacion('Stock insuficiente', 'error')
   }
@@ -432,6 +428,13 @@ const limpiarFiltros = () => { filtros.busqueda = ''; filtros.estado = '' }
 
 onMounted(cargarReparaciones)
 watch([() => filtros.busqueda, () => filtros.estado], () => paginaActual.value = 1)
+
+// Watcher para auto-agregar repuesto cuando se seleccione y especifique cantidad
+watch([repuestoSeleccionado, cantidadRepuesto], ([nuevoRepuesto, nuevaCantidad]) => {
+  if (nuevoRepuesto && nuevaCantidad && nuevaCantidad > 0) {
+    agregarRepuestoALista()
+  }
+})
 </script>
 
 <style scoped>

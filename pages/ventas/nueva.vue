@@ -97,22 +97,22 @@
           </div>
           <div class="p-6 space-y-4">
             <div class="space-y-1">
-              <label class="label-circuit">Nombre Completo *</label>
+              <label class="label-circuit">Nombre Completo <span class="text-red-500">*</span></label>
               <input v-model="clienteForm.nombre_completo" type="text" required class="form-input-circuit" placeholder="EJ: JUAN PEREZ" />
             </div>
             <div class="grid grid-cols-2 gap-4">
               <div class="space-y-1">
-                <label class="label-circuit">DNI / Cédula *</label>
-                <input v-model="clienteForm.dni_cedula" type="text" required class="form-input-circuit" />
+                <label class="label-circuit">Teléfono <span class="text-red-500">*</span></label>
+                <input v-model="clienteForm.telefono" required type="tel" class="form-input-circuit" placeholder="0414-1234567" />
               </div>
               <div class="space-y-1">
-                <label class="label-circuit">Teléfono</label>
-                <input v-model="clienteForm.telefono" type="tel" class="form-input-circuit" placeholder="04XX-XXXXXXX" />
+                <label class="label-circuit">DNI (opcional)</label>
+                <input v-model="clienteForm.dni_cedula" type="text" class="form-input-circuit" placeholder="V-12345678" />
               </div>
             </div>
             <div class="space-y-1">
-              <label class="label-circuit">Ubicación / Dirección</label>
-              <textarea v-model="clienteForm.direccion" rows="2" class="form-input-circuit resize-none" placeholder="AV. PRINCIPAL #123"></textarea>
+              <label class="label-circuit">Dirección (opcional)</label>
+              <textarea v-model="clienteForm.direccion" rows="2" class="form-input-circuit resize-none" placeholder="Av. Principal #123, Edificio A, Piso 2"></textarea>
             </div>
           </div>
         </div>
@@ -126,18 +126,18 @@
             </div>
           </div>
           <div class="p-6 space-y-4">
-            <div class="space-y-1">
-              <label class="label-circuit">Repuesto *</label>
-              <select v-model="ventaForm.repuesto_id" required class="form-input-circuit" @change="calcularPrecios">
-                <option :value="null">-- SELECCIONAR COMPONENTE --</option>
-                <option v-for="r in repuestosDisponibles" :key="r.id" :value="r.id">
-                  {{ r.nombre_repuesto }} [STK: {{ r.cantidad_disponible }}] - ${{ r.precio_venta || 0 }}
-                </option>
-              </select>
-            </div>
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div class="space-y-1">
-                <label class="label-circuit">Cantidad *</label>
+                <label class="label-circuit">Repuesto <span class="text-red-500">*</span></label>
+                <select v-model="ventaForm.repuesto_id" required class="form-input-circuit" @change="calcularPrecios">
+                  <option :value="null">SELECCIONAR</option>
+                  <option v-for="r in repuestosDisponibles" :key="r.id" :value="r.id">
+                    {{ r.nombre_repuesto }} [STK: {{ r.cantidad_disponible }}] - ${{ r.precio_venta || 0 }}
+                  </option>
+                </select>
+              </div>
+              <div class="space-y-1">
+                <label class="label-circuit">Cantidad <span class="text-red-500">*</span></label>
                 <input
                   v-model.number="ventaForm.cantidad"
                   type="number"
@@ -147,6 +147,8 @@
                   @input="calcularTotal"
                 />
               </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
               <div class="space-y-1">
                 <label class="label-circuit">Stock disponible</label>
                 <div class="relative">
@@ -159,18 +161,18 @@
                   />
                 </div>
               </div>
-            </div>
-            <div class="space-y-1">
-              <label class="label-circuit">Precio unitario</label>
-              <div class="relative">
-                <i class="ri-money-dollar-circle-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                <input
-                  readonly
-                  v-model.number="ventaForm.precio_unitario"
-                  type="number"
-                  step="0.01"
-                  class="form-input-circuit-pl-9 font-mono font-bold text-[#065F46]"
-                />
+              <div class="space-y-1">
+                <label class="label-circuit">Precio unitario</label>
+                <div class="relative">
+                  <i class="ri-money-dollar-circle-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                  <input
+                    readonly
+                    v-model.number="ventaForm.precio_unitario"
+                    type="number"
+                    step="0.01"
+                    class="form-input-circuit-pl-9 font-mono font-bold text-[#065F46]"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -186,7 +188,7 @@
           </div>
         </div>
         <div class="p-6">
-          <div class="flex items-center justify-between">
+          <label class="flex items-center justify-between cursor-pointer">
             <div>
               <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">INCLUIR SERVICIO DE INSTALACIÓN</p>
               <p v-if="repuestoSeleccionado?.precio_montaje" class="text-[11px] font-mono text-[#10B981] mt-1">
@@ -201,22 +203,22 @@
                 class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
                 :class="ventaForm.incluir_montaje ? 'right-0 border-[#10B981]' : 'left-0 border-gray-300'"
               />
-              <label
+              <span
                 class="toggle-label block overflow-hidden h-6 rounded-full cursor-pointer"
                 :class="ventaForm.incluir_montaje ? 'bg-[#10B981]' : 'bg-gray-300'"
-              ></label>
+              ></span>
             </div>
-          </div>
+          </label>
         </div>
       </div>
 
-      <!-- RESUMEN DE LA VENTA (Panel de Resultados) -->
+      <!-- RESUMEN DE LA VENTA (Módulo Crítico) -->
       <div class="bg-[#065F46] rounded-2xl p-6 shadow-xl border-b-8 border-[#044a37]">
         <div class="flex items-center gap-3 mb-4">
           <div class="p-2 bg-[#10B981] rounded-lg shadow-inner">
             <i class="ri-calculator-line text-white text-xl"></i>
           </div>
-          <h2 class="text-xs font-black text-white uppercase tracking-[0.2em]">Resumen_de_Transacción</h2>
+          <h2 class="text-xs font-black text-white uppercase tracking-[0.2em]">Transacción <span class="text-red-300">*</span></h2>
         </div>
         
         <div class="space-y-3">
@@ -246,8 +248,8 @@
         <div class="p-6">
           <textarea
             v-model="ventaForm.nota"
-            rows="2"
-            class="form-input-circuit resize-none"
+            rows="3"
+            class="w-full bg-white/10 border-2 border-white/10 rounded-xl p-4 text-[#065F46] placeholder:text-gray-400 focus:bg-white/20 focus:border-[#10B981] transition-all outline-none font-medium"
             placeholder="INFORMACIÓN ADICIONAL SOBRE LA VENTA..."
           ></textarea>
         </div>
@@ -257,8 +259,8 @@
       <div class="flex flex-col sm:flex-row justify-end gap-4 pt-6">
         <button
           type="submit"
-          :disabled="guardando"
-          class="px-10 py-3 bg-[#10B981] text-white rounded-xl hover:bg-[#059669] transition-all disabled:opacity-50 text-xs font-black uppercase tracking-[0.2em] shadow-lg shadow-[#10B981]/20 flex items-center justify-center gap-3"
+          :disabled="guardando || !formularioValido"
+          class="px-10 py-3 bg-[#10B981] text-white rounded-xl hover:bg-[#059669] transition-all disabled:opacity-50 disabled:cursor-not-allowed text-xs font-black uppercase tracking-[0.2em] shadow-lg shadow-[#10B981]/20 flex items-center justify-center gap-3"
         >
           <i v-if="guardando" class="ri-loader-4-line animate-spin text-lg"></i>
           <i v-else class="ri-shopping-cart-line text-lg"></i>
@@ -369,6 +371,16 @@ const total = computed(() => {
   })
 })
 
+// Validación del formulario
+const formularioValido = computed(() => {
+  return clienteForm.nombre_completo &&
+         clienteForm.telefono &&
+         ventaForm.repuesto_id &&
+         ventaForm.cantidad > 0 &&
+         repuestoSeleccionado.value &&
+         ventaForm.cantidad <= repuestoSeleccionado.value.cantidad_disponible
+})
+
 // Calcular precios al seleccionar repuesto
 const calcularPrecios = () => {
   const repuesto = repuestosDisponibles.value.find(r => r.id === ventaForm.repuesto_id)
@@ -444,29 +456,12 @@ const mostrarToast = (mensaje, tipo = 'success') => {
 }
 
 const guardarVenta = async () => {
-  // Validaciones
-  if (!clienteForm.nombre_completo || !clienteForm.dni_cedula) {
-    mostrarToast('Complete los datos del cliente', 'error')
-    return
-  }
-  
-  if (!ventaForm.repuesto_id) {
-    mostrarToast('Seleccione un repuesto', 'error')
-    return
-  }
-  
-  if (!ventaForm.cantidad || ventaForm.cantidad < 1) {
-    mostrarToast('Ingrese una cantidad válida', 'error')
-    return
-  }
-  
-  if (repuestoSeleccionado.value && ventaForm.cantidad > repuestoSeleccionado.value.cantidad_disponible) {
-    mostrarToast('Stock insuficiente', 'error')
+  if (!formularioValido.value) {
+    mostrarToast('Faltan parámetros obligatorios o hay inconsistencias', 'error')
     return
   }
   
   guardando.value = true
-  
   try {
     let clienteId = clienteSeleccionadoId.value
     
@@ -527,8 +522,32 @@ const guardarVenta = async () => {
       mostrarToast(result.error || 'Error al registrar la venta', 'error')
     }
   } catch (error) {
-    console.error('Error:', error)
-    mostrarToast('ERROR CRÍTICO AL GUARDAR', 'error')
+    console.error('Error completo:', error)
+    let mensajeError = 'ERROR CRÍTICO AL GUARDAR'
+    
+    if (error.response) {
+      // Error de respuesta del servidor
+      const status = error.response.status
+      const data = error.response.data
+      
+      if (status === 400) {
+        mensajeError = `Datos inválidos: ${data?.message || 'Verifique los campos obligatorios'}`
+      } else if (status === 404) {
+        mensajeError = 'Endpoint no encontrado - Verifique conexión con servidor'
+      } else if (status === 500) {
+        mensajeError = 'Error interno del servidor - Contacte al administrador'
+      } else {
+        mensajeError = `Error ${status}: ${data?.message || error.message}`
+      }
+    } else if (error.request) {
+      // Error de red
+      mensajeError = 'Error de conexión - Verifique su red o el servidor'
+    } else {
+      // Error de JavaScript
+      mensajeError = `Error: ${error.message}`
+    }
+    
+    mostrarToast(mensajeError, 'error')
   } finally {
     guardando.value = false
   }
@@ -541,11 +560,11 @@ onMounted(() => {
 
 <style scoped>
 .form-input-circuit {
-  @apply w-full px-4 py-2.5 bg-[#F8FAFC] border-2 border-[#D1D5DB] rounded-xl focus:ring-0 focus:border-[#10B981] focus:bg-white transition-all text-sm font-bold text-[#334155] placeholder:text-gray-300 shadow-inner outline-none;
+  @apply w-full px-4 py-2.5 bg-gray-50 border-2 border-gray-100 rounded-xl focus:ring-0 focus:border-[#10B981] focus:bg-white transition-all text-sm font-bold text-[#334155] placeholder:text-gray-300 shadow-inner outline-none;
 }
 
 .form-input-circuit-pl-9 {
-  @apply w-full pl-9 pr-4 py-2.5 bg-[#F8FAFC] border-2 border-[#D1D5DB] rounded-xl focus:ring-0 focus:border-[#10B981] focus:bg-white transition-all text-sm font-bold text-[#334155] placeholder:text-gray-300 shadow-inner outline-none;
+  @apply w-full pl-9 pr-4 py-2.5 bg-gray-50 border-2 border-gray-100 rounded-xl focus:ring-0 focus:border-[#10B981] focus:bg-white transition-all text-sm font-bold text-[#334155] placeholder:text-gray-300 shadow-inner outline-none;
 }
 
 .label-circuit {

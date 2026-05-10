@@ -156,7 +156,7 @@
                 </td>
                 <td class="px-6 py-4">
                   <div class="font-bold text-[#334155]">{{ venta.clientes?.nombre_completo || 'Cliente General' }}</div>
-                  <div class="text-[10px] font-mono text-gray-500">{{ venta.clientes?.dni_cedula || 'DNI_NULL' }}</div>
+                  <div class="text-[10px] font-mono text-gray-500">{{ venta.clientes?.telefono || 'TEL_NULL' }}</div>
                 </td>
                 <td class="px-6 py-4">
                   <span class="text-sm font-bold text-[#065F46]">{{ venta.stock_repuestos?.nombre_repuesto || 'N/A' }}</span>

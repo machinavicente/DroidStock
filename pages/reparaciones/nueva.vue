@@ -361,7 +361,32 @@ const guardarReparacion = async () => {
     mostrarToast('REGISTRO COMPLETADO EXITOSAMENTE')
     setTimeout(() => navigateTo('/reparaciones'), 1500)
   } catch (error) {
-    mostrarToast('ERROR CRÍTICO AL GUARDAR', 'error')
+    console.error('Error completo:', error)
+    let mensajeError = 'ERROR CRÍTICO AL GUARDAR'
+    
+    if (error.response) {
+      // Error de respuesta del servidor
+      const status = error.response.status
+      const data = error.response.data
+      
+      if (status === 400) {
+        mensajeError = `Datos inválidos: ${data?.message || 'Verifique los campos obligatorios'}`
+      } else if (status === 404) {
+        mensajeError = 'Endpoint no encontrado - Verifique conexión con servidor'
+      } else if (status === 500) {
+        mensajeError = 'Error interno del servidor - Contacte al administrador'
+      } else {
+        mensajeError = `Error ${status}: ${data?.message || error.message}`
+      }
+    } else if (error.request) {
+      // Error de red
+      mensajeError = 'Error de conexión - Verifique su red o el servidor'
+    } else {
+      // Error de JavaScript
+      mensajeError = `Error: ${error.message}`
+    }
+    
+    mostrarToast(mensajeError, 'error')
   } finally {
     guardando.value = false
   }

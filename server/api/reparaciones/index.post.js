@@ -27,12 +27,20 @@ export default defineEventHandler(async (event) => {
   const supabase = createServerClient()
 
   // Verificar que el cliente pertenece a la tienda
-  const { data: cliente } = await supabase
+  const { data: cliente, error: errorCliente } = await supabase
     .from('clientes')
     .select('id')
     .eq('id', cliente_id)
     .eq('tienda_id', tiendaId)
     .single()
+
+  if (errorCliente) {
+    console.error('Error al verificar cliente:', errorCliente)
+    throw createError({
+      statusCode: 500,
+      message: 'Error al verificar cliente: ' + errorCliente.message
+    })
+  }
 
   if (!cliente) {
     throw createError({
@@ -42,13 +50,21 @@ export default defineEventHandler(async (event) => {
   }
 
   // Verificar que el técnico existe y pertenece a la tienda
-  const { data: tecnico } = await supabase
+  const { data: tecnico, error: errorTecnico } = await supabase
     .from('tecnicos')
     .select('id')
     .eq('id', tecnico_id)
     .eq('tienda_id', tiendaId)
     .eq('activo', true)
     .single()
+
+  if (errorTecnico) {
+    console.error('Error al verificar técnico:', errorTecnico)
+    throw createError({
+      statusCode: 500,
+      message: 'Error al verificar técnico: ' + errorTecnico.message
+    })
+  }
 
   if (!tecnico) {
     throw createError({
@@ -76,9 +92,10 @@ export default defineEventHandler(async (event) => {
     .single()
 
   if (error) {
+    console.error('Error al crear reparación:', error)
     throw createError({
       statusCode: 500,
-      message: 'Error al crear la reparación'
+      message: 'Error al crear la reparación: ' + error.message
     })
   }
 

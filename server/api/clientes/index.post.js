@@ -9,41 +9,45 @@ export default defineEventHandler(async (event) => {
   const { nombre_completo, dni_cedula, telefono, email, direccion } = body
 
   // Validar campos requeridos
-  if (!nombre_completo || !dni_cedula) {
+  if (!nombre_completo) {
     throw createError({
       statusCode: 400,
-      message: 'Nombre completo y DNI/Cédula son requeridos'
+      message: 'Nombre completo es requerido'
     })
   }
 
   const supabase = createServerClient()
 
-  // Verificar si ya existe un cliente con el mismo DNI en esta tienda
-  const { data: clienteExistente } = await supabase
-    .from('clientes')
-    .select('id')
-    .eq('tienda_id', tiendaId)
-    .eq('dni_cedula', dni_cedula)
-    .maybeSingle()
+  // Verificar si ya existe un cliente con el mismo DNI en esta tienda (solo si se proporciona DNI)
+  if (dni_cedula) {
+    const { data: clienteExistente } = await supabase
+      .from('clientes')
+      .select('id')
+      .eq('tienda_id', tiendaId)
+      .eq('dni_cedula', dni_cedula)
+      .maybeSingle()
 
-  if (clienteExistente) {
-    throw createError({
-      statusCode: 400,
-      message: 'Ya existe un cliente con este DNI/Cédula'
-    })
+    if (clienteExistente) {
+      throw createError({
+        statusCode: 400,
+        message: 'Ya existe un cliente con este DNI/Cédula'
+      })
+    }
   }
 
   // Crear cliente (solo con los campos que existen en la tabla)
+  const clienteData = {
+    tienda_id: tiendaId,
+    nombre_completo: nombre_completo.trim(),
+    dni_cedula: dni_cedula ? dni_cedula.trim() : '',
+    telefono: telefono || null,
+    email: email || null,
+    direccion: direccion || null
+  }
+  
   const { data: cliente, error } = await supabase
     .from('clientes')
-    .insert({
-      tienda_id: tiendaId,
-      nombre_completo: nombre_completo.trim(),
-      dni_cedula: dni_cedula.trim(),
-      telefono: telefono || null,
-      email: email || null,
-      direccion: direccion || null  // Campo agregado
-    })
+    .insert(clienteData)
     .select()
     .single()
 

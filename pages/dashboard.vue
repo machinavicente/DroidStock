@@ -61,7 +61,6 @@
               <p class="text-[10px] font-black text-gray-400 uppercase tracking-wider">REPARACIONES ACTIVAS</p>
               <p class="text-3xl font-black text-[#065F46]">{{ estadisticas.reparacionesActivas }}</p>
               <p class="text-[10px] font-mono text-[#10B981] mt-2">
-                <i class="ri-arrow-up-line"></i> +{{ estadisticas.nuevasHoy || 0 }} hoy
               </p>
             </div>
             <div class="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center border border-blue-100">
@@ -79,7 +78,7 @@
             <div>
               <p class="text-[10px] font-black text-gray-400 uppercase tracking-wider">REPUESTOS EN STOCK</p>
               <p class="text-3xl font-black text-[#065F46]">{{ estadisticas.totalRepuestos }}</p>
-               <p class="text-[10px] font-mono text-gray-500 mt-2">Tipos diferentes</p>
+               <p class="text-[10px] font-mono text-gray-500 mt-2">Modelos diferentes</p>
             </div>
             <div class="w-12 h-12 rounded-xl bg-green-50 flex items-center justify-center border border-green-100">
               <i class="ri-stack-line text-xl text-[#10B981]"></i>
