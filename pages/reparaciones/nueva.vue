@@ -86,22 +86,22 @@
           </div>
           <div class="p-6 space-y-4">
             <div class="space-y-1">
-              <label class="label-circuit">Nombre Completo *</label>
+              <label class="label-circuit">Nombre Completo <span class="text-red-500">*</span></label>
               <input v-model="form.cliente_nombre" type="text" required class="form-input-circuit" placeholder="EJ: JUAN PEREZ" />
             </div>
             <div class="grid grid-cols-2 gap-4">
               <div class="space-y-1">
-                <label class="label-circuit">DNI / Cédula *</label>
-                <input v-model="form.cliente_dni" type="text" required class="form-input-circuit" />
+                <label class="label-circuit">Teléfono <span class="text-red-500">*</span></label>
+                <input v-model="form.cliente_telefono" required type="tel" class="form-input-circuit" placeholder="0414-1234567" />
               </div>
               <div class="space-y-1">
-                <label class="label-circuit">Teléfono</label>
-                <input v-model="form.cliente_telefono" type="tel" class="form-input-circuit" placeholder="04XX-XXXXXXX" />
+                <label class="label-circuit">DNI (opcional)</label>
+                <input v-model="form.cliente_dni" type="text" class="form-input-circuit" placeholder="V-12345678" />
               </div>
             </div>
             <div class="space-y-1">
-              <label class="label-circuit">Ubicación / Dirección</label>
-              <textarea v-model="form.cliente_direccion" rows="2" class="form-input-circuit resize-none"></textarea>
+              <label class="label-circuit">Dirección (opcional)</label>
+              <textarea v-model="form.cliente_direccion" rows="2" class="form-input-circuit resize-none" placeholder="Av. Principal #123, Edificio A, Piso 2"></textarea>
             </div>
           </div>
         </div>
@@ -115,9 +115,9 @@
             </div>
           </div>
           <div class="p-6 space-y-4">
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div class="space-y-1">
-                <label class="label-circuit">Tipo de Equipo *</label>
+                <label class="label-circuit">Tipo de Equipo <span class="text-red-500">*</span></label>
                 <select v-model="form.equipo_tipo" required class="form-input-circuit">
                   <option value="">SELECCIONAR</option>
                   <option value="Celular">SMARTPHONE</option>
@@ -128,26 +128,26 @@
                 </select>
               </div>
               <div class="space-y-1">
-                <label class="label-circuit">Marca / Modelo *</label>
-                <input v-model="form.equipo_marca_modelo" type="text" required class="form-input-circuit" placeholder="EJ: IPHONE 13" />
+                <label class="label-circuit">Marca / Modelo <span class="text-red-500">*</span></label>
+                <input v-model="form.equipo_marca_modelo" type="text" required class="form-input-circuit" placeholder="Samsung Galaxy S23" />
               </div>
             </div>
             <div class="grid grid-cols-2 gap-4">
               <div class="space-y-1">
-                <label class="label-circuit">Serial / IMEI</label>
-                <input v-model="form.numero_serie" type="text" class="form-input-circuit font-mono" placeholder="S/N: 0000000" />
+                <label class="label-circuit">Serial (opcional)</label>
+                <input v-model="form.numero_serie" type="text" class="form-input-circuit font-mono" placeholder="351234567890123" />
               </div>
               <div class="space-y-1">
-                <label class="label-circuit">Técnico Responsable</label>
-                <select v-model="form.tecnico_id" class="form-input-circuit">
-                  <option :value="null">SIN ASIGNAR</option>
+                <label class="label-circuit">Técnico Responsable <span class="text-red-500">*</span></label>
+                <select v-model="form.tecnico_id" required class="form-input-circuit">
+                  <option :value="null">SELECCIONAR</option>
                   <option v-for="tecnico in tecnicos" :key="tecnico.id" :value="tecnico.id">{{ tecnico.nombre }}</option>
                 </select>
               </div>
             </div>
             <div class="space-y-1">
-              <label class="label-circuit">Estado Físico al Recibir</label>
-              <textarea v-model="form.caracteristicas_estado" rows="2" class="form-input-circuit resize-none" placeholder="RAYONES, GOLPES, HUMEDAD..."></textarea>
+              <label class="label-circuit">Estado (opcional)</label>
+              <textarea v-model="form.caracteristicas_estado" rows="2" class="form-input-circuit resize-none" placeholder="Pantalla rota, carcasa rayada, no enciende"></textarea>
             </div>
           </div>
         </div>
@@ -159,14 +159,14 @@
           <div class="p-2 bg-[#10B981] rounded-lg shadow-inner">
             <i class="ri-error-warning-line text-white text-xl"></i>
           </div>
-          <h2 class="text-xs font-black text-white uppercase tracking-[0.2em]">Reporte_de_Avería</h2>
+          <h2 class="text-xs font-black text-white uppercase tracking-[0.2em]">Reporte de Avería <span class="text-red-300">*</span></h2>
         </div>
         <textarea
           v-model="form.falla_reportada"
           rows="3"
           required
           class="w-full bg-white/10 border-2 border-white/10 rounded-xl p-4 text-white placeholder:text-white/30 focus:bg-white/20 focus:border-[#10B981] transition-all outline-none font-medium"
-          placeholder="DESCRIBA DETALLADAMENTE EL PROBLEMA..."
+          placeholder="El teléfono no carga la batería, la pantalla está negra..."
         ></textarea>
       </div>
 
@@ -174,8 +174,8 @@
       <div class="flex flex-col sm:flex-row justify-end gap-4 pt-6">
         <button
           type="submit"
-          :disabled="guardando"
-          class="px-10 py-3 bg-[#10B981] text-white rounded-xl hover:bg-[#059669] transition-all disabled:opacity-50 text-xs font-black uppercase tracking-[0.2em] shadow-lg shadow-[#10B981]/20 flex items-center justify-center gap-3"
+          :disabled="guardando || !formularioValido"
+          class="px-10 py-3 bg-[#10B981] text-white rounded-xl hover:bg-[#059669] transition-all disabled:opacity-50 disabled:cursor-not-allowed text-xs font-black uppercase tracking-[0.2em] shadow-lg shadow-[#10B981]/20 flex items-center justify-center gap-3"
         >
           <i v-if="guardando" class="ri-loader-4-line animate-spin text-lg"></i>
           <i v-else class="ri-shield-check-line text-lg"></i>
@@ -303,8 +303,17 @@ const cargarTecnicos = async () => {
   }
 }
 
+const formularioValido = computed(() => {
+  return form.cliente_nombre &&
+         form.cliente_telefono &&
+         form.equipo_tipo &&
+         form.equipo_marca_modelo &&
+         form.tecnico_id &&
+         form.falla_reportada
+})
+
 const guardarReparacion = async () => {
-  if (!form.cliente_nombre || !form.cliente_dni || !form.equipo_tipo || !form.falla_reportada) {
+  if (!form.cliente_nombre || !form.cliente_telefono || !form.equipo_tipo || !form.equipo_marca_modelo || !form.tecnico_id || !form.falla_reportada) {
     mostrarToast('Faltan parámetros obligatorios', 'error')
     return
   }

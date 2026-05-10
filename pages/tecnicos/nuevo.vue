@@ -64,7 +64,7 @@
             <!-- Especialidad -->
             <div class="space-y-1">
               <label class="label-circuit">
-                Especialidad
+                Especialidad <span class="text-[#F59E0B]">*</span>
               </label>
               <div class="relative">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -72,6 +72,7 @@
                 </div>
                 <select
                   v-model="form.especialidad"
+                  required
                   class="form-select-circuit"
                 >
                   <option value="">-- SELECCIONAR ESPECIALIDAD --</option>
@@ -92,7 +93,7 @@
             <!-- Teléfono -->
             <div class="space-y-1">
               <label class="label-circuit">
-                Teléfono / WhatsApp
+                Teléfono / WhatsApp <span class="text-[#F59E0B]">*</span>
               </label>
               <div class="relative">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -101,6 +102,7 @@
                 <input
                   v-model="form.telefono"
                   type="tel"
+                  required
                   class="form-input-circuit pl-10"
                   placeholder="04XX-XXXXXXX"
                 />
@@ -110,27 +112,11 @@
           </div>
         </div>
 
-        <!-- Bloque informativo - Estilo crítico -->
-        <div class="bg-[#065F46] rounded-xl border-l-8 border-[#10B981] p-4">
-          <div class="flex items-start gap-3">
-            <div class="p-1.5 bg-[#10B981] rounded-lg shadow-inner">
-              <i class="ri-information-line text-white text-sm"></i>
-            </div>
-            <div>
-              <p class="text-[10px] font-black text-white uppercase tracking-widest mb-1">Info_System</p>
-              <p class="text-[11px] text-white/80 leading-relaxed">
-                Los técnicos pueden ser asignados a reparaciones. Una vez que tengan órdenes asignadas, 
-                no podrán ser eliminados del sistema.
-              </p>
-            </div>
-          </div>
-        </div>
-
         <!-- Botones de acción -->
         <div class="flex flex-col sm:flex-row justify-end gap-4 pt-6">
           <button
             type="submit"
-            :disabled="guardando"
+            :disabled="guardando || !formularioValido"
             class="px-10 py-3 bg-[#10B981] text-white rounded-xl hover:bg-[#059669] transition-all disabled:opacity-50 text-xs font-black uppercase tracking-[0.2em] shadow-lg shadow-[#10B981]/20 flex items-center justify-center gap-3"
           >
             <i v-if="guardando" class="ri-loader-4-line animate-spin text-lg"></i>
@@ -199,10 +185,27 @@ const form = reactive({
   telefono: ''
 })
 
+// Computed para verificar si el formulario está completo
+const formularioValido = computed(() => {
+  return form.nombre.trim() !== '' && 
+         form.especialidad.trim() !== '' && 
+         form.telefono.trim() !== ''
+})
+
 const guardarTecnico = async () => {
   // Validar campos requeridos
   if (!form.nombre || form.nombre.trim() === '') {
     mostrarToast('ERROR: NOMBRE_REQUERIDO', 'error')
+    return
+  }
+
+  if (!form.especialidad || form.especialidad.trim() === '') {
+    mostrarToast('ERROR: ESPECIALIDAD_REQUERIDA', 'error')
+    return
+  }
+
+  if (!form.telefono || form.telefono.trim() === '') {
+    mostrarToast('ERROR: TELEFONO_REQUERIDO', 'error')
     return
   }
 

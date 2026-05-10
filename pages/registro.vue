@@ -238,16 +238,9 @@ const filtrarCaracteresPermitidos = (texto) => {
   // Convertir a minúsculas automáticamente
   let filtrado = texto.toLowerCase().replace(/[^a-z0-9-]/g, '')
   
-  // Reemplazar múltiples guiones por uno solo
-  filtrado = filtrado.replace(/-+/g, '-')
-  
-  // Eliminar guiones al inicio y final
-  filtrado = filtrado.replace(/^-+|-+$/g, '')
-  
   // Limitar a 30 caracteres
   if (filtrado.length > 30) {
     filtrado = filtrado.substring(0, 30)
-    filtrado = filtrado.replace(/-+$/, '')
   }
   
   return filtrado

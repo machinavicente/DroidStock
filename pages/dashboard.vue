@@ -18,7 +18,7 @@
             </div>
           </div>
         </div>
-        <div class="flex flex-col items-end">
+        <div class="flex flex-col sm:items-end items-start">
           <div class="flex items-center gap-2 text-white/80">
             <i class="ri-calendar-line text-sm"></i>
             <span class="text-xs font-mono uppercase">{{ fechaActual }}</span>
@@ -32,22 +32,22 @@
     </div>
 
     <!-- Botones de acción rápida - Estilo Técnico -->
-    <div class="flex flex-wrap gap-3">
-      <NuxtLink to="/reparaciones/nueva" class="px-4 py-2.5 bg-[#065F46] text-white font-bold rounded-xl hover:bg-[#054a37] transition-all flex items-center gap-2 text-xs sm:text-sm border-b-4 border-[#033a2b] active:border-b-0 active:translate-y-1 shadow-md">
+    <div class="grid grid-cols-2 sm:flex sm:flex-wrap gap-3">
+      <NuxtLink to="/reparaciones/nueva" class="px-4 py-2.5 bg-[#065F46] text-white font-bold rounded-xl hover:bg-[#054a37] transition-all flex items-center justify-center gap-2 text-xs sm:text-sm border-b-4 border-[#033a2b] active:border-b-0 active:translate-y-1 shadow-md">
         <i class="ri-add-line text-sm sm:text-base"></i>
-        NUEVA REPARACIÓN
+        <span class="truncate text-center">NUEVA REPARACIÓN</span>
       </NuxtLink>
-      <NuxtLink to="/ventas/nueva" class="px-4 py-2.5 bg-[#10B981] text-white font-bold rounded-xl hover:bg-[#059669] transition-all flex items-center gap-2 text-xs sm:text-sm border-b-4 border-[#047857] active:border-b-0 active:translate-y-1 shadow-md">
+      <NuxtLink to="/ventas/nueva" class="px-4 py-2.5 bg-[#10B981] text-white font-bold rounded-xl hover:bg-[#059669] transition-all flex items-center justify-center gap-2 text-xs sm:text-sm border-b-4 border-[#047857] active:border-b-0 active:translate-y-1 shadow-md">
         <i class="ri-shopping-cart-line text-sm sm:text-base"></i>
-        NUEVA VENTA
+        <span class="truncate text-center">NUEVA VENTA</span>
       </NuxtLink>
-      <NuxtLink to="/repuestos/nuevo" class="px-4 py-2.5 bg-[#F59E0B] text-white font-bold rounded-xl hover:bg-[#D97706] transition-all flex items-center gap-2 text-xs sm:text-sm border-b-4 border-[#B45309] active:border-b-0 active:translate-y-1 shadow-md">
+      <NuxtLink to="/repuestos/nuevo" class="px-4 py-2.5 bg-[#F59E0B] text-white font-bold rounded-xl hover:bg-[#D97706] transition-all flex items-center justify-center gap-2 text-xs sm:text-sm border-b-4 border-[#B45309] active:border-b-0 active:translate-y-1 shadow-md">
         <i class="ri-stack-line text-sm sm:text-base"></i>
-        AGREGAR REPUESTO
+        <span class="truncate text-center">AGREGAR REPUESTO</span>
       </NuxtLink>
-      <button @click="refrescarDashboard" :disabled="refrescando" class="px-4 py-2.5 bg-[#334155] text-white font-bold rounded-xl hover:bg-[#1E293B] transition-all flex items-center gap-2 text-xs sm:text-sm border-b-4 border-[#1E293B] active:border-b-0 active:translate-y-1 shadow-md disabled:opacity-50">
+      <button @click="refrescarDashboard" :disabled="refrescando" class="px-4 py-2.5 bg-[#334155] text-white font-bold rounded-xl hover:bg-[#1E293B] transition-all flex items-center justify-center gap-2 text-xs sm:text-sm border-b-4 border-[#1E293B] active:border-b-0 active:translate-y-1 shadow-md disabled:opacity-50">
         <i :class="refrescando ? 'ri-loader-4-line animate-spin' : 'ri-refresh-line'" class="text-sm sm:text-base"></i>
-        {{ refrescando ? 'ACTUALIZANDO...' : 'ACTUALIZAR' }}
+        <span class="truncate text-center">{{ refrescando ? 'ACTUALIZANDO...' : 'ACTUALIZAR' }}</span>
       </button>
     </div>
 
@@ -211,36 +211,55 @@
     </div>
 
     <!-- Sección de reparaciones por estado -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
       <!-- Reparaciones Recibidas -->
       <div class="bg-white rounded-xl border border-[#D1D5DB] overflow-hidden">
-        <div class="px-5 py-3 bg-[#ECFDF5] border-b border-[#D1D5DB] flex justify-between items-center">
+        <div class="px-3 sm:px-5 py-3 bg-[#ECFDF5] border-b border-[#D1D5DB] flex justify-between items-center">
           <div class="flex items-center gap-2">
             <i class="ri-inbox-line text-[#065F46] text-lg"></i>
-            <h3 class="text-[10px] font-black text-[#065F46] uppercase tracking-widest">RECIBIDAS</h3>
-            <span class="px-2 py-0.5 text-[9px] font-black bg-[#D1FAE5] text-[#065F46] rounded-full">{{ reparacionesRecibidas.length }}</span>
+            <h3 class="text-[9px] sm:text-[10px] font-black text-[#065F46] uppercase tracking-wider">RECIBIDAS</h3>
+            <span class="px-1.5 sm:px-2 py-0.5 text-[8px] sm:text-[9px] font-black bg-[#D1FAE5] text-[#065F46] rounded-full">{{ reparacionesRecibidas.length }}</span>
           </div>
-          <NuxtLink to="/reparaciones?estado=Recibido" class="text-[9px] font-mono text-[#10B981] hover:text-[#065F46] transition-all uppercase tracking-wider">
+          <NuxtLink to="/reparaciones?estado=Recibido" class="text-[8px] sm:text-[9px] font-mono text-[#10B981] hover:text-[#065F46] transition-all uppercase tracking-wider hidden xs:block">
             VER_TODAS →
           </NuxtLink>
         </div>
         <div class="max-h-64 overflow-y-auto custom-scrollbar">
-          <table class="w-full">
+          <!-- Vista móvil: cards -->
+          <div class="xs:hidden p-3 space-y-2">
+            <div v-for="rep in reparacionesRecibidas" :key="rep.id" class="bg-[#F0FDF4] rounded-lg p-3 border border-[#D1FAE5]">
+              <div class="flex justify-between items-start mb-2">
+                <div class="flex-1 min-w-0">
+                  <p class="text-xs font-black text-[#065F46] truncate">{{ truncarNombre(rep.clientes?.nombre_completo || '-', 25) }}</p>
+                  <p class="text-[10px] text-gray-600 mt-1">{{ rep.equipo_marca_modelo || '-' }}</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-1 text-[9px] font-mono text-gray-400">
+                <i class="ri-time-line"></i>
+                {{ formatearFechaHora(obtenerFechaPorEstado(rep)) }}
+              </div>
+            </div>
+            <div v-if="reparacionesRecibidas.length === 0" class="text-center py-8">
+              <span class="text-[9px] font-mono text-gray-400 uppercase">SIN_REGISTROS</span>
+            </div>
+          </div>
+          <!-- Vista desktop: tabla -->
+          <table class="w-full hidden xs:table">
             <thead class="bg-[#F8FAFC] sticky top-0">
               <tr class="border-b border-[#D1D5DB]">
-                <th class="px-4 py-2 text-left text-[9px] font-mono text-gray-500 uppercase tracking-wider">CLIENTE</th>
-                <th class="px-4 py-2 text-left text-[9px] font-mono text-gray-500 uppercase tracking-wider">EQUIPO</th>
-                <th class="px-4 py-2 text-left text-[9px] font-mono text-gray-500 uppercase tracking-wider">FECHA</th>
+                <th class="px-3 sm:px-4 py-2 text-left text-[8px] sm:text-[9px] font-mono text-gray-500 uppercase tracking-wider">CLIENTE</th>
+                <th class="px-3 sm:px-4 py-2 text-left text-[8px] sm:text-[9px] font-mono text-gray-500 uppercase tracking-wider">EQUIPO</th>
+                <th class="px-3 sm:px-4 py-2 text-left text-[8px] sm:text-[9px] font-mono text-gray-500 uppercase tracking-wider">FECHA</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-[#D1D5DB]">
               <tr v-for="rep in reparacionesRecibidas" :key="rep.id" class="hover:bg-[#F0FDF4] transition-colors">
-                <td class="px-4 py-2 text-xs font-bold text-[#065F46]">{{ truncarNombre(rep.clientes?.nombre_completo || '-', 20) }}</td>
-                <td class="px-4 py-2 text-[11px] text-gray-600">{{ rep.equipo_marca_modelo || '-' }}</td>
-                <td class="px-4 py-2 text-[10px] font-mono text-gray-400">{{ formatearFechaHora(obtenerFechaPorEstado(rep)) }}</td>
+                <td class="px-3 sm:px-4 py-2 text-xs font-bold text-[#065F46]">{{ truncarNombre(rep.clientes?.nombre_completo || '-', 20) }}</td>
+                <td class="px-3 sm:px-4 py-2 text-[10px] sm:text-[11px] text-gray-600">{{ rep.equipo_marca_modelo || '-' }}</td>
+                <td class="px-3 sm:px-4 py-2 text-[9px] sm:text-[10px] font-mono text-gray-400">{{ formatearFechaHora(obtenerFechaPorEstado(rep)) }}</td>
               </tr>
               <tr v-if="reparacionesRecibidas.length === 0">
-                <td colspan="3" class="px-4 py-8 text-center">
+                <td colspan="3" class="px-3 sm:px-4 py-8 text-center">
                   <span class="text-[9px] font-mono text-gray-400 uppercase">SIN_REGISTROS</span>
                 </td>
               </tr>
@@ -251,33 +270,52 @@
 
       <!-- Reparaciones En Proceso -->
       <div class="bg-white rounded-xl border border-[#D1D5DB] overflow-hidden">
-        <div class="px-5 py-3 bg-amber-50 border-b border-[#D1D5DB] flex justify-between items-center">
+        <div class="px-3 sm:px-5 py-3 bg-amber-50 border-b border-[#D1D5DB] flex justify-between items-center">
           <div class="flex items-center gap-2">
             <i class="ri-time-line text-amber-600 text-lg"></i>
-            <h3 class="text-[10px] font-black text-[#D97706] uppercase tracking-widest">EN PROCESO</h3>
-            <span class="px-2 py-0.5 text-[9px] font-black bg-amber-100 text-amber-700 rounded-full">{{ reparacionesEnProceso.length }}</span>
+            <h3 class="text-[9px] sm:text-[10px] font-black text-[#D97706] uppercase tracking-wider">EN PROCESO</h3>
+            <span class="px-1.5 sm:px-2 py-0.5 text-[8px] sm:text-[9px] font-black bg-amber-100 text-amber-700 rounded-full">{{ reparacionesEnProceso.length }}</span>
           </div>
-          <NuxtLink to="/reparaciones?estado=En reparacion" class="text-[9px] font-mono text-[#10B981] hover:text-[#065F46] transition-all uppercase tracking-wider">
+          <NuxtLink to="/reparaciones?estado=En reparacion" class="text-[8px] sm:text-[9px] font-mono text-[#10B981] hover:text-[#065F46] transition-all uppercase tracking-wider hidden xs:block">
             VER_TODAS →
           </NuxtLink>
         </div>
         <div class="max-h-64 overflow-y-auto custom-scrollbar">
-          <table class="w-full">
+          <!-- Vista móvil: cards -->
+          <div class="xs:hidden p-3 space-y-2">
+            <div v-for="rep in reparacionesEnProceso" :key="rep.id" class="bg-amber-50/30 rounded-lg p-3 border border-amber-100">
+              <div class="flex justify-between items-start mb-2">
+                <div class="flex-1 min-w-0">
+                  <p class="text-xs font-black text-[#065F46] truncate">{{ truncarNombre(rep.clientes?.nombre_completo || '-', 25) }}</p>
+                  <p class="text-[10px] text-gray-600 mt-1">{{ rep.equipo_marca_modelo || '-' }}</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-1 text-[9px] font-mono text-gray-400">
+                <i class="ri-time-line"></i>
+                {{ formatearFechaHora(obtenerFechaPorEstado(rep)) }}
+              </div>
+            </div>
+            <div v-if="reparacionesEnProceso.length === 0" class="text-center py-8">
+              <span class="text-[9px] font-mono text-gray-400 uppercase">SIN_REGISTROS</span>
+            </div>
+          </div>
+          <!-- Vista desktop: tabla -->
+          <table class="w-full hidden xs:table">
             <thead class="bg-[#F8FAFC] sticky top-0">
               <tr class="border-b border-[#D1D5DB]">
-                <th class="px-4 py-2 text-left text-[9px] font-mono text-gray-500 uppercase tracking-wider">CLIENTE</th>
-                <th class="px-4 py-2 text-left text-[9px] font-mono text-gray-500 uppercase tracking-wider">EQUIPO</th>
-                <th class="px-4 py-2 text-left text-[9px] font-mono text-gray-500 uppercase tracking-wider">FECHA</th>
+                <th class="px-3 sm:px-4 py-2 text-left text-[8px] sm:text-[9px] font-mono text-gray-500 uppercase tracking-wider">CLIENTE</th>
+                <th class="px-3 sm:px-4 py-2 text-left text-[8px] sm:text-[9px] font-mono text-gray-500 uppercase tracking-wider">EQUIPO</th>
+                <th class="px-3 sm:px-4 py-2 text-left text-[8px] sm:text-[9px] font-mono text-gray-500 uppercase tracking-wider">FECHA</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-[#D1D5DB]">
               <tr v-for="rep in reparacionesEnProceso" :key="rep.id" class="hover:bg-amber-50/30 transition-colors">
-                <td class="px-4 py-2 text-xs font-bold text-[#065F46]">{{ truncarNombre(rep.clientes?.nombre_completo || '-', 20) }}</td>
-                <td class="px-4 py-2 text-[11px] text-gray-600">{{ rep.equipo_marca_modelo || '-' }}</td>
-                <td class="px-4 py-2 text-[10px] font-mono text-gray-400">{{ formatearFechaHora(obtenerFechaPorEstado(rep)) }}</td>
+                <td class="px-3 sm:px-4 py-2 text-xs font-bold text-[#065F46]">{{ truncarNombre(rep.clientes?.nombre_completo || '-', 20) }}</td>
+                <td class="px-3 sm:px-4 py-2 text-[10px] sm:text-[11px] text-gray-600">{{ rep.equipo_marca_modelo || '-' }}</td>
+                <td class="px-3 sm:px-4 py-2 text-[9px] sm:text-[10px] font-mono text-gray-400">{{ formatearFechaHora(obtenerFechaPorEstado(rep)) }}</td>
               </tr>
               <tr v-if="reparacionesEnProceso.length === 0">
-                <td colspan="3" class="px-4 py-8 text-center">
+                <td colspan="3" class="px-3 sm:px-4 py-8 text-center">
                   <span class="text-[9px] font-mono text-gray-400 uppercase">SIN_REGISTROS</span>
                 </td>
               </tr>
@@ -287,36 +325,55 @@
       </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
       <!-- Reparaciones Finalizadas -->
       <div class="bg-white rounded-xl border border-[#D1D5DB] overflow-hidden">
-        <div class="px-5 py-3 bg-green-50 border-b border-[#D1D5DB] flex justify-between items-center">
+        <div class="px-3 sm:px-5 py-3 bg-green-50 border-b border-[#D1D5DB] flex justify-between items-center">
           <div class="flex items-center gap-2">
             <i class="ri-checkbox-circle-line text-[#10B981] text-lg"></i>
-            <h3 class="text-[10px] font-black text-[#10B981] uppercase tracking-widest">FINALIZADAS</h3>
-            <span class="px-2 py-0.5 text-[9px] font-black bg-green-100 text-green-700 rounded-full">{{ reparacionesFinalizadas.length }}</span>
+            <h3 class="text-[9px] sm:text-[10px] font-black text-[#10B981] uppercase tracking-wider">FINALIZADAS</h3>
+            <span class="px-1.5 sm:px-2 py-0.5 text-[8px] sm:text-[9px] font-black bg-green-100 text-green-700 rounded-full">{{ reparacionesFinalizadas.length }}</span>
           </div>
-          <NuxtLink to="/reparaciones?estado=Finalizado" class="text-[9px] font-mono text-[#10B981] hover:text-[#065F46] transition-all uppercase tracking-wider">
+          <NuxtLink to="/reparaciones?estado=Finalizado" class="text-[8px] sm:text-[9px] font-mono text-[#10B981] hover:text-[#065F46] transition-all uppercase tracking-wider hidden xs:block">
             VER_TODAS →
           </NuxtLink>
         </div>
         <div class="max-h-64 overflow-y-auto custom-scrollbar">
-          <table class="w-full">
+          <!-- Vista móvil: cards -->
+          <div class="xs:hidden p-3 space-y-2">
+            <div v-for="rep in reparacionesFinalizadas" :key="rep.id" class="bg-green-50/30 rounded-lg p-3 border border-green-100">
+              <div class="flex justify-between items-start mb-2">
+                <div class="flex-1 min-w-0">
+                  <p class="text-xs font-black text-[#065F46] truncate">{{ truncarNombre(rep.clientes?.nombre_completo || '-', 25) }}</p>
+                  <p class="text-[10px] text-gray-600 mt-1">{{ rep.equipo_marca_modelo || '-' }}</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-1 text-[9px] font-mono text-gray-400">
+                <i class="ri-time-line"></i>
+                {{ formatearFechaHora(obtenerFechaPorEstado(rep)) }}
+              </div>
+            </div>
+            <div v-if="reparacionesFinalizadas.length === 0" class="text-center py-8">
+              <span class="text-[9px] font-mono text-gray-400 uppercase">SIN_REGISTROS</span>
+            </div>
+          </div>
+          <!-- Vista desktop: tabla -->
+          <table class="w-full hidden xs:table">
             <thead class="bg-[#F8FAFC] sticky top-0">
               <tr class="border-b border-[#D1D5DB]">
-                <th class="px-4 py-2 text-left text-[9px] font-mono text-gray-500 uppercase tracking-wider">CLIENTE</th>
-                <th class="px-4 py-2 text-left text-[9px] font-mono text-gray-500 uppercase tracking-wider">EQUIPO</th>
-                <th class="px-4 py-2 text-left text-[9px] font-mono text-gray-500 uppercase tracking-wider">FECHA</th>
+                <th class="px-3 sm:px-4 py-2 text-left text-[8px] sm:text-[9px] font-mono text-gray-500 uppercase tracking-wider">CLIENTE</th>
+                <th class="px-3 sm:px-4 py-2 text-left text-[8px] sm:text-[9px] font-mono text-gray-500 uppercase tracking-wider">EQUIPO</th>
+                <th class="px-3 sm:px-4 py-2 text-left text-[8px] sm:text-[9px] font-mono text-gray-500 uppercase tracking-wider">FECHA</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-[#D1D5DB]">
               <tr v-for="rep in reparacionesFinalizadas" :key="rep.id" class="hover:bg-green-50/30 transition-colors">
-                <td class="px-4 py-2 text-xs font-bold text-[#065F46]">{{ truncarNombre(rep.clientes?.nombre_completo || '-', 20) }}</td>
-                <td class="px-4 py-2 text-[11px] text-gray-600">{{ rep.equipo_marca_modelo || '-' }}</td>
-                <td class="px-4 py-2 text-[10px] font-mono text-gray-400">{{ formatearFechaHora(obtenerFechaPorEstado(rep)) }}</td>
+                <td class="px-3 sm:px-4 py-2 text-xs font-bold text-[#065F46]">{{ truncarNombre(rep.clientes?.nombre_completo || '-', 20) }}</td>
+                <td class="px-3 sm:px-4 py-2 text-[10px] sm:text-[11px] text-gray-600">{{ rep.equipo_marca_modelo || '-' }}</td>
+                <td class="px-3 sm:px-4 py-2 text-[9px] sm:text-[10px] font-mono text-gray-400">{{ formatearFechaHora(obtenerFechaPorEstado(rep)) }}</td>
               </tr>
               <tr v-if="reparacionesFinalizadas.length === 0">
-                <td colspan="3" class="px-4 py-8 text-center">
+                <td colspan="3" class="px-3 sm:px-4 py-8 text-center">
                   <span class="text-[9px] font-mono text-gray-400 uppercase">SIN_REGISTROS</span>
                 </td>
               </tr>
@@ -327,33 +384,52 @@
 
       <!-- Reparaciones Entregadas -->
       <div class="bg-white rounded-xl border border-[#D1D5DB] overflow-hidden">
-        <div class="px-5 py-3 bg-gray-50 border-b border-[#D1D5DB] flex justify-between items-center">
+        <div class="px-3 sm:px-5 py-3 bg-gray-50 border-b border-[#D1D5DB] flex justify-between items-center">
           <div class="flex items-center gap-2">
             <i class="ri-hand-heart-line text-gray-600 text-lg"></i>
-            <h3 class="text-[10px] font-black text-gray-600 uppercase tracking-widest">ENTREGADAS</h3>
-            <span class="px-2 py-0.5 text-[9px] font-black bg-gray-200 text-gray-700 rounded-full">{{ reparacionesEntregadas.length }}</span>
+            <h3 class="text-[9px] sm:text-[10px] font-black text-gray-600 uppercase tracking-wider">ENTREGADAS</h3>
+            <span class="px-1.5 sm:px-2 py-0.5 text-[8px] sm:text-[9px] font-black bg-gray-200 text-gray-700 rounded-full">{{ reparacionesEntregadas.length }}</span>
           </div>
-          <NuxtLink to="/reparaciones?estado=Entregado" class="text-[9px] font-mono text-[#10B981] hover:text-[#065F46] transition-all uppercase tracking-wider">
+          <NuxtLink to="/reparaciones?estado=Entregado" class="text-[8px] sm:text-[9px] font-mono text-[#10B981] hover:text-[#065F46] transition-all uppercase tracking-wider hidden xs:block">
             VER_TODAS →
           </NuxtLink>
         </div>
         <div class="max-h-64 overflow-y-auto custom-scrollbar">
-          <table class="w-full">
+          <!-- Vista móvil: cards -->
+          <div class="xs:hidden p-3 space-y-2">
+            <div v-for="rep in reparacionesEntregadas" :key="rep.id" class="bg-gray-50 rounded-lg p-3 border border-gray-200">
+              <div class="flex justify-between items-start mb-2">
+                <div class="flex-1 min-w-0">
+                  <p class="text-xs font-black text-[#065F46] truncate">{{ truncarNombre(rep.clientes?.nombre_completo || '-', 25) }}</p>
+                  <p class="text-[10px] text-gray-600 mt-1">{{ rep.equipo_marca_modelo || '-' }}</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-1 text-[9px] font-mono text-gray-400">
+                <i class="ri-time-line"></i>
+                {{ formatearFechaHora(obtenerFechaPorEstado(rep)) }}
+              </div>
+            </div>
+            <div v-if="reparacionesEntregadas.length === 0" class="text-center py-8">
+              <span class="text-[9px] font-mono text-gray-400 uppercase">SIN_REGISTROS</span>
+            </div>
+          </div>
+          <!-- Vista desktop: tabla -->
+          <table class="w-full hidden xs:table">
             <thead class="bg-[#F8FAFC] sticky top-0">
               <tr class="border-b border-[#D1D5DB]">
-                <th class="px-4 py-2 text-left text-[9px] font-mono text-gray-500 uppercase tracking-wider">CLIENTE</th>
-                <th class="px-4 py-2 text-left text-[9px] font-mono text-gray-500 uppercase tracking-wider">EQUIPO</th>
-                <th class="px-4 py-2 text-left text-[9px] font-mono text-gray-500 uppercase tracking-wider">FECHA</th>
+                <th class="px-3 sm:px-4 py-2 text-left text-[8px] sm:text-[9px] font-mono text-gray-500 uppercase tracking-wider">CLIENTE</th>
+                <th class="px-3 sm:px-4 py-2 text-left text-[8px] sm:text-[9px] font-mono text-gray-500 uppercase tracking-wider">EQUIPO</th>
+                <th class="px-3 sm:px-4 py-2 text-left text-[8px] sm:text-[9px] font-mono text-gray-500 uppercase tracking-wider">FECHA</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-[#D1D5DB]">
               <tr v-for="rep in reparacionesEntregadas" :key="rep.id" class="hover:bg-gray-50 transition-colors">
-                <td class="px-4 py-2 text-xs font-bold text-[#065F46]">{{ truncarNombre(rep.clientes?.nombre_completo || '-', 20) }}</td>
-                <td class="px-4 py-2 text-[11px] text-gray-600">{{ rep.equipo_marca_modelo || '-' }}</td>
-                <td class="px-4 py-2 text-[10px] font-mono text-gray-400">{{ formatearFechaHora(obtenerFechaPorEstado(rep)) }}</td>
+                <td class="px-3 sm:px-4 py-2 text-xs font-bold text-[#065F46]">{{ truncarNombre(rep.clientes?.nombre_completo || '-', 20) }}</td>
+                <td class="px-3 sm:px-4 py-2 text-[10px] sm:text-[11px] text-gray-600">{{ rep.equipo_marca_modelo || '-' }}</td>
+                <td class="px-3 sm:px-4 py-2 text-[9px] sm:text-[10px] font-mono text-gray-400">{{ formatearFechaHora(obtenerFechaPorEstado(rep)) }}</td>
               </tr>
               <tr v-if="reparacionesEntregadas.length === 0">
-                <td colspan="3" class="px-4 py-8 text-center">
+                <td colspan="3" class="px-3 sm:px-4 py-8 text-center">
                   <span class="text-[9px] font-mono text-gray-400 uppercase">SIN_REGISTROS</span>
                 </td>
               </tr>
@@ -365,13 +441,13 @@
 
     <!-- Últimas Ventas CON PAGINACIÓN -->
     <div class="bg-white rounded-xl border border-[#D1D5DB] overflow-hidden">
-      <div class="px-5 py-3 bg-[#F8FAFC] border-b border-[#D1D5DB] flex justify-between items-center flex-wrap gap-2">
+      <div class="px-3 sm:px-5 py-3 bg-[#F8FAFC] border-b border-[#D1D5DB] flex justify-between items-center flex-wrap gap-2">
         <div class="flex items-center gap-2">
           <i class="ri-shopping-cart-line text-[#10B981] text-lg"></i>
-          <h3 class="text-[10px] font-black text-[#065F46] uppercase tracking-widest">ÚLTIMAS VENTAS</h3>
+          <h3 class="text-[9px] sm:text-[10px] font-black text-[#065F46] uppercase tracking-wider">ÚLTIMAS VENTAS</h3>
         </div>
-        <div class="flex items-center gap-3">
-          <span class="text-[9px] font-mono text-gray-400">DATA_STREAM: {{ ventasInicio }}-{{ ventasFin }}/{{ ultimasVentas.length }}</span>
+        <div class="flex items-center gap-2 sm:gap-3">
+          <span class="text-[8px] sm:text-[9px] font-mono text-gray-400 hidden xs:block">DATA_STREAM: {{ ventasInicio }}-{{ ventasFin }}/{{ ultimasVentas.length }}</span>
           <div class="flex gap-1">
             <button @click="ventasPaginaAnterior" :disabled="ventasPaginaActual === 1" class="p-1.5 rounded-lg border border-[#D1D5DB] bg-white hover:bg-gray-100 disabled:opacity-30 transition-all">
               <i class="ri-arrow-left-s-line text-xs"></i>
@@ -380,40 +456,63 @@
               <i class="ri-arrow-right-s-line text-xs"></i>
             </button>
           </div>
-          <NuxtLink to="/ventas" class="text-[9px] font-mono text-[#10B981] hover:text-[#065F46] transition-all uppercase tracking-wider">
+          <NuxtLink to="/ventas" class="text-[8px] sm:text-[9px] font-mono text-[#10B981] hover:text-[#065F46] transition-all uppercase tracking-wider hidden xs:block">
             VER_TODAS →
           </NuxtLink>
         </div>
       </div>
-      <div class="overflow-x-auto">
+      <!-- Vista móvil: cards -->
+      <div class="xs:hidden p-3 space-y-2">
+        <div v-for="venta in ventasPaginadas" :key="venta.id" class="bg-[#F0FDF4] rounded-lg p-3 border border-[#D1FAE5]">
+          <div class="flex justify-between items-start mb-2">
+            <div class="flex-1 min-w-0">
+              <p class="text-xs font-black text-[#065F46] truncate">{{ truncarNombre(venta.clientes?.nombre_completo || '-', 25) }}</p>
+              <p class="text-[10px] text-gray-600 mt-1">{{ venta.stock_repuestos?.nombre_repuesto || '-' }}</p>
+            </div>
+            <div class="text-right ml-2">
+              <p class="text-sm font-black text-[#10B981]">${{ venta.total?.toFixed(2) || 0 }}</p>
+              <p class="text-[9px] font-mono text-gray-500">{{ venta.cantidad }} uds</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-1 text-[9px] font-mono text-gray-400">
+            <i class="ri-calendar-line"></i>
+            {{ formatearFecha(venta.created_at) }}
+          </div>
+        </div>
+        <div v-if="ventasPaginadas.length === 0" class="text-center py-8">
+          <span class="text-[9px] font-mono text-gray-400 uppercase">SIN_REGISTROS</span>
+        </div>
+      </div>
+      <!-- Vista desktop: tabla -->
+      <div class="overflow-x-auto hidden xs:block">
         <table class="min-w-[600px] w-full">
           <thead class="bg-[#F8FAFC]">
             <tr class="border-b border-[#D1D5DB]">
-              <th class="px-4 py-2 text-left text-[9px] font-mono text-gray-500 uppercase tracking-wider">FECHA</th>
-              <th class="px-4 py-2 text-left text-[9px] font-mono text-gray-500 uppercase tracking-wider">CLIENTE</th>
-              <th class="px-4 py-2 text-left text-[9px] font-mono text-gray-500 uppercase tracking-wider">REPUESTO</th>
-              <th class="px-4 py-2 text-center text-[9px] font-mono text-gray-500 uppercase tracking-wider">CANT.</th>
-              <th class="px-4 py-2 text-right text-[9px] font-mono text-gray-500 uppercase tracking-wider">TOTAL</th>
+              <th class="px-3 sm:px-4 py-2 text-left text-[8px] sm:text-[9px] font-mono text-gray-500 uppercase tracking-wider">FECHA</th>
+              <th class="px-3 sm:px-4 py-2 text-left text-[8px] sm:text-[9px] font-mono text-gray-500 uppercase tracking-wider">CLIENTE</th>
+              <th class="px-3 sm:px-4 py-2 text-left text-[8px] sm:text-[9px] font-mono text-gray-500 uppercase tracking-wider">REPUESTO</th>
+              <th class="px-3 sm:px-4 py-2 text-center text-[8px] sm:text-[9px] font-mono text-gray-500 uppercase tracking-wider">CANT.</th>
+              <th class="px-3 sm:px-4 py-2 text-right text-[8px] sm:text-[9px] font-mono text-gray-500 uppercase tracking-wider">TOTAL</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-[#D1D5DB]">
             <tr v-for="venta in ventasPaginadas" :key="venta.id" class="hover:bg-[#F0FDF4] transition-colors">
-              <td class="px-4 py-2 text-[10px] font-mono text-gray-500">{{ formatearFecha(venta.created_at) }}</td>
-              <td class="px-4 py-2 text-xs font-bold text-[#065F46]">{{ truncarNombre(venta.clientes?.nombre_completo || '-', 20) }}</td>
-              <td class="px-4 py-2 text-[11px] text-gray-600">{{ venta.stock_repuestos?.nombre_repuesto || '-' }}</td>
-              <td class="px-4 py-2 text-center text-[11px] font-mono text-gray-600">{{ venta.cantidad }}</td>
-              <td class="px-4 py-2 text-right text-sm font-black text-[#10B981]">${{ venta.total?.toFixed(2) || 0 }}</td>
+              <td class="px-3 sm:px-4 py-2 text-[9px] sm:text-[10px] font-mono text-gray-500">{{ formatearFecha(venta.created_at) }}</td>
+              <td class="px-3 sm:px-4 py-2 text-xs font-bold text-[#065F46]">{{ truncarNombre(venta.clientes?.nombre_completo || '-', 20) }}</td>
+              <td class="px-3 sm:px-4 py-2 text-[10px] sm:text-[11px] text-gray-600">{{ venta.stock_repuestos?.nombre_repuesto || '-' }}</td>
+              <td class="px-3 sm:px-4 py-2 text-center text-[10px] sm:text-[11px] font-mono text-gray-600">{{ venta.cantidad }}</td>
+              <td class="px-3 sm:px-4 py-2 text-right text-sm font-black text-[#10B981]">${{ venta.total?.toFixed(2) || 0 }}</td>
             </tr>
             <tr v-if="ventasPaginadas.length === 0">
-              <td colspan="5" class="px-4 py-8 text-center">
+              <td colspan="5" class="px-3 sm:px-4 py-8 text-center">
                 <span class="text-[9px] font-mono text-gray-400 uppercase">SIN_REGISTROS</span>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
-      <div v-if="ventasTotalPaginas > 1" class="px-4 py-2 border-t border-[#D1D5DB] bg-[#F8FAFC] flex justify-center gap-1 flex-wrap">
-        <button v-for="pagina in ventasTotalPaginas" :key="pagina" @click="ventasIrPagina(pagina)" :class="['px-3 py-1 text-[10px] font-mono rounded transition-all', ventasPaginaActual === pagina ? 'bg-[#065F46] text-white' : 'bg-white text-gray-600 hover:bg-gray-100 border border-[#D1D5DB]']">
+      <div v-if="ventasTotalPaginas > 1" class="px-3 sm:px-4 py-2 border-t border-[#D1D5DB] bg-[#F8FAFC] flex justify-center gap-1 flex-wrap">
+        <button v-for="pagina in ventasTotalPaginas" :key="pagina" @click="ventasIrPagina(pagina)" :class="['px-2 sm:px-3 py-1 text-[9px] sm:text-[10px] font-mono rounded transition-all', ventasPaginaActual === pagina ? 'bg-[#065F46] text-white' : 'bg-white text-gray-600 hover:bg-gray-100 border border-[#D1D5DB]']">
           {{ pagina }}
         </button>
       </div>
@@ -421,13 +520,13 @@
 
     <!-- Repuestos con stock bajo CON PAGINACIÓN -->
     <div class="bg-white rounded-xl border border-[#D1D5DB] overflow-hidden">
-      <div class="px-5 py-3 bg-[#FEF3C7] border-b border-[#FDE68A] flex justify-between items-center flex-wrap gap-2">
+      <div class="px-3 sm:px-5 py-3 bg-[#FEF3C7] border-b border-[#FDE68A] flex justify-between items-center flex-wrap gap-2">
         <div class="flex items-center gap-2">
           <i class="ri-alert-line text-[#F59E0B] text-lg"></i>
-          <h3 class="text-[10px] font-black text-[#D97706] uppercase tracking-widest">STOCK CRÍTICO</h3>
+          <h3 class="text-[9px] sm:text-[10px] font-black text-[#D97706] uppercase tracking-wider">STOCK CRÍTICO</h3>
         </div>
-        <div class="flex items-center gap-3">
-          <span class="text-[9px] font-mono text-gray-500">DATA_STREAM: {{ stockInicio }}-{{ stockFin }}/{{ repuestosStockBajo.length }}</span>
+        <div class="flex items-center gap-2 sm:gap-3">
+          <span class="text-[8px] sm:text-[9px] font-mono text-gray-500 hidden xs:block">DATA_STREAM: {{ stockInicio }}-{{ stockFin }}/{{ repuestosStockBajo.length }}</span>
           <div class="flex gap-1">
             <button @click="stockPaginaAnterior" :disabled="stockPaginaActual === 1" class="p-1.5 rounded-lg border border-[#D1D5DB] bg-white hover:bg-gray-100 disabled:opacity-30 transition-all">
               <i class="ri-arrow-left-s-line text-xs"></i>
@@ -436,40 +535,62 @@
               <i class="ri-arrow-right-s-line text-xs"></i>
             </button>
           </div>
-          <NuxtLink to="/repuestos" class="text-[9px] font-mono text-[#10B981] hover:text-[#065F46] transition-all uppercase tracking-wider">
+          <NuxtLink to="/repuestos" class="text-[8px] sm:text-[9px] font-mono text-[#10B981] hover:text-[#065F46] transition-all uppercase tracking-wider hidden xs:block">
             VER_TODAS →
           </NuxtLink>
         </div>
       </div>
-      <div class="overflow-x-auto">
+      <!-- Vista móvil: cards -->
+      <div class="xs:hidden p-3 space-y-2">
+        <div v-for="repuesto in stockPaginados" :key="repuesto.id" class="bg-amber-50/30 rounded-lg p-3 border border-amber-100">
+          <div class="flex justify-between items-start mb-2">
+            <div class="flex-1 min-w-0">
+              <p class="text-xs font-black text-[#065F46] truncate">{{ truncarNombre(repuesto.nombre_repuesto, 30) }}</p>
+            </div>
+            <div class="text-right ml-2">
+              <p class="text-sm font-black text-[#10B981]">${{ repuesto.precio_venta || 0 }}</p>
+            </div>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="inline-flex px-2 py-0.5 text-[9px] font-black bg-amber-100 text-amber-700 rounded-full border border-amber-200">
+              {{ repuesto.cantidad_disponible }} UDS
+            </span>
+          </div>
+        </div>
+        <div v-if="stockPaginados.length === 0" class="text-center py-8">
+          <span class="text-[9px] font-mono text-gray-400 uppercase">SIN_REGISTROS</span>
+        </div>
+      </div>
+      <!-- Vista desktop: tabla -->
+      <div class="overflow-x-auto hidden xs:block">
         <table class="min-w-[600px] w-full">
           <thead class="bg-[#F8FAFC]">
             <tr class="border-b border-[#D1D5DB]">
-              <th class="px-4 py-2 text-left text-[9px] font-mono text-gray-500 uppercase tracking-wider">REPUESTO</th>
-              <th class="px-4 py-2 text-center text-[9px] font-mono text-gray-500 uppercase tracking-wider">STOCK</th>
-              <th class="px-4 py-2 text-right text-[9px] font-mono text-gray-500 uppercase tracking-wider">PRECIO VENTA</th>
+              <th class="px-3 sm:px-4 py-2 text-left text-[8px] sm:text-[9px] font-mono text-gray-500 uppercase tracking-wider">REPUESTO</th>
+              <th class="px-3 sm:px-4 py-2 text-center text-[8px] sm:text-[9px] font-mono text-gray-500 uppercase tracking-wider">STOCK</th>
+              <th class="px-3 sm:px-4 py-2 text-right text-[8px] sm:text-[9px] font-mono text-gray-500 uppercase tracking-wider">PRECIO VENTA</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-[#D1D5DB]">
             <tr v-for="repuesto in stockPaginados" :key="repuesto.id" class="hover:bg-amber-50/30 transition-colors">
-              <td class="px-4 py-2 text-xs font-bold text-[#065F46]">{{ truncarNombre(repuesto.nombre_repuesto, 30) }}</td>
-              <td class="px-4 py-2 text-center">
+              <td class="px-3 sm:px-4 py-2 text-xs font-bold text-[#065F46]">{{ truncarNombre(repuesto.nombre_repuesto, 30) }}</td>
+              <td class="px-3 sm:px-4 py-2 text-center">
                 <span class="inline-flex px-2 py-0.5 text-[9px] font-black bg-amber-100 text-amber-700 rounded-full border border-amber-200">
                   {{ repuesto.cantidad_disponible }} UDS
                 </span>
               </td>
-              <td class="px-4 py-2 text-right text-sm font-black text-[#10B981]">${{ repuesto.precio_venta || 0 }}</td>
+              <td class="px-3 sm:px-4 py-2 text-right text-sm font-black text-[#10B981]">${{ repuesto.precio_venta || 0 }}</td>
             </tr>
             <tr v-if="stockPaginados.length === 0">
-              <td colspan="3" class="px-4 py-8 text-center">
+              <td colspan="3" class="px-3 sm:px-4 py-8 text-center">
                 <span class="text-[9px] font-mono text-gray-400 uppercase">SIN_REGISTROS</span>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
-      <div v-if="stockTotalPaginas > 1" class="px-4 py-2 border-t border-[#D1D5DB] bg-[#F8FAFC] flex justify-center gap-1 flex-wrap">
-        <button v-for="pagina in stockTotalPaginas" :key="pagina" @click="stockIrPagina(pagina)" :class="['px-3 py-1 text-[10px] font-mono rounded transition-all', stockPaginaActual === pagina ? 'bg-[#065F46] text-white' : 'bg-white text-gray-600 hover:bg-gray-100 border border-[#D1D5DB]']">
+      <div v-if="stockTotalPaginas > 1" class="px-3 sm:px-4 py-2 border-t border-[#D1D5DB] bg-[#F8FAFC] flex justify-center gap-1 flex-wrap">
+        <button v-for="pagina in stockTotalPaginas" :key="pagina" @click="stockIrPagina(pagina)" :class="['px-2 sm:px-3 py-1 text-[9px] sm:text-[10px] font-mono rounded transition-all', stockPaginaActual === pagina ? 'bg-[#065F46] text-white' : 'bg-white text-gray-600 hover:bg-gray-100 border border-[#D1D5DB]']">
           {{ pagina }}
         </button>
       </div>
@@ -662,14 +783,15 @@ const irADefectuosos = () => {
 const actualizarFechaHora = () => {
   const ahora = new Date()
   fechaActual.value = ahora.toLocaleDateString('es-ES', { 
-    weekday: 'long', 
+    weekday: 'short', 
     year: 'numeric', 
-    month: 'long', 
+    month: 'short', 
     day: 'numeric' 
   })
   horaActual.value = ahora.toLocaleTimeString('es-ES', { 
     hour: '2-digit', 
-    minute: '2-digit' 
+    minute: '2-digit',
+    hour12: true
   })
 }
 

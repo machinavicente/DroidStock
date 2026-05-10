@@ -98,6 +98,7 @@
 
           <!-- Menú de navegación -->
           <nav class="flex-1 overflow-y-auto px-4 py-6 space-y-1">
+            <!-- Vista General -->
             <NuxtLink
               to="/dashboard"
               class="flex items-center rounded-lg px-4 py-3 transition group"
@@ -110,6 +111,8 @@
               <i class="ri-dashboard-line text-xl"></i>
               <span class="ml-3">Dashboard</span>
             </NuxtLink>
+            
+            <!-- Flujo Principal de Trabajo -->
             <NuxtLink
               to="/reparaciones"
               class="flex items-center rounded-lg px-4 py-3 transition group"
@@ -137,15 +140,19 @@
               <i class="ri-shopping-cart-line text-xl"></i>
               <span class="ml-3">Gestión de Ventas</span>
             </NuxtLink>
+            
+            <!-- Funciones de Apoyo -->
             <NuxtLink
-              to="/reportes/defectuosos"
+              to="/movimientos"
               class="flex items-center rounded-lg px-4 py-3 transition group"
               style="color: #D1D5DB"
               @click="sidebarAbierta = false"
             >
-              <i class="ri-error-warning-line text-xl"></i>
-              <span class="ml-3">Repuestos Defectuosos</span>
+              <i class="ri-exchange-line text-xl"></i>
+              <span class="ml-3">Movimientos</span>
             </NuxtLink>
+            
+            <!-- Administración -->
             <NuxtLink
               to="/tecnicos"
               class="flex items-center rounded-lg px-4 py-3 transition group"
@@ -154,6 +161,17 @@
             >
               <i class="ri-user-settings-line text-xl"></i>
               <span class="ml-3">Equipo Técnico</span>
+            </NuxtLink>
+            
+            <!-- Reportes -->
+            <NuxtLink
+              to="/reportes/defectuosos"
+              class="flex items-center rounded-lg px-4 py-3 transition group"
+              style="color: #D1D5DB"
+              @click="sidebarAbierta = false"
+            >
+              <i class="ri-error-warning-line text-xl"></i>
+              <span class="ml-3">Repuestos Defectuosos</span>
             </NuxtLink>
           </nav>
 
@@ -164,11 +182,10 @@
           >
             <button
               @click="cerrarSesion"
-              class="flex w-full items-center rounded-lg px-4 py-3 transition hover:bg-opacity-10 border-2 border-red-500 bg-red-500 bg-opacity-10 hover:bg-opacity-20"
-              style="color: #EF4444"
+              class="flex w-full items-center rounded-lg px-4 py-3 transition bg-white/10 border border-white/20 text-red-100 hover:bg-red-500 hover:text-white"
             >
               <i class="ri-logout-box-line text-xl"></i>
-              <span class="ml-3 font-semibold">Cerrar Sesión</span>
+              <span class="ml-3 font-medium">Cerrar Sesión</span>
             </button>
           </div>
         </div>
@@ -201,6 +218,7 @@
 
             <!-- Menú de navegación móvil -->
             <nav class="flex-1 space-y-1 overflow-y-auto px-4 py-6">
+              <!-- Vista General -->
               <NuxtLink
                 to="/dashboard"
                 class="flex items-center rounded-lg px-4 py-3 transition group"
@@ -210,6 +228,7 @@
                 <i class="ri-dashboard-line text-xl"></i>
                 <span class="ml-3">Dashboard</span>
               </NuxtLink>
+              <!-- Flujo Principal de Trabajo -->
               <NuxtLink
                 to="/reparaciones"
                 class="flex items-center rounded-lg px-4 py-3 transition group"
@@ -237,15 +256,17 @@
                 <i class="ri-shopping-cart-line text-xl"></i>
                 <span class="ml-3">Gestión de Ventas</span>
               </NuxtLink>
+              <!-- Funciones de Apoyo -->
               <NuxtLink
-                to="/reportes/defectuosos"
+                to="/movimientos"
                 class="flex items-center rounded-lg px-4 py-3 transition group"
                 style="color: #D1D5DB"
                 @click="sidebarAbierta = false"
               >
-                <i class="ri-error-warning-line text-xl"></i>
-                <span class="ml-3">Repuestos Defectuosos</span>
+                <i class="ri-exchange-line text-xl"></i>
+                <span class="ml-3">Movimientos</span>
               </NuxtLink>
+              <!-- Administración -->
               <NuxtLink
                 to="/tecnicos"
                 class="flex items-center rounded-lg px-4 py-3 transition group"
@@ -254,6 +275,16 @@
               >
                 <i class="ri-user-settings-line text-xl"></i>
                 <span class="ml-3">Equipo Técnico</span>
+              </NuxtLink>
+              <!-- Reportes -->
+              <NuxtLink
+                to="/reportes/defectuosos"
+                class="flex items-center rounded-lg px-4 py-3 transition group"
+                style="color: #D1D5DB"
+                @click="sidebarAbierta = false"
+              >
+                <i class="ri-error-warning-line text-xl"></i>
+                <span class="ml-3">Repuestos Defectuosos</span>
               </NuxtLink>
             </nav>
 
@@ -264,11 +295,10 @@
             >
               <button
                 @click="cerrarSesion"
-                class="flex w-full items-center rounded-lg px-4 py-3 transition hover:bg-opacity-10 border-2 border-red-500 bg-red-500 bg-opacity-10 hover:bg-opacity-20"
-                style="color: #EF4444"
+                class="flex w-full items-center rounded-lg px-4 py-3 transition bg-white/10 border border-white/20 text-red-100 hover:bg-red-500 hover:text-white"
               >
                 <i class="ri-logout-box-line text-xl"></i>
-                <span class="ml-3 font-semibold">Cerrar Sesión</span>
+                <span class="ml-3 font-medium">Cerrar Sesión</span>
               </button>
             </div>
           </div>
@@ -279,31 +309,43 @@
       <div class="lg:ml-64">
         <!-- Navbar superior -->
         <header
-          class="sticky top-0 z-40 border-b shadow-md"
-          style="background: linear-gradient(to right, #FFFFFF, #F3F4F6); border-color: #D1D5DB"
+          class="sticky top-0 z-40 border-b backdrop-blur-lg transition-all duration-300"
+          style="background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(243,244,246,0.95) 50%, rgba(255,255,255,0.95) 100%); border-color: rgba(209,213,219,0.5); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);"
         >
           <div class="flex items-center justify-between px-4 py-3 sm:px-6 sm:py-4">
             <!-- Botón hamburguesa (móvil) -->
             <button
               @click="sidebarAbierta = !sidebarAbierta"
-              class="rounded-lg p-2 text-gray-700 shadow-sm transition-all duration-200 hover:shadow-md lg:hidden"
-              style="background-color: transparent"
+              class="group relative rounded-xl p-2.5 text-gray-700 shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105 lg:hidden"
+              style="background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(243,244,246,0.9) 100%); border: 1px solid rgba(209,213,219,0.3);"
             >
-              <i class="ri-menu-line text-2xl"></i>
+              <div class="absolute inset-0 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
+              <i class="ri-menu-line text-2xl relative z-10"></i>
             </button>
 
             <!-- Info del taller -->
-            <div class="flex items-center space-x-2 sm:space-x-4">
-              <div class="text-right">
-                <p class="text-xs font-semibold text-gray-900 sm:text-sm">
-                  {{ tiendaNombre }}
-                </p>
+            <div class="flex items-center space-x-3 sm:space-x-4">
+              <!-- Versión unificada (mismo estilo para móvil y desktop) -->
+              <div class="flex items-center space-x-2">
+                <div class="p-2 rounded-lg bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-200 shadow-sm">
+                  <i class="ri-store-2-line text-lg sm:text-xl text-emerald-600"></i>
+                </div>
+                <div>
+                  <p class="text-sm sm:text-base font-bold text-gray-900">
+                    {{ tiendaNombre }}
+                  </p>
+                  <p class="text-xs text-emerald-600 font-medium">Online</p>
+                </div>
               </div>
-              <div
-                class="flex h-8 w-8 items-center justify-center rounded-full text-white shadow-lg ring-2 ring-white sm:h-10 sm:w-10"
-                style="background-color: #065F46"
-              >
-                <span class="text-sm font-semibold sm:text-base">{{ iniciales }}</span>
+              
+              <div class="relative">
+                <div class="absolute inset-0 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 opacity-30 blur-md"></div>
+                <div
+                  class="relative flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full bg-gradient-to-br from-emerald-600 to-teal-600 text-white shadow-xl ring-2 ring-white ring-offset-2 ring-offset-gray-50 transition-all duration-300 hover:scale-110 hover:shadow-2xl cursor-pointer"
+                >
+                  <span class="text-sm font-bold">{{ iniciales }}</span>
+                  <div class="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-green-500 border-2 border-white"></div>
+                </div>
               </div>
             </div>
           </div>
@@ -475,7 +517,7 @@ input:focus, select:focus, textarea:focus {
 .skeleton {
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200% 100%;
-  animation: loading 1.5s infinite;
+  animation: loading 3s infinite;
 }
 
 @keyframes loading {
@@ -489,9 +531,9 @@ input:focus, select:focus, textarea:focus {
 
 /* Dark skeleton for sidebar */
 .skeleton-dark {
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0.1) 25%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.1) 75%);
+  background: linear-gradient(90deg, rgba(11, 86, 215, 0.1) 25%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.1) 75%);
   background-size: 200% 100%;
-  animation: loading-dark 1.5s infinite;
+  animation: loading-dark 3s infinite;
 }
 
 @keyframes loading-dark {

@@ -29,18 +29,18 @@
       </div>
 
       <!-- Empty state técnico -->
-      <div v-else-if="tecnicos.length === 0" class="bg-white rounded-xl border-2 border-dashed border-[#D1D5DB] p-16 text-center">
-        <div class="w-20 h-20 bg-[#ECFDF5] rounded-full flex items-center justify-center mx-auto mb-4">
+      <div v-else-if="tecnicos.length === 0" class="bg-white rounded-xl border-2 border-dashed border-[#D1D5DB] p-16 flex flex-col items-center justify-center text-center">
+        <div class="w-20 h-20 bg-[#ECFDF5] rounded-full flex items-center justify-center mb-4">
           <i class="ri-user-settings-line text-4xl text-[#10B981]"></i>
         </div>
         <h3 class="text-xl font-black text-[#065F46]">SIN TÉCNICOS REGISTRADOS</h3>
-        <p class="text-gray-500 mt-2 max-w-sm mx-auto">No hay personal técnico activo en el sistema</p>
+        <p class="text-gray-500 mt-2 max-w-sm">No hay personal técnico activo en el sistema</p>
         <NuxtLink
           to="/tecnicos/nuevo"
           class="mt-6 inline-flex px-6 py-3 bg-[#10B981] text-white rounded-xl hover:bg-[#059669] transition-all text-xs font-black uppercase tracking-[0.2em] shadow-lg shadow-[#10B981]/20 items-center gap-2"
         >
           <i class="ri-add-line"></i>
-          REGISTRAR_PRIMER_TÉCNICO
+          REGISTRAR
         </NuxtLink>
       </div>
 

@@ -137,10 +137,10 @@
                     @change="cambiarEstado(reparacion.id, $event.target.value)"
                     :class="[estadoClass(reparacion.estado_servicio), 'status-select']"
                   >
-                    <option value="Recibido">Recibido</option>
-                    <option value="En reparacion">En reparación</option>
-                    <option value="Finalizado">Finalizado</option>
-                    <option value="Entregado">Entregado</option>
+                    <option value="Recibido" :disabled="reparacion.estado_servicio !== 'Recibido'">Recibido</option>
+                    <option value="En reparacion" :disabled="!validarTransicion(reparacion.estado_servicio, 'En reparacion')">En reparación</option>
+                    <option value="Finalizado" :disabled="!validarTransicion(reparacion.estado_servicio, 'Finalizado')">Finalizado</option>
+                    <option value="Entregado" :disabled="!validarTransicion(reparacion.estado_servicio, 'Entregado')">Entregado</option>
                   </select>
                 </td>
                 <td class="px-6 py-4">
@@ -356,7 +356,7 @@ const abrirModalRepuestos = async (reparacion) => {
     const todos = await $fetch('/api/repuestos')
     repuestosDisponibles.value = todos.filter(r => r.cantidad_disponible > 0)
     modalRepuestosVisible.value = true
-  } catch (e) { mostrarNotificacion('Error al conectar con inventario', 'error') }
+  } catch (e) { mostrarNotificacion('Error de conexión', 'error') }
 }
 
 const agregarRepuestoALista = () => {
@@ -387,20 +387,38 @@ const finalizarConRepuestos = async () => {
       body: { nuevoEstado: 'Finalizado' }
     })
     modalRepuestosVisible.value = false
-    mostrarNotificacion('Proceso finalizado y stock actualizado', 'success')
+    mostrarNotificacion('Proceso finalizado', 'success')
     cargarReparaciones()
-  } catch (e) { mostrarNotificacion('Falla en la operación', 'error') }
+  } catch (e) { mostrarNotificacion('Error al finalizar', 'error') }
+}
+
+const ordenEstados = ['Recibido', 'En reparacion', 'Finalizado', 'Entregado']
+
+const validarTransicion = (estadoActual, nuevoEstado) => {
+  const indiceActual = ordenEstados.indexOf(estadoActual)
+  const indiceNuevo = ordenEstados.indexOf(nuevoEstado)
+  return indiceNuevo > indiceActual
 }
 
 const cambiarEstado = async (id, nuevoEstado) => {
-  if (nuevoEstado === 'Finalizado') {
-    return abrirModalRepuestos(reparaciones.value.find(r => r.id === id))
+  const reparacion = reparaciones.value.find(r => r.id === id)
+  const estadoActual = reparacion.estado_servicio
+
+  if (!validarTransicion(estadoActual, nuevoEstado)) {
+    mostrarNotificacion('No puede retroceder de estado', 'error')
+    cargarReparaciones()
+    return
   }
+
+  if (nuevoEstado === 'Finalizado') {
+    return abrirModalRepuestos(reparacion)
+  }
+
   try {
     await $fetch(`/api/reparaciones/${id}/estado`, { method: 'PATCH', body: { nuevoEstado } })
-    mostrarNotificacion(`Estado: ${nuevoEstado}`, 'success')
+    mostrarNotificacion('Estado actualizado', 'success')
     cargarReparaciones()
-  } catch (e) { mostrarNotificacion('Error de red', 'error') }
+  } catch (e) { mostrarNotificacion('Error al actualizar', 'error') }
 }
 
 const cargarReparaciones = async () => {

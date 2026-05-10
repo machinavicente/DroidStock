@@ -17,10 +17,10 @@ export default defineEventHandler(async (event) => {
   } = body
 
   // Validaciones
-  if (!cliente_id || !equipo_tipo || !equipo_marca_modelo || !falla_reportada) {
+  if (!cliente_id || !tecnico_id || !equipo_tipo || !equipo_marca_modelo || !falla_reportada) {
     throw createError({
       statusCode: 400,
-      message: 'Cliente, tipo de equipo, marca/modelo y falla reportada son requeridos'
+      message: 'Cliente, técnico, tipo de equipo, marca/modelo y falla reportada son requeridos'
     })
   }
 
@@ -41,13 +41,29 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  // Verificar que el técnico existe y pertenece a la tienda
+  const { data: tecnico } = await supabase
+    .from('tecnicos')
+    .select('id')
+    .eq('id', tecnico_id)
+    .eq('tienda_id', tiendaId)
+    .eq('activo', true)
+    .single()
+
+  if (!tecnico) {
+    throw createError({
+      statusCode: 404,
+      message: 'Técnico no encontrado o inactivo'
+    })
+  }
+
   // Crear reparación
   const { data: reparacion, error } = await supabase
     .from('reparaciones')
     .insert({
       tienda_id: tiendaId,
       cliente_id,
-      tecnico_id: tecnico_id || null,
+      tecnico_id,
       equipo_tipo,
       equipo_marca_modelo,
       numero_serie: numero_serie || null,

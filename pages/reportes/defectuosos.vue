@@ -402,7 +402,6 @@ const exportarPDF = async () => {
                 </tr>
               `).join('')}
             </tbody>
-          00财
 
           <div style="margin-top: 30px; padding-top: 15px; border-top: 1px solid #D1D5DB; text-align: center;">
             <p style="font-size: 8px; color: #9CA3AF;">Reporte generado automáticamente por DroidStock - Quality Control System</p>
