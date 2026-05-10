@@ -6,7 +6,7 @@
       <!-- Header con breadcrumb técnico -->
       <div class="mb-8">
         <div class="flex items-center gap-2 text-sm text-gray-500 mb-4 font-mono flex-wrap">
-          <NuxtLink to="/repuestos" class="hover:text-[#10B981] flex items-center gap-1 transition-colors truncate">
+          <NuxtLink to="/repuestos" class="hover:text-[#065F46] flex items-center gap-1 transition-colors truncate">
             <i class="ri-cpu-line"></i>
             REPUESTOS
           </NuxtLink>
@@ -47,13 +47,13 @@
               </label>
               <div class="relative group">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <i class="ri-qr-code-line text-gray-400 group-focus-within:text-[#10B981] transition-colors"></i>
+                  <i class="ri-qr-code-line text-gray-400 group-focus-within:text-[#065F46] transition-colors"></i>
                 </div>
                 <input
                   v-model="form.nombre_repuesto"
                   type="text"
                   required
-                  class="block w-full pl-10 pr-3 py-3 border border-[#D1D5DB] rounded-lg focus:ring-2 focus:ring-[#10B981] focus:border-[#10B981] text-sm placeholder-gray-400 bg-[#F8FAFC] focus:bg-white transition-all font-medium text-ellipsis overflow-hidden"
+                  class="block w-full pl-10 pr-3 py-3 border border-[#D1D5DB] rounded-lg focus:ring-2 focus:ring-[#065F46] focus:border-[#065F46] text-sm placeholder-gray-400 bg-[#F8FAFC] focus:bg-white transition-all font-medium text-ellipsis overflow-hidden text-[#334155]"
                   placeholder="Ej: Módulo Pantalla OLED - iPhone 13 Pro"
                 />
               </div>
@@ -63,23 +63,23 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
               <!-- Cantidad -->
               <div>
-                <label class="block text-xs font-black text-[#334155] mb-2 uppercase tracking-widest">Stock Disponible</label>
+                <label class="block text-xs font-black text-[#334155] mb-2 uppercase tracking-widest">Stock Disponible <span class="text-red-500">*</span></label>
                 <div class="relative">
                   <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <i class="ri-archive-line text-gray-400"></i>
+                    <i class="ri-archive-line text-gray-400 group-focus-within:text-[#065F46] transition-colors"></i>
                   </div>
                   <input
                     v-model.number="form.cantidad_disponible"
                     type="number"
                     min="0"
-                    class="block w-full pl-10 py-2.5 border border-[#D1D5DB] rounded-lg focus:ring-2 focus:ring-[#10B981] text-sm bg-[#F8FAFC] text-ellipsis overflow-hidden"
+                    class="block w-full pl-10 py-2.5 border border-[#D1D5DB] rounded-lg focus:ring-2 focus:ring-[#065F46] text-sm bg-[#F8FAFC] text-ellipsis overflow-hidden"
                   />
                 </div>
               </div>
 
               <!-- Precio Costo -->
               <div>
-                <label class="block text-xs font-black text-[#334155] mb-2 uppercase tracking-widest">Costo Proveedor ($)</label>
+                <label class="block text-xs font-black text-[#334155] mb-2 uppercase tracking-widest">Costo Proveedor ($) <span class="text-red-500">*</span></label>
                 <div class="relative">
                   <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none font-mono text-gray-400">$</div>
                   <input
@@ -87,7 +87,7 @@
                     type="number"
                     step="0.01"
                     min="0"
-                    class="block w-full pl-8 py-2.5 border border-[#D1D5DB] rounded-lg focus:ring-2 focus:ring-[#10B981] text-sm bg-[#F8FAFC] text-ellipsis overflow-hidden"
+                    class="block w-full pl-8 py-2.5 border border-[#D1D5DB] rounded-lg focus:ring-2 focus:ring-[#065F46] text-sm bg-[#F8FAFC] text-ellipsis overflow-hidden"
                     placeholder="0.00"
                   />
                 </div>
@@ -95,7 +95,7 @@
 
               <!-- Precio Venta -->
               <div>
-                <label class="block text-xs font-black text-[#334155] mb-2 uppercase tracking-widest">Precio Venta ($)</label>
+                <label class="block text-xs font-black text-[#334155] mb-2 uppercase tracking-widest">Precio Venta ($) <span class="text-red-500">*</span></label>
                 <div class="relative">
                   <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none font-mono text-gray-400">$</div>
                   <input
@@ -103,7 +103,7 @@
                     type="number"
                     step="0.01"
                     min="0"
-                    class="block w-full pl-8 py-2.5 border border-[#D1D5DB] rounded-lg focus:ring-2 focus:ring-[#10B981] text-sm bg-[#F8FAFC] text-ellipsis overflow-hidden"
+                    class="block w-full pl-8 py-2.5 border border-[#D1D5DB] rounded-lg focus:ring-2 focus:ring-[#065F46] text-sm bg-[#F8FAFC] text-ellipsis overflow-hidden"
                     placeholder="0.00"
                   />
                 </div>
@@ -111,15 +111,15 @@
 
               <!-- Precio Montaje: Destacado como Servicio -->
               <div>
-                <label class="block text-xs font-black text-[#10B981] mb-2 uppercase tracking-widest">Servicio de Montaje ($)</label>
+                <label class="block text-xs font-black text-[#065F46] mb-2 uppercase tracking-widest">Servicio de Montaje ($) <span class="text-red-500">*</span></label>
                 <div class="relative">
-                  <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none font-mono text-[#10B981]">$</div>
+                  <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none font-mono text-[#065F46]">$</div>
                   <input
                     v-model.number="form.precio_montaje"
                     type="number"
                     step="0.01"
                     min="0"
-                    class="block w-full pl-8 py-2.5 border-2 border-[#10B981] rounded-lg focus:ring-4 focus:ring-[#10B981]/20 text-sm bg-[#F0FDF4] font-bold text-[#065F46] text-ellipsis overflow-hidden"
+                    class="block w-full pl-8 py-2.5 border-2 border-[#065F46] rounded-lg focus:ring-4 focus:ring-[#065F46]/20 text-sm bg-[#F0FDF4] font-bold text-[#065F46] text-ellipsis overflow-hidden"
                     placeholder="0.00"
                   />
                 </div>
@@ -143,8 +143,8 @@
         <div class="flex flex-col sm:flex-row justify-end gap-3 sm:gap-4 pt-4 button-group-mobile">
           <button
             type="submit"
-            :disabled="guardando"
-            class="w-full sm:w-auto px-6 sm:px-8 py-3 text-xs sm:text-sm font-black text-white bg-[#065F46] rounded-lg hover:bg-[#054a37] transition-all disabled:opacity-50 shadow-lg hover:shadow-[#065F46]/30 flex items-center justify-center gap-2 border-b-4 border-[#033a2b] active:border-b-0 active:translate-y-1 btn-mobile touch-target"
+            :disabled="guardando || !formularioValido"
+            class="w-full sm:w-auto px-6 sm:px-8 py-3 text-xs sm:text-sm font-black text-white bg-[#065F46] rounded-lg hover:bg-[#065F46] transition-all disabled:opacity-50 shadow-lg hover:shadow-[#065F46]/30 flex items-center justify-center gap-2 border-b-4 border-[#033a2b] active:border-b-0 active:translate-y-1 btn-mobile touch-target"
           >
             <i v-if="guardando" class="ri-loader-4-line animate-spin text-base sm:text-lg"></i>
             <i v-else class="ri-save-3-fill text-base sm:text-lg"></i>
@@ -203,6 +203,19 @@ const form = reactive({
   precio_costo: null,
   precio_venta: null,
   precio_montaje: null
+})
+
+const formularioValido = computed(() => {
+  return form.nombre_repuesto && 
+         form.nombre_repuesto.trim() !== '' && 
+         form.cantidad_disponible !== null && 
+         form.cantidad_disponible >= 0 && 
+         form.precio_costo !== null && 
+         form.precio_costo >= 0 && 
+         form.precio_venta !== null && 
+         form.precio_venta >= 0 && 
+         form.precio_montaje !== null && 
+         form.precio_montaje >= 0
 })
 
 const mostrarToast = (mensaje, tipo = 'success') => {
