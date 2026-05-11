@@ -1,23 +1,24 @@
 <template>
   <div>
     <!-- Header -->
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-      <div>
-        <h1 class="text-xl sm:text-2xl font-bold tracking-tight" style="color: #065F46">Historial de Movimientos</h1>
-        <p class="text-sm sm:text-base mt-1" style="color: #6B7280">Visualización y exportación de movimientos</p>
+    <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-8 lg:mb-10">
+      <div class="flex-1">
+        <h1 class="text-2xl lg:text-3xl font-bold tracking-tight mb-2" style="color: #065F46">Historial de Movimientos</h1>
+        <p class="text-base lg:text-lg" style="color: #6B7280">Visualización y exportación de movimientos</p>
       </div>
-      <div class="flex gap-2">
+      <div class="flex-shrink-0 w-full sm:w-auto">
         <button 
           @click="exportarMovimientosPDF"
           :disabled="exportando"
-          class="px-3 sm:px-4 py-2 rounded-lg transition flex items-center justify-center gap-2 text-sm"
+          class="w-full sm:w-auto px-6 py-3 rounded-xl transition flex items-center justify-center gap-3 text-base font-medium shadow-sm hover:shadow-md"
           style="background-color: #F59E0B; color: white;"
           @mouseenter="e => e.currentTarget.style.backgroundColor = '#D97706'"
           @mouseleave="e => e.currentTarget.style.backgroundColor = '#F59E0B'"
         >
-          <i v-if="exportando" class="ri-loader-4-line animate-spin"></i>
-          <i v-else class="ri-file-pdf-line"></i>
+          <i v-if="exportando" class="ri-loader-4-line animate-spin text-lg"></i>
+          <i v-else class="ri-file-pdf-line text-lg"></i>
           <span class="hidden sm:inline">{{ exportando ? 'Generando...' : 'Exportar PDF' }}</span>
+          <span class="sm:hidden">{{ exportando ? 'Gen...' : 'PDF' }}</span>
         </button>
       </div>
     </div>
@@ -39,19 +40,21 @@
     </div>
 
     <!-- Filtros Avanzados -->
-    <div class="rounded-xl shadow-sm border p-6 mb-6" style="background-color: white; border-color: #D1D5DB">
-      <h3 class="text-lg font-semibold mb-4 flex items-center gap-2" style="color: #065F46">
-        <i class="ri-filter-3-line text-gray-600"></i>
-        Filtros
-      </h3>
+    <div class="rounded-2xl shadow-sm border p-8 mb-8" style="background-color: white; border-color: #D1D5DB">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background-color: #F0FDF4;">
+          <i class="ri-filter-3-line text-lg" style="color: #065F46;"></i>
+        </div>
+        <h3 class="text-xl font-semibold" style="color: #065F46">Filtros</h3>
+      </div>
       
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div>
-          <label class="block text-sm font-medium mb-2" style="color: #065F46">Tipo</label>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-8">
+        <div class="space-y-2">
+          <label class="block text-sm font-semibold" style="color: #065F46">Tipo</label>
           <select 
             v-model="filtros.tipo" 
-            class="w-full px-3 py-2 rounded-lg transition-all"
-            style="border: 1px solid #D1D5DB"
+            class="w-full px-4 py-3 rounded-xl transition-all border-2 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:border-green-700 focus:ring-green-700"
+            style="border-color: #E5E7EB;"
             @change="cargarMovimientos"
           >
             <option value="">Todos</option>
@@ -60,12 +63,12 @@
           </select>
         </div>
         
-        <div>
-          <label class="block text-sm font-medium mb-2" style="color: #065F46">Repuesto</label>
+        <div class="space-y-2">
+          <label class="block text-sm font-semibold" style="color: #065F46">Repuesto</label>
           <select 
             v-model="filtros.repuesto_id" 
-            class="w-full px-3 py-2 rounded-lg transition-all"
-            style="border: 1px solid #D1D5DB"
+            class="w-full px-4 py-3 rounded-xl transition-all border-2 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:border-green-700 focus:ring-green-700"
+            style="border-color: #E5E7EB;"
             @change="cargarMovimientos"
           >
             <option value="">Todos</option>
@@ -75,123 +78,123 @@
           </select>
         </div>
         
-        <div>
-          <label class="block text-sm font-medium mb-2" style="color: #065F46">Periodo de Tiempo</label>
+        <div class="space-y-2">
+          <label class="block text-sm font-semibold" style="color: #065F46">Periodo de Tiempo</label>
           <select 
             v-model="filtros.periodo" 
-            class="w-full px-3 py-2 rounded-lg transition-all"
-            style="border: 1px solid #D1D5DB"
+            class="w-full px-4 py-3 rounded-xl transition-all border-2 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:border-green-700 focus:ring-green-700"
+            style="border-color: #E5E7EB;"
             @change="actualizarFechasPorPeriodo"
           >
-            <option value="">📊 Todo el historial</option>
-            <option value="hoy">📅 Hoy</option>
-            <option value="semana">📆 Últimos 7 días</option>
-            <option value="mes">📆 Último mes</option>
-            <option value="ano">📅 Año actual</option>
+            <option value="">Todo el historial</option>
+            <option value="hoy">Hoy</option>
+            <option value="semana">Últimos 7 días</option>
+            <option value="mes">Último mes</option>
+            <option value="ano">Año actual</option>
           </select>
         </div>
         
-              </div>
-      
-      <div class="flex justify-between items-center mt-4">
-        <div class="flex gap-2">
+        <div class="space-y-2">
+          <label class="block text-sm font-semibold opacity-0" style="color: #065F46">Acciones</label>
           <button 
             @click="limpiarFiltros" 
-            class="px-3 py-1 rounded text-sm transition"
-            style="background-color: #F3F4F6; color: #6B7280"
-            @mouseenter="e => e.currentTarget.style.backgroundColor = '#E5E7EB'"
-            @mouseleave="e => e.currentTarget.style.backgroundColor = '#F3F4F6'"
+            class="w-full px-6 py-3 rounded-xl text-sm font-medium transition-all border-2 hover:bg-gray-50 sm:col-span-2 sm:mx-auto"
+            style="background-color: #F9FAFB; border-color: #E5E7EB; color: #6B7280;"
+            @mouseenter="e => e.currentTarget.style.backgroundColor = '#F3F4F6'"
+            @mouseleave="e => e.currentTarget.style.backgroundColor = '#F9FAFB'"
           >
-            Limpiar filtros
+            <i class="ri-refresh-line mr-2"></i>
+            <span class="hidden sm:inline">Limpiar filtros</span>
+            <span class="sm:hidden">Limpiar</span>
           </button>
-        </div>
-        
-        <div class="flex items-center gap-4">
-          <div>
-            <label class="text-sm" style="color: #6B7280">Mostrar:</label>
-            <select 
-              v-model="filtros.limit" 
-              class="ml-2 px-2 py-1 rounded text-sm"
-              style="border: 1px solid #D1D5DB"
-              @change="cargarMovimientos"
-            >
-              <option value="7">7</option>
-            </select>
-          </div>
-          
-          <!-- Paginación -->
-          <div class="flex items-center gap-2">
-            <button 
-              @click="paginaAnterior" 
-              :disabled="paginaActual === 1"
-              class="px-2 py-1 rounded text-sm transition disabled:opacity-50"
-              style="background-color: #F3F4F6; color: #6B7280"
-            >
-              <i class="ri-arrow-left-s-line"></i>
-            </button>
-            <span class="text-sm" style="color: #6B7280">Página {{ paginaActual }}</span>
-            <button 
-              @click="paginaSiguiente" 
-              :disabled="movimientos.length < parseInt(filtros.limit)"
-              class="px-2 py-1 rounded text-sm transition disabled:opacity-50"
-              style="background-color: #F3F4F6; color: #6B7280"
-            >
-              <i class="ri-arrow-right-s-line"></i>
-            </button>
-          </div>
         </div>
       </div>
     </div>
 
     <!-- Historial de Movimientos -->
-    <div class="rounded-xl shadow-sm border p-6" style="background-color: white; border-color: #D1D5DB">
-      <div class="flex justify-between items-center mb-4">
-        <h3 class="text-lg font-semibold flex items-center gap-2" style="color: #065F46">
-          <i class="ri-history-line text-gray-600"></i>
-          Historial de Movimientos
-        </h3>
-        <span class="text-sm" style="color: #6B7280">
-          Total: {{ movimientos.length }} movimientos
-        </span>
+    <div class="rounded-xl shadow-lg border overflow-hidden" style="background-color: white; border-color: #D1D5DB">
+      <!-- Pagination Bar Superior -->
+      <div class="px-6 py-4" style="background-color: #F8FAFC; border-bottom: 1px solid #D1D5DB;">
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background-color: #F0FDF4;">
+              <i class="ri-history-line text-lg" style="color: #065F46;"></i>
+            </div>
+            <h3 class="text-xl font-semibold" style="color: #065F46">Historial de Movimientos</h3>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-mono" style="color: #6B7280;">DATA_STREAM:</span>
+            <span class="text-sm font-bold" style="color: #065F46;">{{ (paginaActual - 1) * 7 + 1 }}-{{ Math.min(paginaActual * 7, totalMovimientos) }}</span>
+            <span class="text-xs font-mono" style="color: #6B7280;">/</span>
+            <span class="text-xs font-mono" style="color: #6B7280;">{{ totalMovimientos }}</span>
+            <div class="flex items-center gap-2 ml-4">
+              <button @click="paginaAnterior" :disabled="paginaActual === 1" class="pagination-btn p-2">
+                <i class="ri-arrow-left-s-line text-base"></i>
+              </button>
+              <div class="flex gap-1">
+                <button v-for="p in paginasMostradas" :key="p" @click="irPagina(p)" :class="['page-num w-8 h-8 text-xs', paginaActual === p ? 'active' : '']">{{ p }}</button>
+              </div>
+              <button @click="paginaSiguiente" :disabled="paginaActual === totalPaginas" class="pagination-btn p-2">
+                <i class="ri-arrow-right-s-line text-base"></i>
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
       
       <!-- Loading -->
-      <div v-if="cargando" class="flex justify-center py-12">
-        <div class="animate-spin rounded-full h-8 w-8 border-b-2" style="border-color: #10B981"></div>
+      <div v-if="cargando" class="flex flex-col items-center justify-center py-16">
+        <div class="animate-spin rounded-full h-12 w-12 border-3 border-t-transparent" style="border-color: #10B981; border-top-color: transparent;"></div>
+        <p class="mt-4 text-sm" style="color: #6B7280;">Cargando movimientos...</p>
       </div>
       
       <!-- Tabla de movimientos -->
       <div v-else-if="movimientos.length > 0" class="overflow-x-auto">
-        <table class="w-full text-sm">
+        <table class="w-full text-left border-collapse min-w-[900px]">
           <thead>
-            <tr class="border-b" style="border-color: #D1D5DB">
-              <th class="text-left py-3 px-4" style="color: #065F46">Fecha</th>
-              <th class="text-left py-3 px-4" style="color: #065F46">Tipo</th>
-              <th class="text-left py-3 px-4" style="color: #065F46">Repuesto</th>
-              <th class="text-center py-3 px-4" style="color: #065F46">Cantidad</th>
-              <th class="text-center py-3 px-4" style="color: #065F46">Stock Anterior</th>
-              <th class="text-center py-3 px-4" style="color: #065F46">Stock Nuevo</th>
-              <th class="text-left py-3 px-4" style="color: #065F46">Motivo/Referencia</th>>
+            <tr style="background-color: #065F46;">
+              <th class="th-tech px-6 py-4 text-[10px] w-32">FECHA</th>
+              <th class="th-tech px-6 py-4 text-[10px] w-24">TIPO</th>
+              <th class="th-tech px-6 py-4 text-[10px] min-w-[200px]">REPUESTO</th>
+              <th class="th-tech px-6 py-4 text-[10px] text-center w-24">CANTIDAD</th>
+              <th class="th-tech px-6 py-4 text-[10px] text-center w-28">STOCK ANTERIOR</th>
+              <th class="th-tech px-6 py-4 text-[10px] text-center w-24">STOCK NUEVO</th>
+              <th class="th-tech px-6 py-4 text-[10px] min-w-[200px]">MOTIVO/REFERENCIA</th>
             </tr>
           </thead>
-          <tbody>
-            <tr v-for="movimiento in movimientos" :key="movimiento.id" class="border-b hover:bg-gray-50" style="border-color: #D1D5DB">
-              <td class="py-3 px-4">{{ formatearFecha(movimiento.created_at) }}</td>
-              <td class="py-3 px-4">
+          <tbody class="divide-y divide-[#D1D5DB]">
+            <tr v-for="(movimiento, index) in movimientos" :key="movimiento.id" 
+                class="hover:bg-[#F0FDF4]/50 transition-colors group">
+              <td class="px-6 py-4 align-middle font-mono text-[11px]" style="color: #6B7280;">
+                {{ formatearFecha(movimiento.created_at) }}
+              </td>
+              <td class="px-6 py-4 align-middle">
                 <span :class="[
-                  'inline-flex items-center px-2 py-1 rounded-full text-xs font-medium',
-                  movimiento.tipo === 'entrada' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                  'inline-flex items-center px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-tighter',
+                  movimiento.tipo === 'entrada' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
                 ]">
-                  <i :class="movimiento.tipo === 'entrada' ? 'ri-add-line' : 'ri-subtract-line'" class="mr-1"></i>
+                  <i :class="movimiento.tipo === 'entrada' ? 'ri-arrow-up-line' : 'ri-arrow-down-line'" class="mr-1.5"></i>
                   {{ getTipoLabel(movimiento.tipo) }}
                 </span>
               </td>
-              <td class="py-3 px-4 font-medium">{{ movimiento.stock_repuestos?.nombre_repuesto || '-' }}</td>
-              <td class="py-3 px-4 text-center font-medium">{{ movimiento.cantidad }}</td>
-              <td class="py-3 px-4 text-center">{{ movimiento.stock_anterior }}</td>
-              <td class="py-3 px-4 text-center font-medium">{{ movimiento.stock_nuevo }}</td>
-              <td class="py-3 px-4 text-xs max-w-xs truncate" :title="movimiento.motivo">
-                {{ movimiento.referencia_tipo === 'reparacion' ? 'Reparación' : (movimiento.motivo || '-') }}
+              <td class="px-6 py-4 align-middle">
+                <div class="text-sm font-bold" style="color: #065F46;">{{ movimiento.stock_repuestos?.nombre_repuesto || 'ID_NULL' }}</div>
+              </td>
+              <td class="px-6 py-4 align-middle">
+                <div class="text-sm font-bold text-center" style="color: #334155;">{{ movimiento.cantidad }}</div>
+              </td>
+              <td class="px-6 py-4 align-middle">
+                <div class="text-sm text-center" style="color: #6B7280;">{{ movimiento.stock_anterior || 0 }}</div>
+              </td>
+              <td class="px-6 py-4 align-middle">
+                <div class="text-sm font-bold text-center" :style="{ color: movimiento.tipo === 'entrada' ? '#10B981' : '#EF4444' }">
+                  {{ movimiento.stock_nuevo || 0 }}
+                </div>
+              </td>
+              <td class="px-6 py-4 align-middle">
+                <div class="text-xs max-w-[200px] truncate group-hover:whitespace-normal transition-all" style="color: #6B7280;">
+                  {{ movimiento.referencia_tipo === 'reparacion' ? 'Reparación' : (movimiento.motivo || '-') }}
+                </div>
               </td>
             </tr>
           </tbody>
@@ -199,10 +202,9 @@
       </div>
       
       <!-- Empty state -->
-      <div v-else class="text-center py-12">
-        <i class="ri-inbox-line text-4xl mb-3 block" style="color: #D1D5DB"></i>
-        <p class="text-sm" style="color: #6B7280">No hay movimientos registrados</p>
-        <p class="text-xs mt-1" style="color: #9CA3AF">Registra tu primer movimiento usando el formulario superior</p>
+      <div v-else class="text-center py-16">
+        <i class="ri-error-warning-line text-5xl text-gray-200 mb-4 block"></i>
+        <p class="text-gray-400 font-medium">No se encontraron registros en este sector.</p>
       </div>
     </div>
   </div>
@@ -220,6 +222,21 @@ const { tienda } = useAuth()
 // Estado
 const exportando = ref(false)
 const paginaActual = ref(1)
+
+// Variables computadas para paginación
+const totalMovimientos = computed(() => movimientos.value?.length || 0)
+const totalPaginas = computed(() => Math.ceil(totalMovimientos.value / 7))
+
+const paginasMostradas = computed(() => {
+  const total = totalPaginas.value
+  const actual = paginaActual.value
+  let inicio = Math.max(1, actual - 2)
+  let fin = Math.min(total, inicio + 4)
+  if (fin - inicio < 4) inicio = Math.max(1, fin - 4)
+  return Array.from({ length: fin - inicio + 1 }, (_, i) => inicio + i)
+})
+
+const irPagina = (p) => paginaActual.value = p
 
 // Toast notification
 const toast = ref({
@@ -370,76 +387,103 @@ const exportarMovimientosPDF = async () => {
     })
 
     const contenido = `
-      <div style="font-family: 'Courier New', monospace; padding: 40px; background: #F3F4F6;">
-        <div style="background: white; border-radius: 12px; padding: 30px; border: 1px solid #D1D5DB;">
-          <div style="display: flex; justify-content: space-between; border-bottom: 2px solid #065F46; padding-bottom: 20px; margin-bottom: 30px;">
-            <div>
-              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 5px;">
-                <span style="width: 8px; height: 8px; background: #10B981; border-radius: 50%; display: inline-block;"></span>
-                <span style="font-size: 10px; color: #6B7280; letter-spacing: 2px;">INVENTORY_TRACKER_v1.0</span>
+      <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 1200px; margin: 0 auto;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #10B981; padding-bottom: 20px; margin-bottom: 25px;">
+          <div style="flex: 1;">
+            <h1 style="color: #065F46; font-size: 28px; margin: 0; font-weight: 900; letter-spacing: -0.5px;">DROIDSTOCK</h1>
+            <p style="color: #6b7280; font-size: 10px; margin: 3px 0; text-transform: uppercase; font-weight: 700; letter-spacing: 1px;">Inventory & Repair Management System</p>
+          </div>
+          <div style="flex: 1; text-align: right;">
+            <h2 style="color: #065F46; font-size: 18px; margin: 0; font-weight: 700; text-transform: uppercase;">Reporte de Movimientos</h2>
+            <p style="color: #374151; font-size: 14px; margin: 4px 0; font-weight: 600;">Correspondiente al taller: ${tienda.value?.nombre || 'Taller'}</p>
+            <div style="margin-top: 5px;">
+              <span style="color: #6b7280; font-size: 10px; padding: 4px 8px; border-radius: 4px; font-family: monospace;">FECHA: ${new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+            </div>
+          </div>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 25px;">
+          <div style="background: #ECFDF5; border: 1px solid #A7F3D0; border-radius: 10px; padding: 15px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <p style="color: #065F46; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">Entradas Totales: </p>
+                <p style="color: #374151; font-size: 24px; font-weight: 900; margin: 5px 0;">${todosLosMovimientos.data?.filter(m => m.tipo === 'entrada').length || 0}</p>
               </div>
-              <h1 style="color: #065F46; font-size: 28px; margin: 0; font-weight: 900;">DROIDSTOCK</h1>
-              <p style="font-size: 11px; color: #6B7280;">SISTEMA DE GESTIÓN TÉCNICA</p>
-            </div>
-            <div style="text-align: right;">
-              <h2 style="font-size: 12px; margin: 0; color: #3B82F6; font-weight: 900;">HISTORIAL DE MOVIMIENTOS</h2>
-              <p style="font-size: 9px; color: #888;">Generado: ${new Date().toLocaleString()}</p>
+              <div style="width: 40px; height: 40px; color: black; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                <i class="ri-arrow-up-line" style="font-size: 20px;"></i>
+              </div>
             </div>
           </div>
-
-          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 30px;">
-            <div style="background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 8px; padding: 15px;">
-              <p style="font-size: 8px; color: #059669; font-weight: 900; letter-spacing: 1px;">ENTRADAS TOTALES</p>
-              <p style="font-size: 24px; color: #10B981; font-weight: 900; margin: 0;">${todosLosMovimientos.data?.filter(m => m.tipo === 'entrada').length || 0}</p>
-            </div>
-            <div style="background: #FEF2F2; border: 1px solid #FECACA; border-radius: 8px; padding: 15px;">
-              <p style="font-size: 8px; color: #DC2626; font-weight: 900; letter-spacing: 1px;">SALIDAS TOTALES</p>
-              <p style="font-size: 24px; color: #EF4444; font-weight: 900; margin: 0;">${todosLosMovimientos.data?.filter(m => m.tipo === 'salida').length || 0}</p>
-            </div>
-            <div style="background: #F8FAFC; border: 1px solid #D1D5DB; border-radius: 8px; padding: 15px;">
-              <p style="font-size: 8px; color: #6B7280; font-weight: 900; letter-spacing: 1px;">PRODUCTOS MOVIDOS</p>
-              <p style="font-size: 24px; color: #065F46; font-weight: 900; margin: 0;">${new Set(todosLosMovimientos.data?.map(m => m.repuesto_id)).size || 0}</p>
-            </div>
-            <div style="background: #FEF3C7; border: 1px solid #FDE68A; border-radius: 8px; padding: 15px;">
-              <p style="font-size: 8px; color: #D97706; font-weight: 900; letter-spacing: 1px;">TOTAL REGISTROS</p>
-              <p style="font-size: 24px; color: #F59E0B; font-weight: 900; margin: 0;">${todosLosMovimientos.data?.length || 0}</p>
+          <div style="background: #FEF2F2; border: 1px solid #FECACA; border-radius: 10px; padding: 15px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <p style="color: #065F46; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">Salidas Totales: </p>
+                <p style="color: #374151; font-size: 24px; font-weight: 900; margin: 5px 0;">${todosLosMovimientos.data?.filter(m => m.tipo === 'salida').length || 0}</p>
+              </div>
+              <div style="width: 40px; height: 40px; color: black; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                <i class="ri-arrow-down-line" style="font-size: 20px;"></i>
+              </div>
             </div>
           </div>
-
-          <table style="width: 100%; border-collapse: collapse; font-size: 9px;">
+          <div style="background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 10px; padding: 15px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <p style="color: #065F46; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">Productos Movidos: </p>
+                <p style="color: #374151; font-size: 24px; font-weight: 900; margin: 5px 0;">${new Set(todosLosMovimientos.data?.map(m => m.repuesto_id)).size || 0}</p>
+              </div>
+              <div style="width: 40px; height: 40px; color: black; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                <i class="ri-archive-line" style="font-size: 20px;"></i>
+              </div>
+            </div>
+          </div>
+          <div style="background: #FEF3C7; border: 1px solid #FDE68A; border-radius: 10px; padding: 15px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <p style="color: #065F46; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">Total Registros: </p>
+                <p style="color: #374151; font-size: 24px; font-weight: 900; margin: 5px 0;">${todosLosMovimientos.data?.length || 0}</p>
+              </div>
+              <div style="width: 40px; height: 40px; color: black; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                <i class="ri-file-list-3-line" style="font-size: 20px;"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div style="overflow-x: auto;">
+          <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
             <thead>
-              <tr style="background: #065F46; color: white;">
-                <th style="padding: 10px; text-align: left;">FECHA</th>
-                <th style="padding: 10px; text-align: left;">TIPO</th>
-                <th style="padding: 10px; text-align: left;">REPUESTO</th>
-                <th style="padding: 10px; text-align: center;">CANTIDAD</th>
-                <th style="padding: 10px; text-align: center;">STOCK ANTERIOR</th>
-                <th style="padding: 10px; text-align: center;">STOCK NUEVO</th>
-                <th style="padding: 10px; text-align: left;">MOTIVO/REFERENCIA</th>
+              <tr style="background: #F3F4F6; border-bottom: 2px solid #D1D5DB;">
+                <th style="padding: 12px; text-align: left;">Fecha</th>
+                <th style="padding: 12px; text-align: left;">Tipo</th>
+                <th style="padding: 12px; text-align: left;">Repuesto</th>
+                <th style="padding: 12px; text-align: center;">Cantidad</th>
+                <th style="padding: 12px; text-align: center;">Stock Anterior</th>
+                <th style="padding: 12px; text-align: center;">Stock Nuevo</th>
+                <th style="padding: 12px; text-align: left;">Motivo/Referencia</th>
               </tr>
             </thead>
             <tbody>
               ${(todosLosMovimientos.data || []).map(item => `
                 <tr style="border-bottom: 1px solid #E5E7EB;">
-                  <td style="padding: 8px 10px;">${formatearFecha(item.created_at)}</td>
-                  <td style="padding: 8px 10px;">
-                    <span style="display: inline-flex; align-items: center; padding: 2px 6px; font-size: 8px; font-weight: bold; ${item.tipo === 'entrada' ? 'color: #065F46;' : 'color: #DC2626;'}">
-                      ${item.tipo === 'entrada' ? ' ENTRADA' : ' SALIDA'}
+                  <td style="padding: 10px 12px; color: #065F46; font-weight: 500;">${formatearFecha(item.created_at)}</td>
+                  <td style="padding: 10px 12px;">
+                    <span style="display: inline-flex; align-items: center; padding: 4px 8px; font-size: 10px; font-weight: 700; border-radius: 12px; ${item.tipo === 'entrada' ? 'color: #065F46;' : 'color: #991B1B;'}">
+                      ${item.tipo === 'entrada' ? 'ENTRADA' : 'SALIDA'}
                     </span>
                   </td>
-                  <td style="padding: 8px 10px; font-weight: bold; color: #065F46;">${item.stock_repuestos?.nombre_repuesto || 'N/A'}</td>
-                  <td style="padding: 8px 10px; text-align: center; font-weight: bold;">${item.cantidad}</td>
-                  <td style="padding: 8px 10px; text-align: center;">${item.stock_anterior || 0}</td>
-                  <td style="padding: 8px 10px; text-align: center; font-weight: bold; color: ${item.tipo === 'entrada' ? '#10B981' : '#EF4444'};">${item.stock_nuevo || 0}</td>
-                  <td style="padding: 8px 10px; color: #6B7280; font-size: 8px;">${item.referencia_tipo === 'reparacion' ? 'Reparación' : (item.motivo || '-')}</td>
+                  <td style="padding: 10px 12px; color: #065F46; font-weight: 500;">${item.stock_repuestos?.nombre_repuesto || 'N/A'}</td>
+                  <td style="padding: 10px 12px; text-align: center; font-weight: 600;">${item.cantidad}</td>
+                  <td style="padding: 10px 12px; text-align: center;">${item.stock_anterior || 0}</td>
+                  <td style="padding: 10px 12px; text-align: center; font-weight: 600; color: ${item.tipo === 'entrada' ? '#10B981' : '#EF4444'};">${item.stock_nuevo || 0}</td>
+                  <td style="padding: 10px 12px; color: #6B7280; font-size: 10px;">${item.referencia_tipo === 'reparacion' ? 'Reparación' : (item.motivo || '-')}</td>
                 </tr>
               `).join('')}
             </tbody>
           </table>
-
-          <div style="margin-top: 30px; padding-top: 15px; border-top: 1px solid #D1D5DB; text-align: center;">
-            <p style="font-size: 8px; color: #9CA3AF;">Reporte generado automáticamente por DroidStock - Inventory Tracking System</p>
-          </div>
+        </div>
+        
+        <div style="margin-top: 30px; padding-top: 15px; border-top: 1px solid #E5E7EB; text-align: center; font-size: 9px; color: #6B7280;">
+          <p>Reporte generado automáticamente por DroidStock - Inventory & Repair Management System</p>
         </div>
       </div>
     `
@@ -486,3 +530,21 @@ watch(filtros.limit, () => {
   cargarMovimientos()
 })
 </script>
+
+<style scoped>
+.th-tech {
+  @apply px-6 py-4 text-[10px] font-black text-white uppercase tracking-widest border-x border-white/5;
+}
+
+.pagination-btn {
+  @apply p-2 rounded-lg border border-[#D1D5DB] bg-white hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-[#334155];
+}
+
+.page-num {
+  @apply w-8 h-8 rounded-lg text-xs font-mono font-bold transition-all border border-transparent;
+}
+
+.page-num.active {
+  @apply bg-[#065F46] text-white border-[#065F46];
+}
+</style>

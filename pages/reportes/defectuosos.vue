@@ -92,12 +92,12 @@
               class="w-full px-3 py-2.5 bg-[#F8FAFC] border border-[#D1D5DB] rounded-lg focus:ring-2 focus:ring-[#10B981] text-sm font-medium"
             >
               <option value="">TODOS LOS MOTIVOS</option>
-              <option value="Defecto de fábrica">🔧 DEFECTO DE FÁBRICA</option>
-              <option value="No enciende">⚡ NO ENCIENDE</option>
-              <option value="Funcionamiento incorrecto">🔄 FUNCIONAMIENTO INCORRECTO</option>
-              <option value="Daño físico">💥 DAÑO FÍSICO</option>
-              <option value="Componente faltante">🧩 COMPONENTE FALTANTE</option>
-              <option value="Otro">❓ OTRO</option>
+              <option value="Defecto de fábrica"><i class="ri-tools-fill"></i> DEFECTO DE FÁBRICA</option>
+              <option value="No enciende"><i class="ri-flashlight-fill"></i> NO ENCIENDE</option>
+              <option value="Funcionamiento incorrecto"><i class="ri-refresh-line"></i> FUNCIONAMIENTO INCORRECTO</option>
+              <option value="Daño físico"><i class="ri-error-warning-fill"></i> DAÑO FÍSICO</option>
+              <option value="Componente faltante"><i class="ri-puzzle-fill"></i> COMPONENTE FALTANTE</option>
+              <option value="Otro"><i class="ri-question-fill"></i> OTRO</option>
             </select>
           </div>
 
@@ -107,10 +107,10 @@
               v-model="filtros.periodo" 
               class="w-full px-3 py-2.5 bg-[#F8FAFC] border border-[#D1D5DB] rounded-lg focus:ring-2 focus:ring-[#10B981] text-sm font-medium"
             >
-              <option value="">📊 TODO EL HISTORIAL</option>
-              <option value="hoy">📅 REGISTROS DE HOY</option>
-              <option value="semana">📆 ÚLTIMOS 7 DÍAS</option>
-              <option value="mes">📆 ÚLTIMOS 30 DÍAS</option>
+              <option value=""><i class="ri-bar-chart-fill"></i> TODO EL HISTORIAL</option>
+              <option value="hoy"><i class="ri-calendar-today-fill"></i> REGISTROS DE HOY</option>
+              <option value="semana"><i class="ri-calendar-2-fill"></i> ÚLTIMOS 7 DÍAS</option>
+              <option value="mes"><i class="ri-calendar-fill"></i> ÚLTIMOS 30 DÍAS</option>
             </select>
           </div>
         </div>
@@ -339,7 +339,7 @@ const cargarDefectuosos = async () => {
   }
 }
 
-// EXPORTACIÓN PDF CON ESTILO DROIDSTOCK INDUSTRIAL
+// EXPORTACIÓN PDF CON NUEVO DISEÑO DROIDSTOCK
 const exportarPDF = async () => {
   if (exportando.value) return
   exportando.value = true
@@ -349,63 +349,82 @@ const exportarPDF = async () => {
     const html2pdf = html2pdfModule.default
 
     const contenido = `
-      <div style="font-family: 'Courier New', monospace; padding: 40px; background: #F3F4F6;">
-        <div style="background: white; border-radius: 12px; padding: 30px; border: 1px solid #D1D5DB;">
-          <div style="display: flex; justify-content: space-between; border-bottom: 2px solid #065F46; padding-bottom: 20px; margin-bottom: 30px;">
-            <div>
-              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 5px;">
-                <span style="width: 8px; height: 8px; background: #10B981; border-radius: 50%; display: inline-block;"></span>
-                <span style="font-size: 10px; color: #6B7280; letter-spacing: 2px;">QUALITY_CONTROL_v1.0</span>
+      <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 1200px; margin: 0 auto;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #10B981; padding-bottom: 20px; margin-bottom: 25px;">
+          <div style="flex: 1;">
+            <h1 style="color: #065F46; font-size: 28px; margin: 0; font-weight: 900; letter-spacing: -0.5px;">DROIDSTOCK</h1>
+            <p style="color: #6b7280; font-size: 10px; margin: 3px 0; text-transform: uppercase; font-weight: 700; letter-spacing: 1px;">Inventory & Repair Management System</p>
+          </div>
+          <div style="flex: 1; text-align: right;">
+            <h2 style="color: #065F46; font-size: 18px; margin: 0; font-weight: 700; text-transform: uppercase;">Reporte de Mermas</h2>
+            <p style="color: #374151; font-size: 14px; margin: 4px 0; font-weight: 600;">Correspondiente al taller: DroidStock</p>
+            <div style="margin-top: 5px;">
+              <span style="color: #6b7280; font-size: 10px; padding: 4px 8px; border-radius: 4px; font-family: monospace;">FECHA: ${new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+            </div>
+          </div>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 25px;">
+          <div style="background: #ECFDF5; border: 1px solid #A7F3D0; border-radius: 10px; padding: 15px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <p style="color: #065F46; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">Unidades Defectuosas: </p>
+                <p style="color: #374151; font-size: 24px; font-weight: 900; margin: 5px 0;">${totalUnidadesFiltradas.value}</p>
               </div>
-              <h1 style="color: #065F46; font-size: 28px; margin: 0; font-weight: 900;">DROIDSTOCK</h1>
-              <p style="font-size: 11px; color: #6B7280;">SISTEMA DE GESTIÓN TÉCNICA - ZARAZA</p>
-            </div>
-            <div style="text-align: right;">
-              <h2 style="font-size: 12px; margin: 0; color: #DC2626; font-weight: 900;">REPORTE DE MERMAS</h2>
-              <p style="font-size: 9px; color: #888;">Generado: ${new Date().toLocaleString()}</p>
+              <div style="width: 40px; height: 40px; color: black; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                <i class="ri-error-warning-fill" style="font-size: 30px;"></i>
+              </div>
             </div>
           </div>
-
-          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 30px;">
-            <div style="background: #F8FAFC; border: 1px solid #D1D5DB; border-radius: 8px; padding: 15px;">
-              <p style="font-size: 8px; color: #9CA3AF; font-weight: 900; letter-spacing: 1px;">UNIDADES DESCARTADAS</p>
-              <p style="font-size: 24px; color: #065F46; font-weight: 900; margin: 0;">${totalUnidadesFiltradas.value}</p>
-            </div>
-            <div style="background: #F8FAFC; border: 1px solid #D1D5DB; border-radius: 8px; padding: 15px;">
-              <p style="font-size: 8px; color: #9CA3AF; font-weight: 900; letter-spacing: 1px;">MODELOS AFECTADOS</p>
-              <p style="font-size: 24px; color: #065F46; font-weight: 900; margin: 0;">${productosAfectadosGlobal.value}</p>
-            </div>
-            <div style="background: #FEF3C7; border: 1px solid #FDE68A; border-radius: 8px; padding: 15px;">
-              <p style="font-size: 8px; color: #D97706; font-weight: 900; letter-spacing: 1px;">PÉRDIDA TOTAL</p>
-              <p style="font-size: 24px; color: #F59E0B; font-weight: 900; margin: 0;">$${perdidaTotalFiltrada.value}</p>
+          <div style="background: #FEF3C7; border: 1px solid #FDE68A; border-radius: 10px; padding: 15px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <p style="color: #065F46; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">Pérdida Total: </p>
+                <p style="color: #374151; font-size: 24px; font-weight: 900; margin: 5px 0;">$${perdidaTotalFiltrada.value}</p>
+              </div>
+              <div style="width: 40px; height: 40px; color: black; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                <i class="ri-money-dollar-circle-fill" style="font-size: 30px;"></i>
+              </div>
             </div>
           </div>
-
-          <table style="width: 100%; border-collapse: collapse; font-size: 9px;">
+        </div>
+        
+        <div style="overflow-x: auto;">
+          <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
             <thead>
-              <tr style="background: #065F46; color: white;">
-                <th style="padding: 10px; text-align: left;">FECHA</th>
-                <th style="padding: 10px; text-align: left;">REPUESTO</th>
-                <th style="padding: 10px; text-align: center;">CANT</th>
-                <th style="padding: 10px; text-align: left;">MOTIVO</th>
-                <th style="padding: 10px; text-align: right;">PÉRDIDA</th>
+              <tr style="background: #F3F4F6; border-bottom: 2px solid #D1D5DB;">
+                <th style="padding: 12px; text-align: left;">Fecha Registro</th>
+                <th style="padding: 12px; text-align: left;">Repuesto</th>
+                <th style="padding: 12px; text-align: center;">Cantidad</th>
+                <th style="padding: 12px; text-align: left;">Motivo</th>
+                <th style="padding: 12px; text-align: right;">Pérdida</th>
               </tr>
             </thead>
             <tbody>
               ${defectuososFiltrados.value.map(item => `
                 <tr style="border-bottom: 1px solid #E5E7EB;">
-                  <td style="padding: 8px 10px;">${formatearFecha(item.created_at)}</td>
-                  <td style="padding: 8px 10px; font-weight: bold; color: #065F46;">${item.stock_repuestos?.nombre_repuesto || 'N/A'}</td>
-                  <td style="padding: 8px 10px; text-align: center;">${item.cantidad}</td>
-                  <td style="padding: 8px 10px; color: #6B7280;">${item.motivo}</td>
-                  <td style="padding: 8px 10px; text-align: right; color: #DC2626; font-weight: bold;">-$${(item.perdida_total || 0).toFixed(2)}</td>
+                  <td style="padding: 10px 12px; color: #065F46; font-weight: 500;">${formatearFecha(item.created_at)}</td>
+                  <td style="padding: 10px 12px; color: #065F46; font-weight: 500;">${item.stock_repuestos?.nombre_repuesto || 'N/A'}</td>
+                  <td style="padding: 10px 12px; text-align: center;">${item.cantidad}</td>
+                  <td style="padding: 10px 12px; color: #374151;">${item.motivo}</td>
+                  <td style="padding: 10px 12px; text-align: right; color: #DC2626; font-weight: bold;">$${(item.perdida_total || 0).toFixed(2)}</td>
                 </tr>
               `).join('')}
             </tbody>
-
-          <div style="margin-top: 30px; padding-top: 15px; border-top: 1px solid #D1D5DB; text-align: center;">
-            <p style="font-size: 8px; color: #9CA3AF;">Reporte generado automáticamente por DroidStock - Quality Control System</p>
-          </div>
+            <tfoot>
+              <tr style="background: #F9FAFB; border-top: 2px solid #D1D5DB;">
+                <td style="padding: 12px; font-weight: bold; color: #065F46;">TOTAL:</td>
+                <td style="padding: 12px;"></td>
+                <td style="padding: 12px; text-align: center; font-weight: bold; color: #065F46;">${totalUnidadesFiltradas.value}</td>
+                <td style="padding: 12px;"></td>
+                <td style="padding: 12px; text-align: right; font-weight: bold; color: #DC2626;">$${perdidaTotalFiltrada.value}</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+        
+        <div style="margin-top: 30px; padding-top: 15px; border-top: 1px solid #E5E7EB; text-align: center; font-size: 9px; color: #6B7280;">
+          <p>Reporte generado automáticamente por DroidStock - Inventory & Repair Management System</p>
         </div>
       </div>
     `

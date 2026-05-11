@@ -31,209 +31,256 @@
       </div>
     </div>
 
-    <!-- Botones de acción rápida - Estilo Técnico -->
-    <div class="grid grid-cols-2 sm:flex sm:flex-wrap gap-3">
-      <NuxtLink to="/reparaciones/nueva" class="px-4 py-2.5 bg-[#065F46] text-white font-bold rounded-xl hover:bg-[#054a37] transition-all flex items-center justify-center gap-2 text-xs sm:text-sm border-b-4 border-[#033a2b] active:border-b-0 active:translate-y-1 shadow-md">
-        <i class="ri-add-line text-sm sm:text-base"></i>
-        <span class="truncate text-center">NUEVA REPARACIÓN</span>
+    <!-- Botones de acción rápida - Layout Simétrico Corporativo -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <NuxtLink to="/reparaciones/nueva" class="group relative px-6 py-4 bg-gradient-to-br from-slate-700 to-slate-800 text-white font-semibold rounded-xl hover:from-slate-800 hover:to-slate-900 transition-all duration-300 flex flex-col items-center justify-center gap-3 shadow-lg hover:shadow-slate-700/25 border border-slate-600/30 hover:border-slate-500/50">
+        <div class="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center group-hover:bg-white/20 transition-all">
+          <i class="ri-tools-line text-xl"></i>
+        </div>
+        <span class="text-sm font-medium text-center">NUEVA REPARACIÓN</span>
+        <div class="absolute inset-x-0 bottom-0 h-0.5 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
       </NuxtLink>
-      <NuxtLink to="/ventas/nueva" class="px-4 py-2.5 bg-[#10B981] text-white font-bold rounded-xl hover:bg-[#059669] transition-all flex items-center justify-center gap-2 text-xs sm:text-sm border-b-4 border-[#047857] active:border-b-0 active:translate-y-1 shadow-md">
-        <i class="ri-shopping-cart-line text-sm sm:text-base"></i>
-        <span class="truncate text-center">NUEVA VENTA</span>
+      
+      <NuxtLink to="/ventas/nueva" class="group relative px-6 py-4 bg-gradient-to-br from-emerald-600 to-emerald-700 text-white font-semibold rounded-xl hover:from-emerald-700 hover:to-emerald-800 transition-all duration-300 flex flex-col items-center justify-center gap-3 shadow-lg hover:shadow-emerald-700/25 border border-emerald-600/30 hover:border-emerald-500/50">
+        <div class="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center group-hover:bg-white/20 transition-all">
+          <i class="ri-shopping-cart-line text-xl"></i>
+        </div>
+        <span class="text-sm font-medium text-center">NUEVA VENTA</span>
+        <div class="absolute inset-x-0 bottom-0 h-0.5 bg-gradient-to-r from-emerald-400 to-green-400 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
       </NuxtLink>
-      <NuxtLink to="/repuestos/nuevo" class="px-4 py-2.5 bg-[#F59E0B] text-white font-bold rounded-xl hover:bg-[#D97706] transition-all flex items-center justify-center gap-2 text-xs sm:text-sm border-b-4 border-[#B45309] active:border-b-0 active:translate-y-1 shadow-md">
-        <i class="ri-stack-line text-sm sm:text-base"></i>
-        <span class="truncate text-center">AGREGAR REPUESTO</span>
+      
+      <NuxtLink to="/repuestos/nuevo" class="group relative px-6 py-4 bg-gradient-to-br from-amber-600 to-amber-700 text-white font-semibold rounded-xl hover:from-amber-700 hover:to-amber-800 transition-all duration-300 flex flex-col items-center justify-center gap-3 shadow-lg hover:shadow-amber-700/25 border border-amber-600/30 hover:border-amber-500/50">
+        <div class="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center group-hover:bg-white/20 transition-all">
+          <i class="ri-stack-line text-xl"></i>
+        </div>
+        <span class="text-sm font-medium text-center">AGREGAR REPUESTO</span>
+        <div class="absolute inset-x-0 bottom-0 h-0.5 bg-gradient-to-r from-amber-400 to-orange-400 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
       </NuxtLink>
-      <button @click="refrescarDashboard" :disabled="refrescando" class="px-4 py-2.5 bg-[#334155] text-white font-bold rounded-xl hover:bg-[#1E293B] transition-all flex items-center justify-center gap-2 text-xs sm:text-sm border-b-4 border-[#1E293B] active:border-b-0 active:translate-y-1 shadow-md disabled:opacity-50">
-        <i :class="refrescando ? 'ri-loader-4-line animate-spin' : 'ri-refresh-line'" class="text-sm sm:text-base"></i>
-        <span class="truncate text-center">{{ refrescando ? 'ACTUALIZANDO...' : 'ACTUALIZAR' }}</span>
+      
+      <button @click="refrescarDashboard" :disabled="refrescando" class="group relative px-6 py-4 bg-gradient-to-br from-slate-600 to-slate-700 text-white font-semibold rounded-xl hover:from-slate-700 hover:to-slate-800 transition-all duration-300 flex flex-col items-center justify-center gap-3 shadow-lg hover:shadow-slate-700/25 border border-slate-600/30 hover:border-slate-500/50 disabled:opacity-50 disabled:cursor-not-allowed">
+        <div class="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center group-hover:bg-white/20 transition-all">
+          <i :class="refrescando ? 'ri-loader-4-line animate-spin' : 'ri-refresh-line'" class="text-xl"></i>
+        </div>
+        <span class="text-sm font-medium text-center">{{ refrescando ? 'ACTUALIZANDO...' : 'ACTUALIZAR' }}</span>
+        <div class="absolute inset-x-0 bottom-0 h-0.5 bg-gradient-to-r from-slate-400 to-gray-400 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
       </button>
     </div>
 
-    <!-- Tarjetas de estadísticas - Estilo PCB -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+    <!-- Tarjetas de estadísticas - Diseño Corporativo Moderno -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
       <!-- Reparaciones Activas -->
-      <div class="bg-white rounded-xl border border-[#D1D5DB] shadow-sm hover:shadow-md transition-all cursor-pointer overflow-hidden group" @click="irAReparaciones()">
-        <div class="p-5">
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-[10px] font-black text-gray-400 uppercase tracking-wider">REPARACIONES ACTIVAS</p>
-              <p class="text-3xl font-black text-[#065F46]">{{ estadisticas.reparacionesActivas }}</p>
-              <p class="text-[10px] font-mono text-[#10B981] mt-2">
-              </p>
+      <div class="group relative bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-slate-200/50 hover:border-slate-300/70">
+        <div class="absolute inset-0 bg-gradient-to-br from-slate-50 to-slate-100 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        <div class="relative p-6">
+          <div class="flex items-start justify-between mb-4">
+            <div class="flex-1">
+              <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Reparaciones Activas</p>
+              <p class="text-4xl font-bold text-slate-800 mb-1">{{ estadisticas.reparacionesActivas }}</p>
+              <div class="flex items-center gap-2">
+                <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+                <p class="text-xs font-medium text-emerald-600">En progreso</p>
+              </div>
             </div>
-            <div class="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center border border-blue-100">
-              <i class="ri-tools-line text-xl text-[#065F46]"></i>
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center border border-slate-200 group-hover:scale-110 transition-transform duration-300">
+              <i class="ri-tools-line text-2xl text-slate-700"></i>
             </div>
           </div>
+          <div class="h-1 bg-gradient-to-r from-slate-200 to-slate-300 rounded-full overflow-hidden">
+            <div class="h-full bg-gradient-to-r from-slate-600 to-slate-700 rounded-full transition-all duration-500" style="width: 75%"></div>
+          </div>
         </div>
-        <div class="h-1 bg-[#065F46] w-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
       </div>
 
       <!-- Repuestos en Stock -->
-      <div class="bg-white rounded-xl border border-[#D1D5DB] shadow-sm hover:shadow-md transition-all cursor-pointer overflow-hidden group" @click="irARepuestos()">
-        <div class="p-5">
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-[10px] font-black text-gray-400 uppercase tracking-wider">REPUESTOS EN STOCK</p>
-              <p class="text-3xl font-black text-[#065F46]">{{ estadisticas.totalRepuestos }}</p>
-               <p class="text-[10px] font-mono text-gray-500 mt-2">Modelos diferentes</p>
+      <div class="group relative bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-slate-200/50 hover:border-slate-300/70">
+        <div class="absolute inset-0 bg-gradient-to-br from-emerald-50 to-emerald-100 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        <div class="relative p-6">
+          <div class="flex items-start justify-between mb-4">
+            <div class="flex-1">
+              <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Repuestos en Stock</p>
+              <p class="text-4xl font-bold text-slate-800 mb-1">{{ estadisticas.totalRepuestos }}</p>
+              <div class="flex items-center gap-2">
+                <div class="w-2 h-2 bg-emerald-500 rounded-full"></div>
+                <p class="text-xs font-medium text-emerald-600">Modelos diferentes</p>
+              </div>
             </div>
-            <div class="w-12 h-12 rounded-xl bg-green-50 flex items-center justify-center border border-green-100">
-              <i class="ri-stack-line text-xl text-[#10B981]"></i>
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-100 to-emerald-200 flex items-center justify-center border border-emerald-200 group-hover:scale-110 transition-transform duration-300">
+              <i class="ri-stack-line text-2xl text-emerald-700"></i>
             </div>
           </div>
+          <div class="h-1 bg-gradient-to-r from-emerald-200 to-emerald-300 rounded-full overflow-hidden">
+            <div class="h-full bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-full transition-all duration-500" style="width: 85%"></div>
+          </div>
         </div>
-        <div class="h-1 bg-[#10B981] w-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
       </div>
 
-      <!-- Técnicos en Taller -->
-      <div class="bg-white rounded-xl border border-[#D1D5DB] shadow-sm hover:shadow-md transition-all cursor-pointer overflow-hidden group" @click="irATecnicos()">
-        <div class="p-5">
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-[10px] font-black text-gray-400 uppercase tracking-wider">TÉCNICOS ACTIVOS</p>
-              <p class="text-3xl font-black text-[#065F46]">{{ estadisticas.totalTecnicos }}</p>
-              <p class="text-[10px] font-mono text-gray-500 mt-2">Activos hoy</p>
+      <!-- Técnicos Activos -->
+      <div class="group relative bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-slate-200/50 hover:border-slate-300/70">
+        <div class="absolute inset-0 bg-gradient-to-br from-violet-50 to-violet-100 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        <div class="relative p-6">
+          <div class="flex items-start justify-between mb-4">
+            <div class="flex-1">
+              <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Técnicos Activos</p>
+              <p class="text-4xl font-bold text-slate-800 mb-1">{{ estadisticas.totalTecnicos }}</p>
+              <div class="flex items-center gap-2">
+                <div class="w-2 h-2 bg-violet-500 rounded-full animate-pulse"></div>
+                <p class="text-xs font-medium text-violet-600">Activos hoy</p>
+              </div>
             </div>
-            <div class="w-12 h-12 rounded-xl bg-purple-50 flex items-center justify-center border border-purple-100">
-              <i class="ri-user-settings-line text-xl text-purple-600"></i>
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-100 to-violet-200 flex items-center justify-center border border-violet-200 group-hover:scale-110 transition-transform duration-300">
+              <i class="ri-user-settings-line text-2xl text-violet-700"></i>
             </div>
           </div>
+          <div class="h-1 bg-gradient-to-r from-violet-200 to-violet-300 rounded-full overflow-hidden">
+            <div class="h-full bg-gradient-to-r from-violet-500 to-violet-600 rounded-full transition-all duration-500" style="width: 60%"></div>
+          </div>
         </div>
-        <div class="h-1 bg-purple-500 w-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
       </div>
 
       <!-- Repuestos Defectuosos -->
-      <div class="bg-white rounded-xl border border-[#D1D5DB] shadow-sm hover:shadow-md transition-all cursor-pointer overflow-hidden group" @click="irADefectuosos()">
-        <div class="p-5">
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-[10px] font-black text-gray-400 uppercase tracking-wider">REPUESTOS DEFECTUOSOS</p>
-              <p class="text-3xl font-black text-[#DC2626]">{{ totalUnidadesDefectuosas }}</p>
-              <p class="text-[10px] font-mono text-red-600 mt-2">{{ tiposDefectuosos.length }} tipos diferentes</p>
-            </div>
-            <div class="w-12 h-12 rounded-xl bg-red-50 flex items-center justify-center border border-red-100">
-              <i class="ri-error-warning-line text-xl text-[#DC2626]"></i>
-            </div>
-          </div>
-        </div>
-        <div class="h-1 bg-[#DC2626] w-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
-      </div>
-    </div>
-
-    <!-- Tarjeta de repuestos defectuosos por tipo - Estilo Técnico -->
-    <div class="bg-white rounded-xl border border-[#D1D5DB] shadow-sm overflow-hidden">
-      <div class="px-5 py-3 bg-[#F8FAFC] border-b border-[#D1D5DB] flex justify-between items-center">
-        <div class="flex items-center gap-2">
-          <div class="w-7 h-7 bg-[#DC2626] rounded-lg flex items-center justify-center">
-            <i class="ri-error-warning-line text-white text-xs"></i>
-          </div>
-          <h3 class="text-[10px] font-black text-[#065F46] uppercase tracking-widest">Análisis de Mermas por Tipo</h3>
-        </div>
-        <NuxtLink to="/reportes/defectuosos" class="text-[10px] font-mono text-[#DC2626] hover:text-red-700 transition-all uppercase tracking-wider">
-          VER_DETALLE →
-        </NuxtLink>
-      </div>
-      
-      <div class="p-5">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          <div v-for="tipo in tiposDefectuosos.slice(0, 6)" :key="tipo.motivo" 
-               class="bg-[#F8FAFC] rounded-lg p-3 border border-[#D1D5DB] hover:border-[#DC2626] transition-all">
-            <div class="flex items-center justify-between">
+      <div class="group relative bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-slate-200/50 hover:border-slate-300/70">
+        <div class="absolute inset-0 bg-gradient-to-br from-red-50 to-red-100 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        <div class="relative p-6">
+          <div class="flex items-start justify-between mb-4">
+            <div class="flex-1">
+              <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Repuestos Defectuosos</p>
+              <p class="text-4xl font-bold text-red-600 mb-1">{{ totalUnidadesDefectuosas }}</p>
               <div class="flex items-center gap-2">
-                <div class="w-7 h-7 bg-red-100 rounded-lg flex items-center justify-center">
-                  <i class="ri-alert-line text-red-600 text-xs"></i>
-                </div>
-                <div>
-                  <p class="text-xs font-black text-[#065F46] uppercase tracking-tighter">{{ tipo.motivo }}</p>
-                  <p class="text-[10px] font-mono text-gray-500">{{ tipo.cantidad }} unidades</p>
-                </div>
+                <div class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+                <p class="text-xs font-medium text-red-600">{{ tiposDefectuosos.length }}  Modelos diferentes</p>
               </div>
             </div>
-            <div class="mt-2 h-1.5 bg-gray-200 rounded-full overflow-hidden">
-              <div class="h-full bg-gradient-to-r from-red-500 to-red-600 rounded-full" :style="{ width: tipo.porcentaje + '%' }"></div>
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-red-100 to-red-200 flex items-center justify-center border border-red-200 group-hover:scale-110 transition-transform duration-300">
+              <i class="ri-error-warning-line text-2xl text-red-700"></i>
             </div>
           </div>
-        </div>
-        
-        <div class="mt-4 pt-3 border-t border-[#D1D5DB] text-center">
-          <p class="text-[9px] font-mono text-gray-400 uppercase tracking-wider">
-            Total unidades defectuosas: {{ totalUnidadesDefectuosas }} uds
-          </p>
+          <div class="h-1 bg-gradient-to-r from-red-200 to-red-300 rounded-full overflow-hidden">
+            <div class="h-full bg-gradient-to-r from-red-500 to-red-600 rounded-full transition-all duration-500" style="width: 25%"></div>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Resumen de hoy - Panel de Movimiento -->
-    <div class="bg-white rounded-xl border border-[#D1D5DB] shadow-sm overflow-hidden">
-      <div class="px-5 py-3 bg-[#F8FAFC] border-b border-[#D1D5DB] flex items-center gap-2">
-        <div class="w-7 h-7 bg-[#10B981] rounded-lg flex items-center justify-center">
-          <i class="ri-calendar-check-line text-white text-xs"></i>
+    <!-- Resumen de hoy - Flujo de Trabajo -->
+    <div class="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden border border-slate-200/50">
+      <div class="px-6 py-4 bg-gradient-to-r from-emerald-50 to-emerald-100 border-b border-emerald-200/50 flex items-center gap-3">
+        <div class="w-10 h-10 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg">
+          <i class="ri-calendar-check-line text-white text-lg"></i>
         </div>
-        <h3 class="text-[10px] font-black text-[#065F46] uppercase tracking-widest">Movimiento del Día</h3>
-        <span class="text-[8px] font-mono text-gray-400">(fecha de cambio de estado)</span>
+        <div>
+          <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider">Flujo de Trabajo del Día</h3>
+          <p class="text-xs font-medium text-slate-500">Estado actual de reparaciones</p>
+        </div>
       </div>
-      <div class="p-5">
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div class="text-center p-3 bg-[#ECFDF5] rounded-xl border border-[#D1FAE5]">
-            <div class="w-9 h-9 bg-[#D1FAE5] rounded-lg flex items-center justify-center mx-auto mb-1">
-              <i class="ri-inbox-line text-[#065F46] text-sm"></i>
+      <div class="p-6">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          <!-- Recibidas -->
+          <div class="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-md hover:shadow-lg transition-all duration-300">
+            <div class="px-3 sm:px-5 py-3 bg-slate-100 border-b border-gray-300 flex justify-between items-center">
+              <div class="flex items-center gap-2">
+                <i class="ri-inbox-line text-slate-600 text-lg"></i>
+                <h3 class="text-[9px] sm:text-[10px] font-black text-slate-700 uppercase tracking-wider">RECIBIDAS</h3>
+                <span class="px-1.5 sm:px-2 py-0.5 text-[8px] sm:text-[9px] font-black bg-slate-200 text-slate-700 rounded-full">{{ resumenHoy.recibidas }}</span>
+              </div>
             </div>
-            <p class="text-[9px] font-mono text-gray-500 uppercase tracking-wider">RECIBIDAS</p>
-            <p class="text-xl font-black text-[#065F46]">{{ resumenHoy.recibidas }}</p>
+            <div class="p-4 text-center">
+              <p class="text-2xl font-bold text-slate-800">{{ resumenHoy.recibidas }}</p>
+              <div class="mt-2 h-1 bg-slate-200 rounded-full overflow-hidden">
+                <div class="h-full bg-gradient-to-r from-slate-400 to-slate-600 rounded-full transition-all duration-500" style="width: 100%"></div>
+              </div>
+            </div>
           </div>
-          <div class="text-center p-3 bg-amber-50 rounded-xl border border-amber-100">
-            <div class="w-9 h-9 bg-amber-100 rounded-lg flex items-center justify-center mx-auto mb-1">
-              <i class="ri-time-line text-amber-600 text-sm"></i>
+          
+          <!-- En Proceso -->
+          <div class="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-md hover:shadow-lg transition-all duration-300">
+            <div class="px-3 sm:px-5 py-3 bg-amber-50 border-b border-gray-300 flex justify-between items-center">
+              <div class="flex items-center gap-2">
+                <i class="ri-time-line text-amber-600 text-lg"></i>
+                <h3 class="text-[9px] sm:text-[10px] font-black text-slate-700 uppercase tracking-wider">EN PROCESO</h3>
+                <span class="px-1.5 sm:px-2 py-0.5 text-[8px] sm:text-[9px] font-black bg-amber-100 text-amber-700 rounded-full">{{ resumenHoy.enProceso }}</span>
+              </div>
             </div>
-            <p class="text-[9px] font-mono text-gray-500 uppercase tracking-wider">EN PROCESO</p>
-            <p class="text-xl font-black text-[#D97706]">{{ resumenHoy.enProceso }}</p>
+            <div class="p-4 text-center">
+              <p class="text-2xl font-bold text-amber-600">{{ resumenHoy.enProceso }}</p>
+              <div class="mt-2 h-1 bg-amber-200 rounded-full overflow-hidden">
+                <div class="h-full bg-gradient-to-r from-amber-400 to-amber-600 rounded-full transition-all duration-500" style="width: 75%"></div>
+              </div>
+            </div>
           </div>
-          <div class="text-center p-3 bg-green-50 rounded-xl border border-green-100">
-            <div class="w-9 h-9 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-1">
-              <i class="ri-checkbox-circle-line text-green-600 text-sm"></i>
+          
+          <!-- Finalizadas -->
+          <div class="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-md hover:shadow-lg transition-all duration-300">
+            <div class="px-3 sm:px-5 py-3 bg-green-50 border-b border-gray-300 flex justify-between items-center">
+              <div class="flex items-center gap-2">
+                <i class="ri-checkbox-circle-line text-green-600 text-lg"></i>
+                <h3 class="text-[9px] sm:text-[10px] font-black text-slate-700 uppercase tracking-wider">FINALIZADAS</h3>
+                <span class="px-1.5 sm:px-2 py-0.5 text-[8px] sm:text-[9px] font-black bg-green-100 text-green-700 rounded-full">{{ resumenHoy.finalizadas }}</span>
+              </div>
             </div>
-            <p class="text-[9px] font-mono text-gray-500 uppercase tracking-wider">FINALIZADAS</p>
-            <p class="text-xl font-black text-[#10B981]">{{ resumenHoy.finalizadas }}</p>
+            <div class="p-4 text-center">
+              <p class="text-2xl font-bold text-green-600">{{ resumenHoy.finalizadas }}</p>
+              <div class="mt-2 h-1 bg-green-200 rounded-full overflow-hidden">
+                <div class="h-full bg-gradient-to-r from-green-400 to-green-600 rounded-full transition-all duration-500" style="width: 90%"></div>
+              </div>
+            </div>
           </div>
-          <div class="text-center p-3 bg-gray-50 rounded-xl border border-gray-200">
-            <div class="w-9 h-9 bg-gray-200 rounded-lg flex items-center justify-center mx-auto mb-1">
-              <i class="ri-hand-heart-line text-gray-600 text-sm"></i>
+          
+          <!-- Entregadas -->
+          <div class="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-md hover:shadow-lg transition-all duration-300">
+            <div class="px-3 sm:px-5 py-3 bg-gray-100 border-b border-gray-300 flex justify-between items-center">
+              <div class="flex items-center gap-2">
+                <i class="ri-hand-heart-line text-gray-600 text-lg"></i>
+                <h3 class="text-[9px] sm:text-[10px] font-black text-slate-700 uppercase tracking-wider">ENTREGADAS</h3>
+                <span class="px-1.5 sm:px-2 py-0.5 text-[8px] sm:text-[9px] font-black bg-gray-200 text-gray-700 rounded-full">{{ resumenHoy.entregadas }}</span>
+              </div>
             </div>
-            <p class="text-[9px] font-mono text-gray-500 uppercase tracking-wider">ENTREGADAS</p>
-            <p class="text-xl font-black text-gray-600">{{ resumenHoy.entregadas }}</p>
+            <div class="p-4 text-center">
+              <p class="text-2xl font-bold text-gray-600">{{ resumenHoy.entregadas }}</p>
+              <div class="mt-2 h-1 bg-gray-200 rounded-full overflow-hidden">
+                <div class="h-full bg-gradient-to-r from-gray-400 to-gray-600 rounded-full transition-all duration-500" style="width: 60%"></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
     <!-- Sección de reparaciones por estado -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+    <div class="bg-gradient-to-br from-slate-50 to-slate-100 rounded-2xl p-6 shadow-lg border border-slate-200">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-gradient-to-br from-slate-600 to-slate-700 rounded-xl flex items-center justify-center shadow-lg">
+          <i class="ri-tools-line text-white text-xl"></i>
+        </div>
+        <div>
+          <h2 class="text-lg font-bold text-slate-800 uppercase tracking-wider">Estados de Reparaciones</h2>
+          <p class="text-sm font-medium text-slate-600">Seguimiento del flujo de trabajo</p>
+        </div>
+      </div>
+      
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
       <!-- Reparaciones Recibidas -->
-      <div class="bg-white rounded-xl border border-[#D1D5DB] overflow-hidden">
-        <div class="px-3 sm:px-5 py-3 bg-[#ECFDF5] border-b border-[#D1D5DB] flex justify-between items-center">
+      <div class="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-md hover:shadow-lg transition-all duration-300">
+        <div class="px-3 sm:px-5 py-3 bg-slate-100 border-b border-gray-300 flex justify-between items-center">
           <div class="flex items-center gap-2">
-            <i class="ri-inbox-line text-[#065F46] text-lg"></i>
-            <h3 class="text-[9px] sm:text-[10px] font-black text-[#065F46] uppercase tracking-wider">RECIBIDAS</h3>
-            <span class="px-1.5 sm:px-2 py-0.5 text-[8px] sm:text-[9px] font-black bg-[#D1FAE5] text-[#065F46] rounded-full">{{ reparacionesRecibidas.length }}</span>
+            <i class="ri-inbox-line text-slate-600 text-lg"></i>
+            <h3 class="text-[9px] sm:text-[10px] font-black text-slate-700 uppercase tracking-wider">RECIBIDAS</h3>
+            <span class="px-1.5 sm:px-2 py-0.5 text-[8px] sm:text-[9px] font-black bg-slate-200 text-slate-700 rounded-full">{{ reparacionesRecibidas.length }}</span>
           </div>
-          <NuxtLink to="/reparaciones?estado=Recibido" class="text-[8px] sm:text-[9px] font-mono text-[#10B981] hover:text-[#065F46] transition-all uppercase tracking-wider hidden xs:block">
+          <NuxtLink to="/reparaciones?estado=Recibido" class="text-[8px] sm:text-[9px] font-mono text-slate-500 hover:text-slate-700 transition-all uppercase tracking-wider hidden xs:block">
             VER_TODAS →
           </NuxtLink>
         </div>
         <div class="max-h-64 overflow-y-auto custom-scrollbar">
           <!-- Vista móvil: cards -->
           <div class="xs:hidden p-3 space-y-2">
-            <div v-for="rep in reparacionesRecibidas" :key="rep.id" class="bg-[#F0FDF4] rounded-lg p-3 border border-[#D1FAE5]">
+            <div v-for="rep in reparacionesRecibidas" :key="rep.id" class="bg-gray-50 rounded-lg p-3 border border-gray-200">
               <div class="flex justify-between items-start mb-2">
                 <div class="flex-1 min-w-0">
-                  <p class="text-xs font-black text-[#065F46] truncate">{{ truncarNombre(rep.clientes?.nombre_completo || '-', 25) }}</p>
+                  <p class="text-xs font-black text-slate-700 truncate">{{ truncarNombre(rep.clientes?.nombre_completo || '-', 25) }}</p>
                   <p class="text-[10px] text-gray-600 mt-1">{{ rep.equipo_marca_modelo || '-' }}</p>
                 </div>
               </div>
-              <div class="flex items-center gap-1 text-[9px] font-mono text-gray-400">
+              <div class="flex items-center gap-1 text-[9px] font-mono text-gray-500">
                 <i class="ri-time-line"></i>
                 {{ formatearFechaHora(obtenerFechaPorEstado(rep)) }}
               </div>
@@ -244,18 +291,18 @@
           </div>
           <!-- Vista desktop: tabla -->
           <table class="w-full hidden xs:table">
-            <thead class="bg-[#F8FAFC] sticky top-0">
-              <tr class="border-b border-[#D1D5DB]">
-                <th class="px-3 sm:px-4 py-2 text-left text-[8px] sm:text-[9px] font-mono text-gray-500 uppercase tracking-wider">CLIENTE</th>
-                <th class="px-3 sm:px-4 py-2 text-left text-[8px] sm:text-[9px] font-mono text-gray-500 uppercase tracking-wider">EQUIPO</th>
-                <th class="px-3 sm:px-4 py-2 text-left text-[8px] sm:text-[9px] font-mono text-gray-500 uppercase tracking-wider">FECHA</th>
+            <thead class="bg-gray-50 sticky top-0">
+              <tr class="border-b border-gray-200">
+                <th class="px-3 sm:px-4 py-2 text-left text-[8px] sm:text-[9px] font-mono text-gray-600 uppercase tracking-wider">CLIENTE</th>
+                <th class="px-3 sm:px-4 py-2 text-left text-[8px] sm:text-[9px] font-mono text-gray-600 uppercase tracking-wider">EQUIPO</th>
+                <th class="px-3 sm:px-4 py-2 text-left text-[8px] sm:text-[9px] font-mono text-gray-600 uppercase tracking-wider">FECHA</th>
               </tr>
             </thead>
-            <tbody class="divide-y divide-[#D1D5DB]">
-              <tr v-for="rep in reparacionesRecibidas" :key="rep.id" class="hover:bg-[#F0FDF4] transition-colors">
-                <td class="px-3 sm:px-4 py-2 text-xs font-bold text-[#065F46]">{{ truncarNombre(rep.clientes?.nombre_completo || '-', 20) }}</td>
+            <tbody class="divide-y divide-gray-200">
+              <tr v-for="rep in reparacionesRecibidas" :key="rep.id" class="hover:bg-gray-50 transition-colors">
+                <td class="px-3 sm:px-4 py-2 text-xs font-bold text-slate-700">{{ truncarNombre(rep.clientes?.nombre_completo || '-', 20) }}</td>
                 <td class="px-3 sm:px-4 py-2 text-[10px] sm:text-[11px] text-gray-600">{{ rep.equipo_marca_modelo || '-' }}</td>
-                <td class="px-3 sm:px-4 py-2 text-[9px] sm:text-[10px] font-mono text-gray-400">{{ formatearFechaHora(obtenerFechaPorEstado(rep)) }}</td>
+                <td class="px-3 sm:px-4 py-2 text-[9px] sm:text-[10px] font-mono text-gray-500">{{ formatearFechaHora(obtenerFechaPorEstado(rep)) }}</td>
               </tr>
               <tr v-if="reparacionesRecibidas.length === 0">
                 <td colspan="3" class="px-3 sm:px-4 py-8 text-center">
@@ -268,28 +315,28 @@
       </div>
 
       <!-- Reparaciones En Proceso -->
-      <div class="bg-white rounded-xl border border-[#D1D5DB] overflow-hidden">
-        <div class="px-3 sm:px-5 py-3 bg-amber-50 border-b border-[#D1D5DB] flex justify-between items-center">
+      <div class="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-md hover:shadow-lg transition-all duration-300">
+        <div class="px-3 sm:px-5 py-3 bg-amber-50 border-b border-gray-300 flex justify-between items-center">
           <div class="flex items-center gap-2">
             <i class="ri-time-line text-amber-600 text-lg"></i>
-            <h3 class="text-[9px] sm:text-[10px] font-black text-[#D97706] uppercase tracking-wider">EN PROCESO</h3>
+            <h3 class="text-[9px] sm:text-[10px] font-black text-slate-700 uppercase tracking-wider">EN PROCESO</h3>
             <span class="px-1.5 sm:px-2 py-0.5 text-[8px] sm:text-[9px] font-black bg-amber-100 text-amber-700 rounded-full">{{ reparacionesEnProceso.length }}</span>
           </div>
-          <NuxtLink to="/reparaciones?estado=En reparacion" class="text-[8px] sm:text-[9px] font-mono text-[#10B981] hover:text-[#065F46] transition-all uppercase tracking-wider hidden xs:block">
+          <NuxtLink to="/reparaciones?estado=En reparacion" class="text-[8px] sm:text-[9px] font-mono text-slate-500 hover:text-slate-700 transition-all uppercase tracking-wider hidden xs:block">
             VER_TODAS →
           </NuxtLink>
         </div>
         <div class="max-h-64 overflow-y-auto custom-scrollbar">
           <!-- Vista móvil: cards -->
           <div class="xs:hidden p-3 space-y-2">
-            <div v-for="rep in reparacionesEnProceso" :key="rep.id" class="bg-amber-50/30 rounded-lg p-3 border border-amber-100">
+            <div v-for="rep in reparacionesEnProceso" :key="rep.id" class="bg-gray-50 rounded-lg p-3 border border-gray-200">
               <div class="flex justify-between items-start mb-2">
                 <div class="flex-1 min-w-0">
-                  <p class="text-xs font-black text-[#065F46] truncate">{{ truncarNombre(rep.clientes?.nombre_completo || '-', 25) }}</p>
+                  <p class="text-xs font-black text-slate-700 truncate">{{ truncarNombre(rep.clientes?.nombre_completo || '-', 25) }}</p>
                   <p class="text-[10px] text-gray-600 mt-1">{{ rep.equipo_marca_modelo || '-' }}</p>
                 </div>
               </div>
-              <div class="flex items-center gap-1 text-[9px] font-mono text-gray-400">
+              <div class="flex items-center gap-1 text-[9px] font-mono text-gray-500">
                 <i class="ri-time-line"></i>
                 {{ formatearFechaHora(obtenerFechaPorEstado(rep)) }}
               </div>
@@ -300,18 +347,18 @@
           </div>
           <!-- Vista desktop: tabla -->
           <table class="w-full hidden xs:table">
-            <thead class="bg-[#F8FAFC] sticky top-0">
-              <tr class="border-b border-[#D1D5DB]">
-                <th class="px-3 sm:px-4 py-2 text-left text-[8px] sm:text-[9px] font-mono text-gray-500 uppercase tracking-wider">CLIENTE</th>
-                <th class="px-3 sm:px-4 py-2 text-left text-[8px] sm:text-[9px] font-mono text-gray-500 uppercase tracking-wider">EQUIPO</th>
-                <th class="px-3 sm:px-4 py-2 text-left text-[8px] sm:text-[9px] font-mono text-gray-500 uppercase tracking-wider">FECHA</th>
+            <thead class="bg-gray-50 sticky top-0">
+              <tr class="border-b border-gray-200">
+                <th class="px-3 sm:px-4 py-2 text-left text-[8px] sm:text-[9px] font-mono text-gray-600 uppercase tracking-wider">CLIENTE</th>
+                <th class="px-3 sm:px-4 py-2 text-left text-[8px] sm:text-[9px] font-mono text-gray-600 uppercase tracking-wider">EQUIPO</th>
+                <th class="px-3 sm:px-4 py-2 text-left text-[8px] sm:text-[9px] font-mono text-gray-600 uppercase tracking-wider">FECHA</th>
               </tr>
             </thead>
-            <tbody class="divide-y divide-[#D1D5DB]">
-              <tr v-for="rep in reparacionesEnProceso" :key="rep.id" class="hover:bg-amber-50/30 transition-colors">
-                <td class="px-3 sm:px-4 py-2 text-xs font-bold text-[#065F46]">{{ truncarNombre(rep.clientes?.nombre_completo || '-', 20) }}</td>
+            <tbody class="divide-y divide-gray-200">
+              <tr v-for="rep in reparacionesEnProceso" :key="rep.id" class="hover:bg-gray-50 transition-colors">
+                <td class="px-3 sm:px-4 py-2 text-xs font-bold text-slate-700">{{ truncarNombre(rep.clientes?.nombre_completo || '-', 20) }}</td>
                 <td class="px-3 sm:px-4 py-2 text-[10px] sm:text-[11px] text-gray-600">{{ rep.equipo_marca_modelo || '-' }}</td>
-                <td class="px-3 sm:px-4 py-2 text-[9px] sm:text-[10px] font-mono text-gray-400">{{ formatearFechaHora(obtenerFechaPorEstado(rep)) }}</td>
+                <td class="px-3 sm:px-4 py-2 text-[9px] sm:text-[10px] font-mono text-gray-500">{{ formatearFechaHora(obtenerFechaPorEstado(rep)) }}</td>
               </tr>
               <tr v-if="reparacionesEnProceso.length === 0">
                 <td colspan="3" class="px-3 sm:px-4 py-8 text-center">
@@ -322,32 +369,30 @@
           </table>
         </div>
       </div>
-    </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
       <!-- Reparaciones Finalizadas -->
-      <div class="bg-white rounded-xl border border-[#D1D5DB] overflow-hidden">
-        <div class="px-3 sm:px-5 py-3 bg-green-50 border-b border-[#D1D5DB] flex justify-between items-center">
+      <div class="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-md hover:shadow-lg transition-all duration-300">
+        <div class="px-3 sm:px-5 py-3 bg-green-50 border-b border-gray-300 flex justify-between items-center">
           <div class="flex items-center gap-2">
-            <i class="ri-checkbox-circle-line text-[#10B981] text-lg"></i>
-            <h3 class="text-[9px] sm:text-[10px] font-black text-[#10B981] uppercase tracking-wider">FINALIZADAS</h3>
+            <i class="ri-checkbox-circle-line text-green-600 text-lg"></i>
+            <h3 class="text-[9px] sm:text-[10px] font-black text-slate-700 uppercase tracking-wider">FINALIZADAS</h3>
             <span class="px-1.5 sm:px-2 py-0.5 text-[8px] sm:text-[9px] font-black bg-green-100 text-green-700 rounded-full">{{ reparacionesFinalizadas.length }}</span>
           </div>
-          <NuxtLink to="/reparaciones?estado=Finalizado" class="text-[8px] sm:text-[9px] font-mono text-[#10B981] hover:text-[#065F46] transition-all uppercase tracking-wider hidden xs:block">
+          <NuxtLink to="/reparaciones?estado=Finalizado" class="text-[8px] sm:text-[9px] font-mono text-slate-500 hover:text-slate-700 transition-all uppercase tracking-wider hidden xs:block">
             VER_TODAS →
           </NuxtLink>
         </div>
         <div class="max-h-64 overflow-y-auto custom-scrollbar">
           <!-- Vista móvil: cards -->
           <div class="xs:hidden p-3 space-y-2">
-            <div v-for="rep in reparacionesFinalizadas" :key="rep.id" class="bg-green-50/30 rounded-lg p-3 border border-green-100">
+            <div v-for="rep in reparacionesFinalizadas" :key="rep.id" class="bg-gray-50 rounded-lg p-3 border border-gray-200">
               <div class="flex justify-between items-start mb-2">
                 <div class="flex-1 min-w-0">
-                  <p class="text-xs font-black text-[#065F46] truncate">{{ truncarNombre(rep.clientes?.nombre_completo || '-', 25) }}</p>
+                  <p class="text-xs font-black text-slate-700 truncate">{{ truncarNombre(rep.clientes?.nombre_completo || '-', 25) }}</p>
                   <p class="text-[10px] text-gray-600 mt-1">{{ rep.equipo_marca_modelo || '-' }}</p>
                 </div>
               </div>
-              <div class="flex items-center gap-1 text-[9px] font-mono text-gray-400">
+              <div class="flex items-center gap-1 text-[9px] font-mono text-gray-500">
                 <i class="ri-time-line"></i>
                 {{ formatearFechaHora(obtenerFechaPorEstado(rep)) }}
               </div>
@@ -358,18 +403,18 @@
           </div>
           <!-- Vista desktop: tabla -->
           <table class="w-full hidden xs:table">
-            <thead class="bg-[#F8FAFC] sticky top-0">
-              <tr class="border-b border-[#D1D5DB]">
-                <th class="px-3 sm:px-4 py-2 text-left text-[8px] sm:text-[9px] font-mono text-gray-500 uppercase tracking-wider">CLIENTE</th>
-                <th class="px-3 sm:px-4 py-2 text-left text-[8px] sm:text-[9px] font-mono text-gray-500 uppercase tracking-wider">EQUIPO</th>
-                <th class="px-3 sm:px-4 py-2 text-left text-[8px] sm:text-[9px] font-mono text-gray-500 uppercase tracking-wider">FECHA</th>
+            <thead class="bg-gray-50 sticky top-0">
+              <tr class="border-b border-gray-200">
+                <th class="px-3 sm:px-4 py-2 text-left text-[8px] sm:text-[9px] font-mono text-gray-600 uppercase tracking-wider">CLIENTE</th>
+                <th class="px-3 sm:px-4 py-2 text-left text-[8px] sm:text-[9px] font-mono text-gray-600 uppercase tracking-wider">EQUIPO</th>
+                <th class="px-3 sm:px-4 py-2 text-left text-[8px] sm:text-[9px] font-mono text-gray-600 uppercase tracking-wider">FECHA</th>
               </tr>
             </thead>
-            <tbody class="divide-y divide-[#D1D5DB]">
-              <tr v-for="rep in reparacionesFinalizadas" :key="rep.id" class="hover:bg-green-50/30 transition-colors">
-                <td class="px-3 sm:px-4 py-2 text-xs font-bold text-[#065F46]">{{ truncarNombre(rep.clientes?.nombre_completo || '-', 20) }}</td>
+            <tbody class="divide-y divide-gray-200">
+              <tr v-for="rep in reparacionesFinalizadas" :key="rep.id" class="hover:bg-gray-50 transition-colors">
+                <td class="px-3 sm:px-4 py-2 text-xs font-bold text-slate-700">{{ truncarNombre(rep.clientes?.nombre_completo || '-', 20) }}</td>
                 <td class="px-3 sm:px-4 py-2 text-[10px] sm:text-[11px] text-gray-600">{{ rep.equipo_marca_modelo || '-' }}</td>
-                <td class="px-3 sm:px-4 py-2 text-[9px] sm:text-[10px] font-mono text-gray-400">{{ formatearFechaHora(obtenerFechaPorEstado(rep)) }}</td>
+                <td class="px-3 sm:px-4 py-2 text-[9px] sm:text-[10px] font-mono text-gray-500">{{ formatearFechaHora(obtenerFechaPorEstado(rep)) }}</td>
               </tr>
               <tr v-if="reparacionesFinalizadas.length === 0">
                 <td colspan="3" class="px-3 sm:px-4 py-8 text-center">
@@ -382,14 +427,14 @@
       </div>
 
       <!-- Reparaciones Entregadas -->
-      <div class="bg-white rounded-xl border border-[#D1D5DB] overflow-hidden">
-        <div class="px-3 sm:px-5 py-3 bg-gray-50 border-b border-[#D1D5DB] flex justify-between items-center">
+      <div class="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-md hover:shadow-lg transition-all duration-300">
+        <div class="px-3 sm:px-5 py-3 bg-gray-100 border-b border-gray-300 flex justify-between items-center">
           <div class="flex items-center gap-2">
             <i class="ri-hand-heart-line text-gray-600 text-lg"></i>
-            <h3 class="text-[9px] sm:text-[10px] font-black text-gray-600 uppercase tracking-wider">ENTREGADAS</h3>
+            <h3 class="text-[9px] sm:text-[10px] font-black text-slate-700 uppercase tracking-wider">ENTREGADAS</h3>
             <span class="px-1.5 sm:px-2 py-0.5 text-[8px] sm:text-[9px] font-black bg-gray-200 text-gray-700 rounded-full">{{ reparacionesEntregadas.length }}</span>
           </div>
-          <NuxtLink to="/reparaciones?estado=Entregado" class="text-[8px] sm:text-[9px] font-mono text-[#10B981] hover:text-[#065F46] transition-all uppercase tracking-wider hidden xs:block">
+          <NuxtLink to="/reparaciones?estado=Entregado" class="text-[8px] sm:text-[9px] font-mono text-slate-500 hover:text-slate-700 transition-all uppercase tracking-wider hidden xs:block">
             VER_TODAS →
           </NuxtLink>
         </div>
@@ -399,11 +444,11 @@
             <div v-for="rep in reparacionesEntregadas" :key="rep.id" class="bg-gray-50 rounded-lg p-3 border border-gray-200">
               <div class="flex justify-between items-start mb-2">
                 <div class="flex-1 min-w-0">
-                  <p class="text-xs font-black text-[#065F46] truncate">{{ truncarNombre(rep.clientes?.nombre_completo || '-', 25) }}</p>
+                  <p class="text-xs font-black text-slate-700 truncate">{{ truncarNombre(rep.clientes?.nombre_completo || '-', 25) }}</p>
                   <p class="text-[10px] text-gray-600 mt-1">{{ rep.equipo_marca_modelo || '-' }}</p>
                 </div>
               </div>
-              <div class="flex items-center gap-1 text-[9px] font-mono text-gray-400">
+              <div class="flex items-center gap-1 text-[9px] font-mono text-gray-500">
                 <i class="ri-time-line"></i>
                 {{ formatearFechaHora(obtenerFechaPorEstado(rep)) }}
               </div>
@@ -414,18 +459,18 @@
           </div>
           <!-- Vista desktop: tabla -->
           <table class="w-full hidden xs:table">
-            <thead class="bg-[#F8FAFC] sticky top-0">
-              <tr class="border-b border-[#D1D5DB]">
-                <th class="px-3 sm:px-4 py-2 text-left text-[8px] sm:text-[9px] font-mono text-gray-500 uppercase tracking-wider">CLIENTE</th>
-                <th class="px-3 sm:px-4 py-2 text-left text-[8px] sm:text-[9px] font-mono text-gray-500 uppercase tracking-wider">EQUIPO</th>
-                <th class="px-3 sm:px-4 py-2 text-left text-[8px] sm:text-[9px] font-mono text-gray-500 uppercase tracking-wider">FECHA</th>
+            <thead class="bg-gray-50 sticky top-0">
+              <tr class="border-b border-gray-200">
+                <th class="px-3 sm:px-4 py-2 text-left text-[8px] sm:text-[9px] font-mono text-gray-600 uppercase tracking-wider">CLIENTE</th>
+                <th class="px-3 sm:px-4 py-2 text-left text-[8px] sm:text-[9px] font-mono text-gray-600 uppercase tracking-wider">EQUIPO</th>
+                <th class="px-3 sm:px-4 py-2 text-left text-[8px] sm:text-[9px] font-mono text-gray-600 uppercase tracking-wider">FECHA</th>
               </tr>
             </thead>
-            <tbody class="divide-y divide-[#D1D5DB]">
+            <tbody class="divide-y divide-gray-200">
               <tr v-for="rep in reparacionesEntregadas" :key="rep.id" class="hover:bg-gray-50 transition-colors">
-                <td class="px-3 sm:px-4 py-2 text-xs font-bold text-[#065F46]">{{ truncarNombre(rep.clientes?.nombre_completo || '-', 20) }}</td>
+                <td class="px-3 sm:px-4 py-2 text-xs font-bold text-slate-700">{{ truncarNombre(rep.clientes?.nombre_completo || '-', 20) }}</td>
                 <td class="px-3 sm:px-4 py-2 text-[10px] sm:text-[11px] text-gray-600">{{ rep.equipo_marca_modelo || '-' }}</td>
-                <td class="px-3 sm:px-4 py-2 text-[9px] sm:text-[10px] font-mono text-gray-400">{{ formatearFechaHora(obtenerFechaPorEstado(rep)) }}</td>
+                <td class="px-3 sm:px-4 py-2 text-[9px] sm:text-[10px] font-mono text-gray-500">{{ formatearFechaHora(obtenerFechaPorEstado(rep)) }}</td>
               </tr>
               <tr v-if="reparacionesEntregadas.length === 0">
                 <td colspan="3" class="px-3 sm:px-4 py-8 text-center">
@@ -437,161 +482,131 @@
         </div>
       </div>
     </div>
-
-    <!-- Últimas Ventas CON PAGINACIÓN -->
-    <div class="bg-white rounded-xl border border-[#D1D5DB] overflow-hidden">
-      <div class="px-3 sm:px-5 py-3 bg-[#F8FAFC] border-b border-[#D1D5DB] flex justify-between items-center flex-wrap gap-2">
-        <div class="flex items-center gap-2">
-          <i class="ri-shopping-cart-line text-[#10B981] text-lg"></i>
-          <h3 class="text-[9px] sm:text-[10px] font-black text-[#065F46] uppercase tracking-wider">ÚLTIMAS VENTAS</h3>
-        </div>
-        <div class="flex items-center gap-2 sm:gap-3">
-          <span class="text-[8px] sm:text-[9px] font-mono text-gray-400 hidden xs:block">DATA_STREAM: {{ ventasInicio }}-{{ ventasFin }}/{{ ultimasVentas.length }}</span>
-          <div class="flex gap-1">
-            <button @click="ventasPaginaAnterior" :disabled="ventasPaginaActual === 1" class="p-1.5 rounded-lg border border-[#D1D5DB] bg-white hover:bg-gray-100 disabled:opacity-30 transition-all">
-              <i class="ri-arrow-left-s-line text-xs"></i>
-            </button>
-            <button @click="ventasPaginaSiguiente" :disabled="ventasPaginaActual === ventasTotalPaginas" class="p-1.5 rounded-lg border border-[#D1D5DB] bg-white hover:bg-gray-100 disabled:opacity-30 transition-all">
-              <i class="ri-arrow-right-s-line text-xs"></i>
-            </button>
-          </div>
-          <NuxtLink to="/ventas" class="text-[8px] sm:text-[9px] font-mono text-[#10B981] hover:text-[#065F46] transition-all uppercase tracking-wider hidden xs:block">
-            VER_TODAS →
-          </NuxtLink>
-        </div>
-      </div>
-      <!-- Vista móvil: cards -->
-      <div class="xs:hidden p-3 space-y-2">
-        <div v-for="venta in ventasPaginadas" :key="venta.id" class="bg-[#F0FDF4] rounded-lg p-3 border border-[#D1FAE5]">
-          <div class="flex justify-between items-start mb-2">
-            <div class="flex-1 min-w-0">
-              <p class="text-xs font-black text-[#065F46] truncate">{{ truncarNombre(venta.clientes?.nombre_completo || '-', 25) }}</p>
-              <p class="text-[10px] text-gray-600 mt-1">{{ venta.stock_repuestos?.nombre_repuesto || '-' }}</p>
-            </div>
-            <div class="text-right ml-2">
-              <p class="text-sm font-black text-[#10B981]">${{ venta.total?.toFixed(2) || 0 }}</p>
-              <p class="text-[9px] font-mono text-gray-500">{{ venta.cantidad }} uds</p>
-            </div>
-          </div>
-          <div class="flex items-center gap-1 text-[9px] font-mono text-gray-400">
-            <i class="ri-calendar-line"></i>
-            {{ formatearFecha(venta.created_at) }}
-          </div>
-        </div>
-        <div v-if="ventasPaginadas.length === 0" class="text-center py-8">
-          <span class="text-[9px] font-mono text-gray-400 uppercase">SIN_REGISTROS</span>
-        </div>
-      </div>
-      <!-- Vista desktop: tabla -->
-      <div class="overflow-x-auto hidden xs:block">
-        <table class="min-w-[600px] w-full">
-          <thead class="bg-[#F8FAFC]">
-            <tr class="border-b border-[#D1D5DB]">
-              <th class="px-3 sm:px-4 py-2 text-left text-[8px] sm:text-[9px] font-mono text-gray-500 uppercase tracking-wider">FECHA</th>
-              <th class="px-3 sm:px-4 py-2 text-left text-[8px] sm:text-[9px] font-mono text-gray-500 uppercase tracking-wider">CLIENTE</th>
-              <th class="px-3 sm:px-4 py-2 text-left text-[8px] sm:text-[9px] font-mono text-gray-500 uppercase tracking-wider">REPUESTO</th>
-              <th class="px-3 sm:px-4 py-2 text-center text-[8px] sm:text-[9px] font-mono text-gray-500 uppercase tracking-wider">CANT.</th>
-              <th class="px-3 sm:px-4 py-2 text-right text-[8px] sm:text-[9px] font-mono text-gray-500 uppercase tracking-wider">TOTAL</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-[#D1D5DB]">
-            <tr v-for="venta in ventasPaginadas" :key="venta.id" class="hover:bg-[#F0FDF4] transition-colors">
-              <td class="px-3 sm:px-4 py-2 text-[9px] sm:text-[10px] font-mono text-gray-500">{{ formatearFecha(venta.created_at) }}</td>
-              <td class="px-3 sm:px-4 py-2 text-xs font-bold text-[#065F46]">{{ truncarNombre(venta.clientes?.nombre_completo || '-', 20) }}</td>
-              <td class="px-3 sm:px-4 py-2 text-[10px] sm:text-[11px] text-gray-600">{{ venta.stock_repuestos?.nombre_repuesto || '-' }}</td>
-              <td class="px-3 sm:px-4 py-2 text-center text-[10px] sm:text-[11px] font-mono text-gray-600">{{ venta.cantidad }}</td>
-              <td class="px-3 sm:px-4 py-2 text-right text-sm font-black text-[#10B981]">${{ venta.total?.toFixed(2) || 0 }}</td>
-            </tr>
-            <tr v-if="ventasPaginadas.length === 0">
-              <td colspan="5" class="px-3 sm:px-4 py-8 text-center">
-                <span class="text-[9px] font-mono text-gray-400 uppercase">SIN_REGISTROS</span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div v-if="ventasTotalPaginas > 1" class="px-3 sm:px-4 py-2 border-t border-[#D1D5DB] bg-[#F8FAFC] flex justify-center gap-1 flex-wrap">
-        <button v-for="pagina in ventasTotalPaginas" :key="pagina" @click="ventasIrPagina(pagina)" :class="['px-2 sm:px-3 py-1 text-[9px] sm:text-[10px] font-mono rounded transition-all', ventasPaginaActual === pagina ? 'bg-[#065F46] text-white' : 'bg-white text-gray-600 hover:bg-gray-100 border border-[#D1D5DB]']">
-          {{ pagina }}
-        </button>
-      </div>
     </div>
 
-    <!-- Repuestos con stock bajo CON PAGINACIÓN -->
-    <div class="bg-white rounded-xl border border-[#D1D5DB] overflow-hidden">
-      <div class="px-3 sm:px-5 py-3 bg-[#FEF3C7] border-b border-[#FDE68A] flex justify-between items-center flex-wrap gap-2">
-        <div class="flex items-center gap-2">
-          <i class="ri-alert-line text-[#F59E0B] text-lg"></i>
-          <h3 class="text-[9px] sm:text-[10px] font-black text-[#D97706] uppercase tracking-wider">STOCK CRÍTICO</h3>
-        </div>
-        <div class="flex items-center gap-2 sm:gap-3">
-          <span class="text-[8px] sm:text-[9px] font-mono text-gray-500 hidden xs:block">DATA_STREAM: {{ stockInicio }}-{{ stockFin }}/{{ repuestosStockBajo.length }}</span>
-          <div class="flex gap-1">
-            <button @click="stockPaginaAnterior" :disabled="stockPaginaActual === 1" class="p-1.5 rounded-lg border border-[#D1D5DB] bg-white hover:bg-gray-100 disabled:opacity-30 transition-all">
-              <i class="ri-arrow-left-s-line text-xs"></i>
-            </button>
-            <button @click="stockPaginaSiguiente" :disabled="stockPaginaActual === stockTotalPaginas" class="p-1.5 rounded-lg border border-[#D1D5DB] bg-white hover:bg-gray-100 disabled:opacity-30 transition-all">
-              <i class="ri-arrow-right-s-line text-xs"></i>
-            </button>
+    <!-- Sección de ventas y stock -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+      <!-- Últimas Ventas -->
+      <div class="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-md hover:shadow-lg transition-all duration-300">
+        <div class="px-3 sm:px-5 py-3 bg-indigo-50 border-b border-gray-300 flex justify-between items-center">
+          <div class="flex items-center gap-2">
+            <i class="ri-shopping-cart-line text-indigo-600 text-lg"></i>
+            <h3 class="text-[9px] sm:text-[10px] font-black text-slate-700 uppercase tracking-wider">ÚLTIMAS VENTAS</h3>
+            <span class="px-1.5 sm:px-2 py-0.5 text-[8px] sm:text-[9px] font-black bg-indigo-100 text-indigo-700 rounded-full">{{ ultimasVentas.length }}</span>
           </div>
-          <NuxtLink to="/repuestos" class="text-[8px] sm:text-[9px] font-mono text-[#10B981] hover:text-[#065F46] transition-all uppercase tracking-wider hidden xs:block">
+          <NuxtLink to="/ventas" class="text-[8px] sm:text-[9px] font-mono text-slate-500 hover:text-slate-700 transition-all uppercase tracking-wider hidden xs:block">
             VER_TODAS →
           </NuxtLink>
         </div>
-      </div>
-      <!-- Vista móvil: cards -->
-      <div class="xs:hidden p-3 space-y-2">
-        <div v-for="repuesto in stockPaginados" :key="repuesto.id" class="bg-amber-50/30 rounded-lg p-3 border border-amber-100">
-          <div class="flex justify-between items-start mb-2">
-            <div class="flex-1 min-w-0">
-              <p class="text-xs font-black text-[#065F46] truncate">{{ truncarNombre(repuesto.nombre_repuesto, 30) }}</p>
+        <div class="max-h-64 overflow-y-auto custom-scrollbar">
+          <!-- Vista móvil: cards -->
+          <div class="xs:hidden p-3 space-y-2">
+            <div v-for="venta in ultimasVentas.slice(0, 3)" :key="venta.id" class="bg-gray-50 rounded-lg p-3 border border-gray-200">
+              <div class="flex justify-between items-start mb-2">
+                <div class="flex-1 min-w-0">
+                  <p class="text-xs font-black text-slate-700 truncate">{{ truncarNombre(venta.clientes?.nombre_completo || '-', 25) }}</p>
+                  <p class="text-[10px] text-gray-600 mt-1">{{ venta.stock_repuestos?.nombre_repuesto || '-' }}</p>
+                </div>
+                <div class="text-right ml-2">
+                  <p class="text-sm font-black text-indigo-600">${{ venta.total?.toFixed(2) || 0 }}</p>
+                  <p class="text-[9px] font-mono text-gray-500">{{ venta.cantidad }} uds</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-1 text-[9px] font-mono text-gray-500">
+                <i class="ri-calendar-line"></i>
+                {{ formatearFecha(venta.created_at) }}
+              </div>
             </div>
-            <div class="text-right ml-2">
-              <p class="text-sm font-black text-[#10B981]">${{ repuesto.precio_venta || 0 }}</p>
+            <div v-if="ultimasVentas.length === 0" class="text-center py-8">
+              <span class="text-[9px] font-mono text-gray-400 uppercase">SIN_REGISTROS</span>
             </div>
           </div>
-          <div class="flex items-center justify-between">
-            <span class="inline-flex px-2 py-0.5 text-[9px] font-black bg-amber-100 text-amber-700 rounded-full border border-amber-200">
-              {{ repuesto.cantidad_disponible }} UDS
-            </span>
-          </div>
-        </div>
-        <div v-if="stockPaginados.length === 0" class="text-center py-8">
-          <span class="text-[9px] font-mono text-gray-400 uppercase">SIN_REGISTROS</span>
+          <!-- Vista desktop: tabla -->
+          <table class="w-full hidden xs:table">
+            <thead class="bg-gray-50 sticky top-0">
+              <tr class="border-b border-gray-200">
+                <th class="px-3 sm:px-4 py-2 text-left text-[8px] sm:text-[9px] font-mono text-gray-600 uppercase tracking-wider">CLIENTE</th>
+                <th class="px-3 sm:px-4 py-2 text-left text-[8px] sm:text-[9px] font-mono text-gray-600 uppercase tracking-wider">REPUESTO</th>
+                <th class="px-3 sm:px-4 py-2 text-right text-[8px] sm:text-[9px] font-mono text-gray-600 uppercase tracking-wider">TOTAL</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+              <tr v-for="venta in ultimasVentas.slice(0, 3)" :key="venta.id" class="hover:bg-gray-50 transition-colors">
+                <td class="px-3 sm:px-4 py-2 text-xs font-bold text-slate-700">{{ truncarNombre(venta.clientes?.nombre_completo || '-', 20) }}</td>
+                <td class="px-3 sm:px-4 py-2 text-[10px] sm:text-[11px] text-gray-600">{{ venta.stock_repuestos?.nombre_repuesto || '-' }}</td>
+                <td class="px-3 sm:px-4 py-2 text-right text-sm font-black text-indigo-600">${{ venta.total?.toFixed(2) || 0 }}</td>
+              </tr>
+              <tr v-if="ultimasVentas.length === 0">
+                <td colspan="3" class="px-3 sm:px-4 py-8 text-center">
+                  <span class="text-[9px] font-mono text-gray-400 uppercase">SIN_REGISTROS</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
-      <!-- Vista desktop: tabla -->
-      <div class="overflow-x-auto hidden xs:block">
-        <table class="min-w-[600px] w-full">
-          <thead class="bg-[#F8FAFC]">
-            <tr class="border-b border-[#D1D5DB]">
-              <th class="px-3 sm:px-4 py-2 text-left text-[8px] sm:text-[9px] font-mono text-gray-500 uppercase tracking-wider">REPUESTO</th>
-              <th class="px-3 sm:px-4 py-2 text-center text-[8px] sm:text-[9px] font-mono text-gray-500 uppercase tracking-wider">STOCK</th>
-              <th class="px-3 sm:px-4 py-2 text-right text-[8px] sm:text-[9px] font-mono text-gray-500 uppercase tracking-wider">PRECIO VENTA</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-[#D1D5DB]">
-            <tr v-for="repuesto in stockPaginados" :key="repuesto.id" class="hover:bg-amber-50/30 transition-colors">
-              <td class="px-3 sm:px-4 py-2 text-xs font-bold text-[#065F46]">{{ truncarNombre(repuesto.nombre_repuesto, 30) }}</td>
-              <td class="px-3 sm:px-4 py-2 text-center">
-                <span class="inline-flex px-2 py-0.5 text-[9px] font-black bg-amber-100 text-amber-700 rounded-full border border-amber-200">
+
+      <!-- Repuestos con stock bajo -->
+      <div class="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-md hover:shadow-lg transition-all duration-300">
+        <div class="px-3 sm:px-5 py-3 bg-red-50 border-b border-gray-300 flex justify-between items-center">
+          <div class="flex items-center gap-2">
+            <i class="ri-alert-line text-red-600 text-lg"></i>
+            <h3 class="text-[9px] sm:text-[10px] font-black text-slate-700 uppercase tracking-wider">STOCK CRÍTICO</h3>
+            <span class="px-1.5 sm:px-2 py-0.5 text-[8px] sm:text-[9px] font-black bg-red-100 text-red-700 rounded-full">{{ repuestosStockBajo.length }}</span>
+          </div>
+          <NuxtLink to="/repuestos" class="text-[8px] sm:text-[9px] font-mono text-slate-500 hover:text-slate-700 transition-all uppercase tracking-wider hidden xs:block">
+            VER_TODAS →
+          </NuxtLink>
+        </div>
+        <div class="max-h-64 overflow-y-auto custom-scrollbar">
+          <!-- Vista móvil: cards -->
+          <div class="xs:hidden p-3 space-y-2">
+            <div v-for="repuesto in repuestosStockBajo.slice(0, 3)" :key="repuesto.id" class="bg-gray-50 rounded-lg p-3 border border-gray-200">
+              <div class="flex justify-between items-start mb-2">
+                <div class="flex-1 min-w-0">
+                  <p class="text-xs font-black text-slate-700 truncate">{{ truncarNombre(repuesto.nombre_repuesto, 30) }}</p>
+                </div>
+                <div class="text-right ml-2">
+                  <p class="text-sm font-black text-red-600">${{ repuesto.precio_venta || 0 }}</p>
+                </div>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="inline-flex px-2 py-0.5 text-[9px] font-black bg-red-100 text-red-700 rounded-full border border-red-200">
                   {{ repuesto.cantidad_disponible }} UDS
                 </span>
-              </td>
-              <td class="px-3 sm:px-4 py-2 text-right text-sm font-black text-[#10B981]">${{ repuesto.precio_venta || 0 }}</td>
-            </tr>
-            <tr v-if="stockPaginados.length === 0">
-              <td colspan="3" class="px-3 sm:px-4 py-8 text-center">
-                <span class="text-[9px] font-mono text-gray-400 uppercase">SIN_REGISTROS</span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div v-if="stockTotalPaginas > 1" class="px-3 sm:px-4 py-2 border-t border-[#D1D5DB] bg-[#F8FAFC] flex justify-center gap-1 flex-wrap">
-        <button v-for="pagina in stockTotalPaginas" :key="pagina" @click="stockIrPagina(pagina)" :class="['px-2 sm:px-3 py-1 text-[9px] sm:text-[10px] font-mono rounded transition-all', stockPaginaActual === pagina ? 'bg-[#065F46] text-white' : 'bg-white text-gray-600 hover:bg-gray-100 border border-[#D1D5DB]']">
-          {{ pagina }}
-        </button>
+              </div>
+            </div>
+            <div v-if="repuestosStockBajo.length === 0" class="text-center py-8">
+              <span class="text-[9px] font-mono text-gray-400 uppercase">SIN_REGISTROS</span>
+            </div>
+          </div>
+          <!-- Vista desktop: tabla -->
+          <table class="w-full hidden xs:table">
+            <thead class="bg-gray-50 sticky top-0">
+              <tr class="border-b border-gray-200">
+                <th class="px-3 sm:px-4 py-2 text-left text-[8px] sm:text-[9px] font-mono text-gray-600 uppercase tracking-wider">REPUESTO</th>
+                <th class="px-3 sm:px-4 py-2 text-center text-[8px] sm:text-[9px] font-mono text-gray-600 uppercase tracking-wider">STOCK</th>
+                <th class="px-3 sm:px-4 py-2 text-right text-[8px] sm:text-[9px] font-mono text-gray-600 uppercase tracking-wider">PRECIO</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+              <tr v-for="repuesto in repuestosStockBajo.slice(0, 3)" :key="repuesto.id" class="hover:bg-gray-50 transition-colors">
+                <td class="px-3 sm:px-4 py-2 text-xs font-bold text-slate-700">{{ truncarNombre(repuesto.nombre_repuesto, 30) }}</td>
+                <td class="px-3 sm:px-4 py-2 text-center">
+                  <span class="inline-flex px-2 py-0.5 text-[9px] font-black bg-red-100 text-red-700 rounded-full border border-red-200">
+                    {{ repuesto.cantidad_disponible }} UDS
+                  </span>
+                </td>
+                <td class="px-3 sm:px-4 py-2 text-right text-sm font-black text-red-600">${{ repuesto.precio_venta || 0 }}</td>
+              </tr>
+              <tr v-if="repuestosStockBajo.length === 0">
+                <td colspan="3" class="px-3 sm:px-4 py-8 text-center">
+                  <span class="text-[9px] font-mono text-gray-400 uppercase">SIN_REGISTROS</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
@@ -641,76 +656,6 @@ const todasVentas = ref([])
 const todosRepuestos = ref([])
 const todosDefectuosos = ref([])
 
-// ========== PAGINACIÓN - Últimas Ventas ==========
-const ITEMS_POR_PAGINA = 7
-const ventasPaginaActual = ref(1)
-
-const ventasTotalPaginas = computed(() => {
-  return Math.ceil(ultimasVentas.value.length / ITEMS_POR_PAGINA)
-})
-
-const ventasInicio = computed(() => {
-  if (ultimasVentas.value.length === 0) return 0
-  return (ventasPaginaActual.value - 1) * ITEMS_POR_PAGINA + 1
-})
-
-const ventasFin = computed(() => {
-  const fin = ventasPaginaActual.value * ITEMS_POR_PAGINA
-  return Math.min(fin, ultimasVentas.value.length)
-})
-
-const ventasPaginadas = computed(() => {
-  const inicio = (ventasPaginaActual.value - 1) * ITEMS_POR_PAGINA
-  const fin = inicio + ITEMS_POR_PAGINA
-  return ultimasVentas.value.slice(inicio, fin)
-})
-
-const ventasPaginaAnterior = () => {
-  if (ventasPaginaActual.value > 1) ventasPaginaActual.value--
-}
-
-const ventasPaginaSiguiente = () => {
-  if (ventasPaginaActual.value < ventasTotalPaginas.value) ventasPaginaActual.value++
-}
-
-const ventasIrPagina = (pagina) => {
-  ventasPaginaActual.value = pagina
-}
-
-// ========== PAGINACIÓN - Stock Bajo ==========
-const stockPaginaActual = ref(1)
-
-const stockTotalPaginas = computed(() => {
-  return Math.ceil(repuestosStockBajo.value.length / ITEMS_POR_PAGINA)
-})
-
-const stockInicio = computed(() => {
-  if (repuestosStockBajo.value.length === 0) return 0
-  return (stockPaginaActual.value - 1) * ITEMS_POR_PAGINA + 1
-})
-
-const stockFin = computed(() => {
-  const fin = stockPaginaActual.value * ITEMS_POR_PAGINA
-  return Math.min(fin, repuestosStockBajo.value.length)
-})
-
-const stockPaginados = computed(() => {
-  const inicio = (stockPaginaActual.value - 1) * ITEMS_POR_PAGINA
-  const fin = inicio + ITEMS_POR_PAGINA
-  return repuestosStockBajo.value.slice(inicio, fin)
-})
-
-const stockPaginaAnterior = () => {
-  if (stockPaginaActual.value > 1) stockPaginaActual.value--
-}
-
-const stockPaginaSiguiente = () => {
-  if (stockPaginaActual.value < stockTotalPaginas.value) stockPaginaActual.value++
-}
-
-const stockIrPagina = (pagina) => {
-  stockPaginaActual.value = pagina
-}
 
 // Función para truncar nombres largos
 const truncarNombre = (nombre, maxLength) => {
@@ -719,11 +664,6 @@ const truncarNombre = (nombre, maxLength) => {
   return nombre.substring(0, maxLength) + '...'
 }
 
-// Reiniciar paginación
-const reiniciarPaginacion = () => {
-  ventasPaginaActual.value = 1
-  stockPaginaActual.value = 1
-}
 
 // FUNCIÓN: Obtener la fecha según el estado actual de la reparación
 const obtenerFechaPorEstado = (rep) => {
@@ -909,25 +849,24 @@ const refrescarDashboard = async () => {
     cargarRepuestos(),
     cargarDefectuosos()
   ])
-  reiniciarPaginacion()
   refrescando.value = false
 }
 
 // Computed para tablas de reparaciones
 const reparacionesRecibidas = computed(() => {
-  return todasReparaciones.value.filter(r => r.estado_servicio === 'Recibido').slice(0, 5)
+  return todasReparaciones.value.filter(r => r.estado_servicio === 'Recibido').slice(0, 3)
 })
 
 const reparacionesEnProceso = computed(() => {
-  return todasReparaciones.value.filter(r => r.estado_servicio === 'En reparacion').slice(0, 5)
+  return todasReparaciones.value.filter(r => r.estado_servicio === 'En reparacion').slice(0, 3)
 })
 
 const reparacionesFinalizadas = computed(() => {
-  return todasReparaciones.value.filter(r => r.estado_servicio === 'Finalizado').slice(0, 5)
+  return todasReparaciones.value.filter(r => r.estado_servicio === 'Finalizado').slice(0, 3)
 })
 
 const reparacionesEntregadas = computed(() => {
-  return todasReparaciones.value.filter(r => r.estado_servicio === 'Entregado').slice(0, 5)
+  return todasReparaciones.value.filter(r => r.estado_servicio === 'Entregado').slice(0, 3)
 })
 
 const ultimasVentas = computed(() => {

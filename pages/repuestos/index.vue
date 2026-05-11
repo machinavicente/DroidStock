@@ -1,42 +1,42 @@
 <template>
   <div>
     <!-- Header -->
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+    <div class="flex flex-col gap-4 mb-6">
       <div>
         <h1 class="text-xl sm:text-2xl font-bold tracking-tight" style="color: #065F46">Repuestos</h1>
         <p class="text-sm sm:text-base mt-1" style="color: #6B7280">Control de inventario y stock</p>
       </div>
-      <div class="flex flex-col xs:flex-row gap-2 w-full sm:w-auto">
+      <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
         <button 
           @click="exportarInventarioPDF"
           :disabled="exportandoInventario"
-          class="w-full xs:w-auto px-3 sm:px-4 py-2 rounded-lg transition flex items-center justify-center gap-2 text-sm"
+          class="w-full sm:w-auto px-3 sm:px-4 py-2 rounded-lg transition flex items-center justify-center gap-2 text-sm"
           style="background-color: #F59E0B; color: white;"
           @mouseenter="e => e.currentTarget.style.backgroundColor = '#D97706'"
           @mouseleave="e => e.currentTarget.style.backgroundColor = '#F59E0B'"
         >
           <i v-if="exportandoInventario" class="ri-loader-4-line animate-spin"></i>
           <i v-else class="ri-file-pdf-line"></i>
-          <span class="hidden xs:inline">{{ exportandoInventario ? 'Generando...' : 'Exportar Inventario' }}</span>
-          <span class="xs:hidden">{{ exportandoInventario ? '...' : 'Exportar Inventario' }}</span>
+          <span class="hidden sm:inline">{{ exportandoInventario ? 'Generando...' : 'Exportar Inventario' }}</span>
+          <span class="sm:hidden">{{ exportandoInventario ? 'GEN...' : 'EXPORTAR' }}</span>
         </button>
         <NuxtLink
           to="/repuestos/nuevo"
-          class="w-full xs:w-auto px-3 sm:px-4 py-2 rounded-lg transition flex items-center justify-center gap-2 text-sm"
+          class="w-full sm:w-auto px-3 sm:px-4 py-2 rounded-lg transition flex items-center justify-center gap-2 text-sm"
           style="background-color: #10B981; color: white;"
           @mouseenter="e => e.currentTarget.style.backgroundColor = '#059669'"
           @mouseleave="e => e.currentTarget.style.backgroundColor = '#10B981'"
         >
           <i class="ri-add-line"></i>
-          <span class="hidden xs:inline">Nuevo Repuesto</span>
-          <span class="xs:hidden">Nuevo Repuesto</span>
+          <span class="hidden sm:inline">Nuevo Repuesto</span>
+          <span class="sm:hidden">NUEVO</span>
         </NuxtLink>
       </div>
     </div>
 
     <!-- Buscador -->
     <div class="mb-6">
-      <div class="relative w-full max-w-md">
+      <div class="relative w-full sm:max-w-md">
         <i class="ri-search-line absolute left-3 top-1/2 transform -translate-y-1/2" style="color: #9CA3AF"></i>
         <input
           v-model="busqueda"
@@ -51,9 +51,9 @@
     </div>
 
     <!-- Toast de notificación -->
-    <div v-if="toast.visible" class="fixed bottom-4 right-4 z-50 animate-slide-up">
+    <div v-if="toast.visible" class="fixed bottom-4 right-4 left-4 sm:left-auto z-50 animate-slide-up">
       <div :class="[
-        'px-3 sm:px-4 py-2 sm:py-3 rounded-lg shadow-lg flex items-center gap-2 sm:gap-3 min-w-[250px] sm:min-w-[300px]',
+        'px-3 sm:px-4 py-2 sm:py-3 rounded-lg shadow-lg flex items-center gap-2 sm:gap-3 min-w-[250px] sm:min-w-[300px] mx-auto sm:mx-0',
         toast.tipo === 'success' ? 'text-white' : 
         toast.tipo === 'error' ? 'text-white' : 
         'text-white'
@@ -89,7 +89,7 @@
     </div>
 
     <!-- Grid de tarjetas -->
-    <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+    <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-5">
       <div
         v-for="repuesto in repuestosFiltrados"
         :key="repuesto.id"
@@ -99,11 +99,11 @@
         @mouseleave="e => e.currentTarget.style.borderColor = '#D1D5DB'"
       >
         <!-- Card header -->
-        <div class="p-4 sm:p-5 border-b" style="border-color: #D1D5DB">
-          <div class="flex items-start justify-between">
+        <div class="p-3 sm:p-4 lg:p-5 border-b" style="border-color: #D1D5DB">
+          <div class="flex flex-col sm:flex-row sm:items-start gap-3">
             <div class="flex items-center gap-3 flex-1 min-w-0">
-              <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-white font-semibold text-base sm:text-lg shadow-sm flex-shrink-0" style="background: linear-gradient(135deg, #065F46, #10B981)">
-                <i class="ri-stack-line text-base sm:text-xl"></i>
+              <div class="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 rounded-full flex items-center justify-center text-white font-semibold text-sm sm:text-base lg:text-lg shadow-sm flex-shrink-0" style="background: linear-gradient(135deg, #065F46, #10B981)">
+                <i class="ri-stack-line text-sm sm:text-base lg:text-xl"></i>
               </div>
               <div class="flex-1 min-w-0">
                 <h3 class="font-semibold text-sm sm:text-base break-words leading-tight" style="color: #065F46">
@@ -114,70 +114,70 @@
                 </span>
               </div>
             </div>
-            <div class="flex gap-1 flex-shrink-0 ml-2">
+            <div class="flex gap-1 flex-shrink-0 sm:ml-2">
               <!-- Botón Marcar como Defectuoso -->
               <button
                 @click="abrirModalDefectuoso(repuesto)"
-                class="p-1.5 rounded-lg transition"
+                class="p-1 sm:p-1.5 rounded-lg transition"
                 style="color: #9CA3AF"
                 @mouseenter="e => { e.currentTarget.style.color = '#EF4444'; e.currentTarget.style.backgroundColor = '#FEF2F2' }"
                 @mouseleave="e => { e.currentTarget.style.color = '#9CA3AF'; e.currentTarget.style.backgroundColor = 'transparent' }"
                 title="Marcar como defectuoso"
               >
-                <i class="ri-error-warning-line text-base sm:text-lg"></i>
+                <i class="ri-error-warning-line text-sm sm:text-base lg:text-lg"></i>
               </button>
               <button
                 @click="abrirModalAumentarStock(repuesto)"
-                class="p-1.5 rounded-lg transition"
+                class="p-1 sm:p-1.5 rounded-lg transition"
                 style="color: #9CA3AF"
                 @mouseenter="e => { e.currentTarget.style.color = '#10B981'; e.currentTarget.style.backgroundColor = '#ECFDF5' }"
                 @mouseleave="e => { e.currentTarget.style.color = '#9CA3AF'; e.currentTarget.style.backgroundColor = 'transparent' }"
                 title="Aumentar stock"
               >
-                <i class="ri-add-line text-base sm:text-lg"></i>
+                <i class="ri-add-line text-sm sm:text-base lg:text-lg"></i>
               </button>
               <NuxtLink
                 :to="`/repuestos/editar/${repuesto.id}`"
-                class="p-1.5 rounded-lg transition"
+                class="p-1 sm:p-1.5 rounded-lg transition"
                 style="color: #9CA3AF"
                 @mouseenter="e => { e.currentTarget.style.color = '#3B82F6'; e.currentTarget.style.backgroundColor = '#EFF6FF' }"
                 @mouseleave="e => { e.currentTarget.style.color = '#9CA3AF'; e.currentTarget.style.backgroundColor = 'transparent' }"
                 title="Editar"
               >
-                <i class="ri-edit-line text-base sm:text-lg"></i>
+                <i class="ri-edit-line text-sm sm:text-base lg:text-lg"></i>
               </NuxtLink>
               <button
                 @click="confirmarEliminar(repuesto)"
-                class="p-1.5 rounded-lg transition"
+                class="p-1 sm:p-1.5 rounded-lg transition"
                 style="color: #9CA3AF"
                 @mouseenter="e => { e.currentTarget.style.color = '#EF4444'; e.currentTarget.style.backgroundColor = '#FEF2F2' }"
                 @mouseleave="e => { e.currentTarget.style.color = '#9CA3AF'; e.currentTarget.style.backgroundColor = 'transparent' }"
                 title="Eliminar"
               >
-                <i class="ri-delete-bin-line text-base sm:text-lg"></i>
+                <i class="ri-delete-bin-line text-sm sm:text-base lg:text-lg"></i>
               </button>
             </div>
           </div>
         </div>
 
         <!-- Card body -->
-        <div class="p-4 sm:p-5 space-y-2 sm:space-y-3 flex-1">
+        <div class="p-3 sm:p-4 lg:p-5 space-y-2 sm:space-y-3 flex-1">
           <div class="flex items-center gap-2 text-xs sm:text-sm">
-            <i class="ri-shopping-cart-line flex-shrink-0" style="color: #9CA3AF"></i>
+            <i class="ri-shopping-cart-line flex-shrink-0 text-xs sm:text-sm" style="color: #9CA3AF"></i>
             <span style="color: #6B7280">
-              Precio costo: <span class="font-medium" style="color: #065F46">${{ repuesto.precio_costo || 0 }}</span>
+              <span class="hidden sm:inline">Precio costo:</span><span class="sm:hidden">Costo:</span> <span class="font-medium" style="color: #065F46">${{ repuesto.precio_costo || 0 }}</span>
             </span>
           </div>
           <div v-if="repuesto.precio_venta" class="flex items-center gap-2 text-xs sm:text-sm">
-            <i class="ri-money-dollar-circle-line flex-shrink-0" style="color: #9CA3AF"></i>
+            <i class="ri-money-dollar-circle-line flex-shrink-0 text-xs sm:text-sm" style="color: #9CA3AF"></i>
             <span style="color: #6B7280">
-              Precio venta: <span class="font-medium" style="color: #10B981">${{ repuesto.precio_venta || 0 }}</span>
+              <span class="hidden sm:inline">Precio venta:</span><span class="sm:hidden">Venta:</span> <span class="font-medium" style="color: #10B981">${{ repuesto.precio_venta || 0 }}</span>
             </span>
           </div>
           <div v-if="repuesto.precio_montaje" class="flex items-center gap-2 text-xs sm:text-sm">
-            <i class="ri-tools-line flex-shrink-0" style="color: #9CA3AF"></i>
+            <i class="ri-tools-line flex-shrink-0 text-xs sm:text-sm" style="color: #9CA3AF"></i>
             <span style="color: #6B7280">
-              Montaje: <span class="font-medium" style="color: #065F46">${{ repuesto.precio_montaje || 0 }}</span>
+              <span class="hidden sm:inline">Montaje:</span><span class="sm:hidden">Mont:</span> <span class="font-medium" style="color: #065F46">${{ repuesto.precio_montaje || 0 }}</span>
             </span>
           </div>
           
@@ -197,24 +197,24 @@
           </div>
 
           <div class="flex items-center gap-2 text-xs sm:text-sm pt-1">
-            <i class="ri-calendar-line flex-shrink-0" style="color: #9CA3AF"></i>
+            <i class="ri-calendar-line flex-shrink-0 text-xs sm:text-sm" style="color: #9CA3AF"></i>
             <span class="text-xs sm:text-sm truncate" style="color: #6B7280">
-              Agregado: {{ formatearFecha(repuesto.created_at) }}
+              <span class="hidden sm:inline">Agregado:</span><span class="sm:hidden">Add:</span> {{ formatearFecha(repuesto.created_at) }}
             </span>
           </div>
         </div>
 
         <!-- Card footer stock bajo -->
-        <div v-if="repuesto.cantidad_disponible <= 5 && repuesto.cantidad_disponible > 0" class="px-4 sm:px-5 py-2 sm:py-3 rounded-b-xl border-t" style="background-color: #FEF3C7; border-color: #FDE68A">
+        <div v-if="repuesto.cantidad_disponible <= 5 && repuesto.cantidad_disponible > 0" class="px-3 sm:px-4 lg:px-5 py-2 sm:py-3 rounded-b-xl border-t" style="background-color: #FEF3C7; border-color: #FDE68A">
           <div class="flex items-center gap-2 text-xs sm:text-sm" style="color: #D97706">
-            <i class="ri-alert-line flex-shrink-0"></i>
-            <span class="truncate">Stock bajo. ¡Reabastecer pronto!</span>
+            <i class="ri-alert-line flex-shrink-0 text-xs sm:text-sm"></i>
+            <span class="truncate"><span class="hidden sm:inline">Stock bajo. ¡Reabastecer pronto!</span><span class="sm:hidden">Stock bajo</span></span>
           </div>
         </div>
-        <div v-else-if="repuesto.cantidad_disponible === 0" class="px-4 sm:px-5 py-2 sm:py-3 rounded-b-xl border-t" style="background-color: #FEE2E2; border-color: #FECACA">
+        <div v-else-if="repuesto.cantidad_disponible === 0" class="px-3 sm:px-4 lg:px-5 py-2 sm:py-3 rounded-b-xl border-t" style="background-color: #FEE2E2; border-color: #FECACA">
           <div class="flex items-center gap-2 text-xs sm:text-sm" style="color: #DC2626">
-            <i class="ri-error-warning-line flex-shrink-0"></i>
-            <span class="truncate">Sin stock. ¡Urgente reabastecer!</span>
+            <i class="ri-error-warning-line flex-shrink-0 text-xs sm:text-sm"></i>
+            <span class="truncate"><span class="hidden sm:inline">Sin stock. ¡Urgente reabastecer!</span><span class="sm:hidden">Sin stock</span></span>
           </div>
         </div>
       </div>
@@ -222,10 +222,10 @@
 
     <!-- Modal para aumentar stock -->
     <div v-if="modalAumentarVisible" class="fixed inset-0 z-50 overflow-y-auto">
-      <div class="flex items-center justify-center min-h-screen px-4 py-6">
+      <div class="flex items-center justify-center min-h-screen px-2 sm:px-4 py-6">
         <div class="fixed inset-0 bg-gray-900 bg-opacity-50 transition-opacity" @click="modalAumentarVisible = false"></div>
         
-        <div class="relative rounded-xl shadow-xl max-w-md w-full mx-auto p-4 sm:p-6 transform transition-all" style="background-color: white">
+        <div class="relative rounded-xl shadow-xl max-w-md w-full mx-auto p-3 sm:p-4 lg:p-6 transform transition-all" style="background-color: white">
           <div class="flex justify-between items-center mb-4">
             <h3 class="text-base sm:text-lg font-semibold" style="color: #065F46">Aumentar stock</h3>
             <button @click="modalAumentarVisible = false" style="color: #9CA3AF" class="hover:text-gray-600">
@@ -303,9 +303,9 @@
 
     <!-- Modal para marcar repuesto defectuoso -->
     <div v-if="modalDefectuosoVisible" class="fixed inset-0 z-50 overflow-y-auto">
-      <div class="flex items-center justify-center min-h-screen px-4 py-6">
+      <div class="flex items-center justify-center min-h-screen px-2 sm:px-4 py-6">
         <div class="fixed inset-0 bg-gray-900 bg-opacity-50" @click="modalDefectuosoVisible = false"></div>
-        <div class="relative rounded-xl shadow-xl max-w-md w-full mx-auto p-4 sm:p-6" style="background-color: white">
+        <div class="relative rounded-xl shadow-xl max-w-md w-full mx-auto p-3 sm:p-4 lg:p-6" style="background-color: white">
           <div class="flex justify-between items-center mb-4">
             <h3 class="text-base sm:text-lg font-semibold" style="color: #065F46">Repuesto Defectuoso</h3>
             <button @click="modalDefectuosoVisible = false" style="color: #9CA3AF" class="hover:text-gray-600">
@@ -374,9 +374,9 @@
 
     <!-- Modal de confirmación para eliminar -->
     <div v-if="modalEliminarVisible" class="fixed inset-0 z-50 overflow-y-auto">
-      <div class="flex items-center justify-center min-h-screen px-4 py-6">
+      <div class="flex items-center justify-center min-h-screen px-2 sm:px-4 py-6">
         <div class="fixed inset-0 bg-gray-900 bg-opacity-50 transition-opacity" @click="modalEliminarVisible = false"></div>
-        <div class="relative rounded-xl shadow-xl max-w-md w-full mx-auto p-4 sm:p-6 transform transition-all" style="background-color: white">
+        <div class="relative rounded-xl shadow-xl max-w-md w-full mx-auto p-3 sm:p-4 lg:p-6 transform transition-all" style="background-color: white">
           <div class="text-center">
             <div class="mx-auto flex items-center justify-center h-12 w-12 sm:h-14 sm:w-14 rounded-full mb-4" style="background-color: #FEE2E2">
               <i class="ri-delete-bin-line text-xl sm:text-2xl" style="color: #EF4444"></i>
@@ -423,6 +423,7 @@ definePageMeta({
 })
 
 const { repuestos, cargando, obtenerRepuestos, eliminarRepuesto, actualizarRepuesto } = useRepuestos()
+const { tienda } = useAuth()
 
 const busqueda = ref('')
 const modalEliminarVisible = ref(false)
@@ -525,6 +526,7 @@ const exportarInventarioPDF = async () => {
           </div>
           <div style="flex: 1; text-align: right;">
             <h2 style="color: #065F46; font-size: 18px; margin: 0; font-weight: 700; text-transform: uppercase;">Reporte de Inventario</h2>
+            <p style="color: #374151; font-size: 14px; margin: 4px 0; font-weight: 600;">Correspondiente al taller: ${tienda.value?.nombre || 'Taller'}</p>
             <div style="margin-top: 5px;">
               <span style="color: #6b7280; font-size: 10px; padding: 4px 8px; border-radius: 4px; font-family: monospace;">FECHA: ${new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
             </div>
@@ -538,8 +540,8 @@ const exportarInventarioPDF = async () => {
                 <p style="color: #065F46; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">Variedad de Catálogo: </p>
                 <p style="color: #374151; font-size: 24px; font-weight: 900; margin: 5px 0;">${totalProductos}</p>
               </div>
-              <div style="width: 40px; height: 40px; color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
-                <i style="font-size: 20px;">📑</i>
+              <div style="width: 40px; height: 40px; color: black; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                <i class="ri-draft-line" style="font-size: 30px;"></i>
               </div>
             </div>
           </div>
@@ -549,8 +551,8 @@ const exportarInventarioPDF = async () => {
                 <p style="color: #065F46; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">Existencia Global: </p>
                 <p style="color: #374151; font-size: 24px; font-weight: 900; margin: 5px 0;">${totalUnidades}</p>
               </div>
-              <div style="width: 40px; height: 40px; color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
-                <i style="font-size: 20px;">📦</i>
+              <div style="width: 40px; height: 40px; color: black; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                <i class="ri-box-1-fill" style="font-size: 30px;"></i>
               </div>
             </div>
           </div>
@@ -580,11 +582,11 @@ const exportarInventarioPDF = async () => {
             </tbody>
             <tfoot>
               <tr style="background: #F9FAFB; border-top: 2px solid #D1D5DB;">
-                <td style="padding: 12px; font-weight: bold; color: #065F46;">TOTALES</td>
+                <td style="padding: 12px; font-weight: bold; color: #065F46;">TOTAL:</td>
                 <td style="padding: 12px; text-align: center; font-weight: bold; color: #065F46;">${totalUnidades}</td>
                 <td style="padding: 12px; text-align: right;"></td>
                 <td style="padding: 12px; text-align: right;"></td>
-                <td style="padding: 12px; text-align: right; font-weight: bold; color: #10B981;">$${valorTotalCosto.toFixed(2)}</td>
+                
                </tr>
             </tfoot>
           </table>
@@ -592,7 +594,6 @@ const exportarInventarioPDF = async () => {
         
         <div style="margin-top: 30px; padding-top: 15px; border-top: 1px solid #E5E7EB; text-align: center; font-size: 9px; color: #6B7280;">
           <p>Reporte generado automáticamente por DroidStock - Inventory & Repair Management System</p>
-          <p>Zaraza - Guárico</p>
         </div>
       </div>
     `

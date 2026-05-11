@@ -4,28 +4,41 @@
     <div class="max-w-7xl mx-auto">
       
       <!-- Header Estilo Industrial -->
-      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-8">
-        <div>
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-8">
+        <div class="flex-1">
           <div class="flex items-center gap-2 mb-1">
             <span class="h-2 w-2 bg-[#10B981] rounded-full animate-pulse"></span>
             <span class="text-[10px] font-mono text-gray-500 uppercase tracking-widest">Sales_Monitor_v1.0</span>
           </div>
-          <h1 class="text-3xl font-black text-[#065F46] tracking-tight uppercase">Ventas de Repuestos</h1>
+          <h1 class="text-2xl sm:text-3xl font-black text-[#065F46] tracking-tight uppercase">Ventas de Repuestos</h1>
           <p class="text-gray-500 text-sm">Registro de ventas a clientes y técnicos externos</p>
         </div>
-        <NuxtLink
-          to="/ventas/nueva"
-          class="px-6 py-3 bg-[#065F46] text-white font-bold rounded-lg hover:bg-[#054a37] transition-all flex items-center gap-2 shadow-lg hover:shadow-[#065F46]/20 border-b-4 border-[#033a2b] active:border-b-0 active:translate-y-1"
-        >
-          <i class="ri-add-circle-fill text-lg"></i>
-          NUEVA VENTA
-        </NuxtLink>
+        <div class="flex flex-col sm:flex-row gap-2 sm:gap-3 lg:w-auto">
+          <button 
+            @click="exportarPDF"
+            :disabled="exportando || ventasFiltradas.length === 0"
+            class="w-full sm:w-auto px-4 sm:px-6 py-2.5 sm:py-3 bg-[#DC2626] text-white font-bold rounded-lg hover:bg-[#B91C1C] transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-[#DC2626]/20 border-b-4 border-[#991B1B] active:border-b-0 active:translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
+          >
+            <i v-if="exportando" class="ri-loader-4-line animate-spin text-lg"></i>
+            <i v-else class="ri-file-pdf-line text-lg"></i>
+            <span class="hidden sm:inline">{{ exportando ? 'GENERANDO...' : 'EXPORTAR REPORTE' }}</span>
+            <span class="sm:hidden">{{ exportando ? 'GEN...' : 'EXPORTAR' }}</span>
+          </button>
+          <NuxtLink
+            to="/ventas/nueva"
+            class="w-full sm:w-auto px-4 sm:px-6 py-2.5 sm:py-3 bg-[#065F46] text-white font-bold rounded-lg hover:bg-[#054a37] transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-[#065F46]/20 border-b-4 border-[#033a2b] active:border-b-0 active:translate-y-1 text-sm sm:text-base"
+          >
+            <i class="ri-add-circle-fill text-lg"></i>
+            <span class="hidden sm:inline">NUEVA VENTA</span>
+            <span class="sm:hidden">NUEVO</span>
+          </NuxtLink>
+        </div>
       </div>
 
       <!-- Filtros - Control Panel Style -->
-      <div class="bg-white rounded-xl shadow-md border border-[#D1D5DB] p-5 mb-8">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div>
+      <div class="bg-white rounded-xl shadow-md border border-[#D1D5DB] p-4 sm:p-6 mb-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 lg:gap-6">
+          <div class="lg:col-span-2">
             <label class="block text-[10px] font-black text-[#334155] mb-2 uppercase tracking-widest">Búsqueda Técnica</label>
             <div class="relative group">
               <i class="ri-search-2-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#10B981]"></i>
@@ -46,61 +59,62 @@
               class="w-full px-3 py-2.5 bg-[#F8FAFC] border border-[#D1D5DB] rounded-lg focus:ring-2 focus:ring-[#10B981] text-sm font-medium"
             >
               <option value="">TODOS</option>
-              <option value="hoy">📅 HOY</option>
-              <option value="ultima_semana">📆 ÚLTIMA SEMANA</option>
-              <option value="ultimo_mes">📆 ÚLTIMO MES</option>
-              <option value="ultimo_ano">📆 ÚLTIMO AÑO</option>
+              <option value="hoy">HOY</option>
+              <option value="ultima_semana">ÚLTIMA SEMANA</option>
+              <option value="ultimo_mes">ÚLTIMO MES</option>
+              <option value="ultimo_ano">ÚLTIMO AÑO</option>
             </select>
           </div>
 
-          <div class="flex items-end">
+          <div class="flex flex-col justify-end">
             <button 
               @click="limpiarFiltros" 
-              class="w-full sm:w-auto px-6 py-2.5 text-[#334155] font-bold bg-white border border-[#D1D5DB] rounded-lg hover:bg-gray-50 transition-all text-xs flex items-center justify-center gap-2"
+              class="w-full px-4 sm:px-6 py-2.5 text-[#334155] font-bold bg-white border border-[#D1D5DB] rounded-lg hover:bg-gray-50 transition-all text-xs flex items-center justify-center gap-2"
             >
               <i class="ri-refresh-line"></i>
-              RESET FILTROS
+              <span class="hidden sm:inline">RESET FILTROS</span>
+              <span class="sm:hidden">RESET</span>
             </button>
           </div>
         </div>
       </div>
 
       <!-- Indicadores de Placa Base (Stats) -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-        <div class="bg-white p-4 rounded-xl border border-[#D1D5DB] shadow-sm relative overflow-hidden group">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6 mb-8">
+        <div class="bg-white p-6 rounded-xl border border-[#D1D5DB] shadow-sm relative overflow-hidden group hover:shadow-md transition-all duration-300">
           <div class="flex items-center justify-between relative z-10">
-            <div>
-              <p class="text-[10px] font-black text-gray-400 uppercase tracking-tighter">TOTAL VENTAS</p>
-              <p class="text-3xl font-black text-[#334155]">{{ totalVentasMostradas }}</p>
+            <div class="flex-1">
+              <p class="text-[10px] font-black text-gray-400 uppercase tracking-tighter mb-1">TOTAL VENTAS</p>
+              <p class="text-3xl lg:text-4xl font-black text-[#334155] leading-tight">{{ totalVentasMostradas }}</p>
             </div>
-            <div class="w-12 h-12 rounded-lg flex items-center justify-center bg-green-50 border border-green-100">
-              <i class="ri-shopping-cart-line text-2xl text-[#10B981]"></i>
+            <div class="w-14 h-14 lg:w-16 lg:h-16 rounded-xl flex items-center justify-center bg-green-50 border border-green-100 ml-4">
+              <i class="ri-shopping-cart-line text-2xl lg:text-3xl text-[#10B981]"></i>
             </div>
           </div>
           <div class="absolute bottom-0 left-0 h-1 w-full bg-green-500 opacity-20"></div>
         </div>
 
-        <div class="bg-white p-4 rounded-xl border border-[#D1D5DB] shadow-sm relative overflow-hidden group">
+        <div class="bg-white p-6 rounded-xl border border-[#D1D5DB] shadow-sm relative overflow-hidden group hover:shadow-md transition-all duration-300">
           <div class="flex items-center justify-between relative z-10">
-            <div>
-              <p class="text-[10px] font-black text-gray-400 uppercase tracking-tighter">UNIDADES VENDIDAS</p>
-              <p class="text-3xl font-black text-[#334155]">{{ totalUnidadesMostradas }}</p>
+            <div class="flex-1">
+              <p class="text-[10px] font-black text-gray-400 uppercase tracking-tighter mb-1">UNIDADES VENDIDAS</p>
+              <p class="text-3xl lg:text-4xl font-black text-[#334155] leading-tight">{{ totalUnidadesMostradas }}</p>
             </div>
-            <div class="w-12 h-12 rounded-lg flex items-center justify-center bg-blue-50 border border-blue-100">
-              <i class="ri-stack-line text-2xl text-blue-500"></i>
+            <div class="w-14 h-14 lg:w-16 lg:h-16 rounded-xl flex items-center justify-center bg-blue-50 border border-blue-100 ml-4">
+              <i class="ri-stack-line text-2xl lg:text-3xl text-blue-500"></i>
             </div>
           </div>
           <div class="absolute bottom-0 left-0 h-1 w-full bg-blue-500 opacity-20"></div>
         </div>
 
-        <div class="bg-white p-4 rounded-xl border border-[#D1D5DB] shadow-sm relative overflow-hidden group">
+        <div class="bg-white p-6 rounded-xl border border-[#D1D5DB] shadow-sm relative overflow-hidden group hover:shadow-md transition-all duration-300">
           <div class="flex items-center justify-between relative z-10">
-            <div>
-              <p class="text-[10px] font-black text-gray-400 uppercase tracking-tighter">INGRESOS TOTALES</p>
-              <p class="text-3xl font-black text-[#F59E0B]">${{ totalIngresosMostrados }}</p>
+            <div class="flex-1">
+              <p class="text-[10px] font-black text-gray-400 uppercase tracking-tighter mb-1">INGRESOS TOTALES</p>
+              <p class="text-3xl lg:text-4xl font-black text-[#F59E0B] leading-tight">${{ totalIngresosMostrados }}</p>
             </div>
-            <div class="w-12 h-12 rounded-lg flex items-center justify-center bg-amber-50 border border-amber-100">
-              <i class="ri-money-dollar-circle-line text-2xl text-amber-500"></i>
+            <div class="w-14 h-14 lg:w-16 lg:h-16 rounded-xl flex items-center justify-center bg-amber-50 border border-amber-100 ml-4">
+              <i class="ri-money-dollar-circle-line text-2xl lg:text-3xl text-amber-500"></i>
             </div>
           </div>
           <div class="absolute bottom-0 left-0 h-1 w-full bg-amber-500 opacity-20"></div>
@@ -110,66 +124,75 @@
       <!-- Tabla Principal: Estética PCB -->
       <div class="bg-white rounded-xl shadow-lg border border-[#D1D5DB] overflow-hidden">
         <!-- Pagination Bar Superior -->
-        <div class="px-6 py-4 bg-[#F8FAFC] border-b border-[#D1D5DB] flex flex-col md:flex-row justify-between items-center gap-4">
-          <span class="text-xs font-mono text-gray-500">
-            DATA_STREAM: <span class="text-[#065F46] font-bold">{{ inicioMostrando }}-{{ finMostrando }}</span> / TOTAL: {{ ventasFiltradas.length }}
-          </span>
-          <div class="flex items-center gap-2">
-            <button @click="paginaAnterior" :disabled="paginaActual === 1" class="pagination-btn"><i class="ri-arrow-left-s-line"></i></button>
-            <div class="flex gap-1">
-              <button v-for="p in paginasMostradas" :key="p" @click="irPagina(p)" :class="['page-num', paginaActual === p ? 'active' : '']">{{ p }}</button>
+        <div class="px-6 py-4 bg-[#F8FAFC] border-b border-[#D1D5DB]">
+          <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-mono text-gray-500">DATA_STREAM:</span>
+              <span class="text-[#065F46] font-bold text-sm">{{ inicioMostrando }}-{{ finMostrando }}</span>
+              <span class="text-xs font-mono text-gray-500">/</span>
+              <span class="text-xs font-mono text-gray-500">{{ ventasFiltradas.length }}</span>
             </div>
-            <button @click="paginaSiguiente" :disabled="paginaActual === totalPaginas" class="pagination-btn"><i class="ri-arrow-right-s-line"></i></button>
+            <div class="flex items-center gap-2">
+              <button @click="paginaAnterior" :disabled="paginaActual === 1" class="pagination-btn p-2">
+                <i class="ri-arrow-left-s-line text-base"></i>
+              </button>
+              <div class="flex gap-1">
+                <button v-for="p in paginasMostradas" :key="p" @click="irPagina(p)" :class="['page-num w-8 h-8 text-xs', paginaActual === p ? 'active' : '']">{{ p }}</button>
+              </div>
+              <button @click="paginaSiguiente" :disabled="paginaActual === totalPaginas" class="pagination-btn p-2">
+                <i class="ri-arrow-right-s-line text-base"></i>
+              </button>
+            </div>
           </div>
         </div>
 
         <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse">
+          <table class="w-full text-left border-collapse min-w-[800px]">
             <thead>
               <tr class="bg-[#065F46]">
-                <th class="th-tech">FECHA</th>
-                <th class="th-tech">CLIENTE</th>
-                <th class="th-tech">REPUESTO</th>
-                <th class="th-tech text-center">CANT.</th>
-                <th class="th-tech text-right">MONTAJE</th>
-                <th class="th-tech text-right">TOTAL</th>
+                <th class="th-tech px-6 py-4 text-[10px] w-24">FECHA</th>
+                <th class="th-tech px-6 py-4 text-[10px] min-w-[200px]">CLIENTE</th>
+                <th class="th-tech px-6 py-4 text-[10px] min-w-[180px]">REPUESTO</th>
+                <th class="th-tech px-6 py-4 text-[10px] text-center w-20">CANT.</th>
+                <th class="th-tech px-6 py-4 text-[10px] text-right w-32">MONTAJE</th>
+                <th class="th-tech px-6 py-4 text-[10px] text-right w-32">TOTAL</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-[#D1D5DB]">
               <tr v-if="cargando">
-                <td colspan="6" class="py-20 text-center">
-                  <div class="flex flex-col items-center gap-3">
+                <td colspan="6" class="py-16 text-center">
+                  <div class="flex flex-col items-center gap-4">
                     <div class="w-12 h-12 border-4 border-[#10B981] border-t-transparent rounded-full animate-spin"></div>
-                    <span class="text-xs font-mono text-gray-400 uppercase">Loading_Database...</span>
+                    <span class="text-xs font-mono text-gray-400 uppercase tracking-widest">Loading_Database...</span>
                   </div>
                 </td>
               </tr>
               <tr v-else-if="ventasPaginadas.length === 0">
-                <td colspan="6" class="py-20 text-center">
+                <td colspan="6" class="py-16 text-center">
                   <i class="ri-shopping-cart-line text-5xl text-gray-200 mb-4 block"></i>
                   <p class="text-gray-400 font-medium">No se encontraron registros en este sector.</p>
                 </td>
               </tr>
               <tr v-for="venta in ventasPaginadas" :key="venta.id" class="hover:bg-[#F0FDF4]/50 transition-colors group">
-                <td class="px-6 py-4 font-mono text-[11px] text-gray-500">
+                <td class="px-6 py-4 font-mono text-[11px] text-gray-500 align-middle">
                   {{ formatearFecha(venta.created_at) }}
                 </td>
-                <td class="px-6 py-4">
-                  <div class="font-bold text-[#334155]">{{ venta.clientes?.nombre_completo || 'Cliente General' }}</div>
+                <td class="px-6 py-4 align-middle">
+                  <div class="font-bold text-[#334155] text-sm">{{ venta.clientes?.nombre_completo || 'Cliente General' }}</div>
                   <div class="text-[10px] font-mono text-gray-500">{{ venta.clientes?.telefono || 'TEL_NULL' }}</div>
                 </td>
-                <td class="px-6 py-4">
+                <td class="px-6 py-4 align-middle">
                   <span class="text-sm font-bold text-[#065F46]">{{ venta.stock_repuestos?.nombre_repuesto || 'N/A' }}</span>
                 </td>
-                <td class="px-6 py-4 text-center">
+                <td class="px-6 py-4 text-center align-middle">
                   <span class="inline-flex items-center justify-center px-2 py-1 text-[10px] font-black rounded-full bg-gray-100 text-[#065F46]">
                     {{ venta.cantidad }} uds
                   </span>
                 </td>
-                <td class="px-6 py-4 text-right">
+                <td class="px-6 py-4 text-right align-middle">
                   <div v-if="venta.incluye_montaje" class="space-y-1">
                     <span class="inline-flex items-center gap-1 text-[11px] font-bold text-[#10B981]">
-                      <i class="ri-tools-line"></i> INCLUIDO
+                      <i class="ri-tools-line text-sm"></i> <span class="hidden lg:inline">INCLUIDO</span><span class="lg:hidden">SÍ</span>
                     </span>
                     <div class="text-[10px] text-gray-500">
                       +${{ formatearTotal((venta.stock_repuestos?.precio_montaje || 0) * venta.cantidad) }}
@@ -177,7 +200,7 @@
                   </div>
                   <span v-else class="text-[10px] text-gray-400 uppercase">SIN MONTAJE</span>
                 </td>
-                <td class="px-6 py-4 text-right">
+                <td class="px-6 py-4 text-right align-middle">
                   <span class="text-base font-black text-[#10B981]">${{ formatearTotal(venta.total) }}</span>
                 </td>
               </tr>
@@ -214,6 +237,8 @@ definePageMeta({
 const { ventas, cargando, obtenerVentas } = useVentas()
 
 const toast = ref({ visible: false, mensaje: '', tipo: 'success' })
+const exportando = ref(false)
+const tienda = ref(null)
 
 const mostrarNotificacion = (mensaje, tipo = 'success') => {
   toast.value = { visible: true, mensaje, tipo }
@@ -224,7 +249,6 @@ const mostrarNotificacion = (mensaje, tipo = 'success') => {
 const filtros = reactive({
   busqueda: '',
   periodo: '',
-  fecha_inicio: '',
   fecha_fin: ''
 })
 
@@ -245,14 +269,11 @@ const ventasFiltradas = computed(() => {
     )
   }
 
-  if (filtros.fecha_inicio) {
-    resultado = resultado.filter(v => new Date(v.created_at) >= new Date(filtros.fecha_inicio))
-  }
-
   if (filtros.fecha_fin) {
-    const fechaFin = new Date(filtros.fecha_fin)
-    fechaFin.setHours(23, 59, 59)
-    resultado = resultado.filter(v => new Date(v.created_at) <= fechaFin)
+    resultado = resultado.filter(v => {
+      const fechaVenta = new Date(v.created_at).toISOString().split('T')[0]
+      return fechaVenta <= filtros.fecha_fin
+    })
   }
 
   return resultado
@@ -315,7 +336,7 @@ const irPagina = (pagina) => {
 }
 
 // Reiniciar página si cambian los filtros
-watch([() => filtros.busqueda, () => filtros.fecha_inicio, () => filtros.fecha_fin], () => {
+watch([() => filtros.busqueda, () => filtros.fecha_fin], () => {
   paginaActual.value = 1
 })
 
@@ -359,29 +380,24 @@ const aplicarPeriodo = () => {
   
   switch (filtros.periodo) {
     case 'hoy':
-      filtros.fecha_inicio = hoy.toISOString().split('T')[0]
       filtros.fecha_fin = hoy.toISOString().split('T')[0]
       break
     case 'ultima_semana':
       const inicioSemana = new Date(hoy)
       inicioSemana.setDate(hoy.getDate() - 7)
-      filtros.fecha_inicio = inicioSemana.toISOString().split('T')[0]
       filtros.fecha_fin = hoy.toISOString().split('T')[0]
       break
     case 'ultimo_mes':
       const inicioMes = new Date(hoy)
       inicioMes.setMonth(hoy.getMonth() - 1)
-      filtros.fecha_inicio = inicioMes.toISOString().split('T')[0]
       filtros.fecha_fin = hoy.toISOString().split('T')[0]
       break
     case 'ultimo_ano':
       const inicioAno = new Date(hoy)
       inicioAno.setFullYear(hoy.getFullYear() - 1)
-      filtros.fecha_inicio = inicioAno.toISOString().split('T')[0]
       filtros.fecha_fin = hoy.toISOString().split('T')[0]
       break
     default:
-      filtros.fecha_inicio = ''
       filtros.fecha_fin = ''
   }
 }
@@ -389,14 +405,152 @@ const aplicarPeriodo = () => {
 const limpiarFiltros = () => {
   filtros.busqueda = ''
   filtros.periodo = ''
-  filtros.fecha_inicio = ''
   filtros.fecha_fin = ''
   mostrarNotificacion('Filtros reiniciados', 'success')
 }
 
 onMounted(async () => {
   await obtenerVentas()
+  // Obtener datos de la tienda
+  try {
+    const session = await $fetch('/api/auth/session')
+    tienda.value = session?.session?.tienda || null
+  } catch (e) {
+    tienda.value = null
+  }
 })
+
+// ESTADÍSTICAS PARA REPORTE
+const totalVentas = computed(() => ventasFiltradas.value.length)
+const totalIngresos = computed(() => {
+  return ventasFiltradas.value.reduce((sum, v) => sum + (v.total || 0), 0)
+})
+const productosVendidos = computed(() => {
+  return ventasFiltradas.value.reduce((sum, v) => sum + (v.cantidad || 0), 0)
+})
+
+// EXPORTACIÓN PDF CON DISEÑO DROIDSTOCK
+const exportarPDF = async () => {
+  if (exportando.value) return
+  exportando.value = true
+
+  try {
+    const html2pdfModule = await import('html2pdf.js')
+    const html2pdf = html2pdfModule.default
+
+    const contenido = `
+      <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 1200px; margin: 0 auto;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #10B981; padding-bottom: 20px; margin-bottom: 25px;">
+          <div style="flex: 1;">
+            <h1 style="color: #065F46; font-size: 28px; margin: 0; font-weight: 900; letter-spacing: -0.5px;">DROIDSTOCK</h1>
+            <p style="color: #6b7280; font-size: 10px; margin: 3px 0; text-transform: uppercase; font-weight: 700; letter-spacing: 1px;">Inventory & Repair Management System</p>
+          </div>
+          <div style="flex: 1; text-align: right;">
+            <h2 style="color: #065F46; font-size: 18px; margin: 0; font-weight: 700; text-transform: uppercase;">Reporte de Ventas</h2>
+            <p style="color: #374151; font-size: 14px; margin: 4px 0; font-weight: 600;">Correspondiente al taller: ${tienda.value?.nombre_tienda || 'Taller'}</p>
+              <span style="color: #6b7280; font-size: 10px; padding: 4px 8px; border-radius: 4px; font-family: monospace;">FECHA: ${new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+            </div>
+          </div>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px;">
+          <div style="background: #DBEAFE; border: 1px solid #93C5FD; border-radius: 10px; padding: 15px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <p style="color: #065F46; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">Total Ventas: </p>
+                <p style="color: #374151; font-size: 20px; font-weight: 900; margin: 5px 0;">${totalVentas.value}</p>
+              </div>
+              <div style="width: 40px; height: 40px; color: black; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                <i class="ri-shopping-cart-fill" style="font-size: 30px;"></i>
+              </div>
+            </div>
+          </div>
+          <div style="background: #D1FAE5; border: 1px solid #A7F3D0; border-radius: 10px; padding: 15px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <p style="color: #065F46; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">Ingresos: </p>
+                <p style="color: #374151; font-size: 20px; font-weight: 900; margin: 5px 0;">$${formatearTotal(totalIngresos.value)}</p>
+              </div>
+              <div style="width: 40px; height: 40px; color: black; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                <i class="ri-money-dollar-circle-fill" style="font-size: 30px;"></i>
+              </div>
+            </div>
+          </div>
+          <div style="background: #FEF3C7; border: 1px solid #FDE68A; border-radius: 10px; padding: 15px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <p style="color: #065F46; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">Unidades Vendidas: </p>
+                <p style="color: #374151; font-size: 20px; font-weight: 900; margin: 5px 0;">${productosVendidos.value}</p>
+              </div>
+              <div style="width: 40px; height: 40px; color: black; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                <i class="ri-stack-fill" style="font-size: 30px;"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div style="overflow-x: auto;">
+          <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+            <thead>
+              <tr style="background: #F3F4F6; border-bottom: 2px solid #D1D5DB;">
+                <th style="padding: 12px; text-align: left;">Fecha</th>
+                <th style="padding: 12px; text-align: left;">Cliente</th>
+                <th style="padding: 12px; text-align: left;">Repuesto</th>
+                <th style="padding: 12px; text-align: left;">Cantidad</th>
+                <th style="padding: 12px; text-align: center;">Montaje</th>
+                <th style="padding: 12px; text-align: right;">Precio Venta</th>
+                <th style="padding: 12px; text-align: right;">Monto Montaje</th>
+                <th style="padding: 12px; text-align: right;">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${ventasFiltradas.value.map(item => `
+                <tr style="border-bottom: 1px solid #E5E7EB;">
+                  <td style="padding: 10px 12px; color: #065F46; font-weight: 500;">${formatearFecha(item.created_at)}</td>
+                  <td style="padding: 10px 12px; color: #065F46; font-weight: 500;">${item.clientes?.nombre_completo || 'N/A'}</td>
+                  <td style="padding: 10px 12px; color: #065F46; font-weight: 500;">${item.stock_repuestos?.nombre_repuesto || 'N/A'}</td>
+                  <td style="padding: 10px 12px; text-align: center;">${item.cantidad}</td>
+                  <td style="padding: 10px 12px; text-align: center; color: #374151;">${item.incluye_montaje ? 'SÍ' : 'NO'}</td>
+                  <td style="padding: 10px 12px; text-align: right; color: #374151;">$${formatearTotal(item.stock_repuestos?.precio_venta || 0)}</td>
+                  <td style="padding: 10px 12px; text-align: right; color: #374151;">$${formatearTotal(item.incluye_montaje ? (item.stock_repuestos?.precio_montaje || 0) * item.cantidad : 0)}</td>
+                  <td style="padding: 10px 12px; text-align: right; color: #065F46; font-weight: bold;">$${formatearTotal(item.total)}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+            <tfoot>
+              <tr style="background: #F9FAFB; border-top: 2px solid #D1D5DB;">
+                <td style="padding: 12px; font-weight: bold; color: #065F46;" colspan="6">TOTAL:</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+        
+        <div style="margin-top: 30px; padding-top: 15px; border-top: 1px solid #E5E7EB; text-align: center; font-size: 9px; color: #6B7280;">
+          <p>Reporte generado automáticamente por DroidStock - Inventory & Repair Management System</p>
+        </div>
+      </div>
+    `
+    
+    const element = document.createElement('div')
+    element.innerHTML = contenido
+    document.body.appendChild(element)
+    
+    await html2pdf().set({
+      margin: 0.3,
+      filename: `DroidStock_Ventas_${Date.now()}.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+    }).from(element).save()
+    
+    element.remove()
+    mostrarNotificacion('Reporte generado exitosamente')
+  } catch (e) {
+    mostrarNotificacion('Error al crear PDF', 'error')
+  } finally {
+    exportando.value = false
+  }
+}
 </script>
 
 <style scoped>
@@ -418,6 +572,61 @@ onMounted(async () => {
 
 .page-num:not(.active) {
   @apply text-[#334155] hover:bg-[#F0FDF4] hover:text-[#065F46];
+}
+
+/* Desktop-specific improvements */
+@media (min-width: 1024px) {
+  .lg\:gap-6 {
+    gap: 1.5rem;
+  }
+  
+  .lg\:w-auto {
+    width: auto;
+  }
+  
+  .lg\:col-span-2 {
+    grid-column: span 2 / span 2;
+  }
+  
+  .lg\:text-4xl {
+    font-size: 2.25rem;
+    line-height: 2.5rem;
+  }
+  
+  .lg\:w-16 {
+    width: 4rem;
+  }
+  
+  .lg\:h-16 {
+    height: 4rem;
+  }
+  
+  .lg\:text-3xl {
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+  }
+}
+
+/* Enhanced hover states */
+.group:hover .group-hover\:shadow-md {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Better alignment for table cells */
+.align-middle {
+  vertical-align: middle;
+}
+
+/* Consistent spacing */
+.min-w-\[800px\] {
+  min-width: 800px;
+}
+
+/* Improved focus states */
+input:focus, select:focus, button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #10B981;
+  border-color: #10B981;
 }
 
 @keyframes spin {
