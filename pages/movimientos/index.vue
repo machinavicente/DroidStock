@@ -148,57 +148,120 @@
         <p class="mt-4 text-sm" style="color: #6B7280;">Cargando movimientos...</p>
       </div>
       
-      <!-- Tabla de movimientos -->
-      <div v-else-if="movimientos.length > 0" class="overflow-x-auto">
-        <table class="w-full text-left border-collapse min-w-[900px]">
-          <thead>
-            <tr style="background-color: #065F46;">
-              <th class="th-tech px-6 py-4 text-[10px] w-32">FECHA</th>
-              <th class="th-tech px-6 py-4 text-[10px] w-24">TIPO</th>
-              <th class="th-tech px-6 py-4 text-[10px] min-w-[200px]">REPUESTO</th>
-              <th class="th-tech px-6 py-4 text-[10px] text-center w-24">CANTIDAD</th>
-              <th class="th-tech px-6 py-4 text-[10px] text-center w-28">STOCK ANTERIOR</th>
-              <th class="th-tech px-6 py-4 text-[10px] text-center w-24">STOCK NUEVO</th>
-              <th class="th-tech px-6 py-4 text-[10px] min-w-[200px]">MOTIVO/REFERENCIA</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-[#D1D5DB]">
-            <tr v-for="(movimiento, index) in movimientos" :key="movimiento.id" 
-                class="hover:bg-[#F0FDF4]/50 transition-colors group">
-              <td class="px-6 py-4 align-middle font-mono text-[11px]" style="color: #6B7280;">
-                {{ formatearFecha(movimiento.created_at) }}
-              </td>
-              <td class="px-6 py-4 align-middle">
-                <span :class="[
-                  'inline-flex items-center px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-tighter',
-                  movimiento.tipo === 'entrada' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
-                ]">
-                  <i :class="movimiento.tipo === 'entrada' ? 'ri-arrow-up-line' : 'ri-arrow-down-line'" class="mr-1.5"></i>
-                  {{ getTipoLabel(movimiento.tipo) }}
-                </span>
-              </td>
-              <td class="px-6 py-4 align-middle">
-                <div class="text-sm font-bold" style="color: #065F46;">{{ movimiento.stock_repuestos?.nombre_repuesto || 'ID_NULL' }}</div>
-              </td>
-              <td class="px-6 py-4 align-middle">
-                <div class="text-sm font-bold text-center" style="color: #334155;">{{ movimiento.cantidad }}</div>
-              </td>
-              <td class="px-6 py-4 align-middle">
-                <div class="text-sm text-center" style="color: #6B7280;">{{ movimiento.stock_anterior || 0 }}</div>
-              </td>
-              <td class="px-6 py-4 align-middle">
-                <div class="text-sm font-bold text-center" :style="{ color: movimiento.tipo === 'entrada' ? '#10B981' : '#EF4444' }">
-                  {{ movimiento.stock_nuevo || 0 }}
+      <!-- Cards para móvil y tabla para desktop -->
+      <div v-else-if="movimientos.length > 0">
+        <!-- Mobile Cards -->
+        <div class="lg:hidden space-y-4 p-4">
+          <div v-for="movimiento in movimientos" :key="movimiento.id" 
+               class="bg-white rounded-xl border shadow-sm hover:shadow-md transition-all"
+               style="border-color: #E5E7EB;">
+            
+            <!-- Header: Fecha y Tipo -->
+            <div class="flex justify-between items-center px-4 py-3 border-b" style="border-color: #F3F4F6;">
+              <div class="text-xs font-mono" style="color: #6B7280;">
+                {{ formatearFechaCorta(movimiento.created_at) }}
+              </div>
+              <span :class="[
+                'inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter',
+                movimiento.tipo === 'entrada' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+              ]">
+                <i :class="movimiento.tipo === 'entrada' ? 'ri-arrow-down-line' : 'ri-arrow-up-line'" class="mr-1"></i>
+                {{ getTipoLabel(movimiento.tipo) }}
+              </span>
+            </div>
+            
+            <!-- Body: Repuesto y Motivo -->
+            <div class="px-4 py-3">
+              <div class="text-base font-bold mb-1" style="color: #065F46;">
+                {{ movimiento.stock_repuestos?.nombre_repuesto || 'ID_NULL' }}
+              </div>
+              <div class="text-sm" style="color: #6B7280;">
+                Motivo: {{ movimiento.referencia_tipo === 'reparacion' ? 'Reparación' : (movimiento.motivo || '-') }}
+              </div>
+            </div>
+            
+            <!-- Footer: Auditoría de stock -->
+            <div class="px-4 py-3 border-t bg-gray-50 rounded-b-xl" style="border-color: #F3F4F6;">
+              <div class="flex items-center justify-between text-xs">
+                <div class="flex items-center gap-1">
+                  <div class="w-6 h-6 rounded bg-gray-200 flex items-center justify-center font-mono font-bold" style="color: #6B7280;">
+                    {{ movimiento.stock_anterior || 0 }}
+                  </div>
+                  <i class="ri-arrow-right-line" style="color: #9CA3AF;"></i>
+                  <div :class="[
+                    'w-6 h-6 rounded flex items-center justify-center font-mono font-bold',
+                    movimiento.tipo === 'entrada' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                  ]">
+                    {{ movimiento.tipo === 'entrada' ? '+' : '-' }}{{ movimiento.cantidad }}
+                  </div>
+                  <i class="ri-arrow-right-line" style="color: #9CA3AF;"></i>
+                  <div :class="[
+                    'w-6 h-6 rounded flex items-center justify-center font-mono font-bold',
+                    movimiento.tipo === 'entrada' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                  ]">
+                    {{ movimiento.stock_nuevo || 0 }}
+                  </div>
                 </div>
-              </td>
-              <td class="px-6 py-4 align-middle">
-                <div class="text-xs max-w-[200px] truncate group-hover:whitespace-normal transition-all" style="color: #6B7280;">
-                  {{ movimiento.referencia_tipo === 'reparacion' ? 'Reparación' : (movimiento.motivo || '-') }}
+                <div class="text-xs font-mono" style="color: #9CA3AF;">
+                  NUEVO: {{ movimiento.stock_nuevo || 0 }}
                 </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Desktop Table -->
+        <div class="hidden lg:block overflow-x-auto">
+          <table class="w-full text-left border-collapse min-w-[900px]">
+            <thead>
+              <tr style="background-color: #065F46;">
+                <th class="th-tech px-6 py-4 text-[10px] w-32">FECHA</th>
+                <th class="th-tech px-6 py-4 text-[10px] w-24">TIPO</th>
+                <th class="th-tech px-6 py-4 text-[10px] min-w-[200px]">REPUESTO</th>
+                <th class="th-tech px-6 py-4 text-[10px] text-center w-24">CANTIDAD</th>
+                <th class="th-tech px-6 py-4 text-[10px] text-center w-28">STOCK ANTERIOR</th>
+                <th class="th-tech px-6 py-4 text-[10px] text-center w-24">STOCK NUEVO</th>
+                <th class="th-tech px-6 py-4 text-[10px] min-w-[200px]">MOTIVO/REFERENCIA</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[#D1D5DB]">
+              <tr v-for="(movimiento, index) in movimientos" :key="movimiento.id" 
+                  class="hover:bg-[#F0FDF4]/50 transition-colors group">
+                <td class="px-6 py-4 align-middle font-mono text-[11px]" style="color: #6B7280;">
+                  {{ formatearFecha(movimiento.created_at) }}
+                </td>
+                <td class="px-6 py-4 align-middle">
+                  <span :class="[
+                    'inline-flex items-center px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-tighter',
+                    movimiento.tipo === 'entrada' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                  ]">
+                    <i :class="movimiento.tipo === 'entrada' ? 'ri-arrow-up-line' : 'ri-arrow-down-line'" class="mr-1.5"></i>
+                    {{ getTipoLabel(movimiento.tipo) }}
+                  </span>
+                </td>
+                <td class="px-6 py-4 align-middle">
+                  <div class="text-sm font-bold" style="color: #065F46;">{{ movimiento.stock_repuestos?.nombre_repuesto || 'ID_NULL' }}</div>
+                </td>
+                <td class="px-6 py-4 align-middle">
+                  <div class="text-sm font-bold text-center" style="color: #334155;">{{ movimiento.cantidad }}</div>
+                </td>
+                <td class="px-6 py-4 align-middle">
+                  <div class="text-sm text-center" style="color: #6B7280;">{{ movimiento.stock_anterior || 0 }}</div>
+                </td>
+                <td class="px-6 py-4 align-middle">
+                  <div class="text-sm font-bold text-center" :style="{ color: movimiento.tipo === 'entrada' ? '#10B981' : '#EF4444' }">
+                    {{ movimiento.stock_nuevo || 0 }}
+                  </div>
+                </td>
+                <td class="px-6 py-4 align-middle">
+                  <div class="text-xs max-w-[200px] truncate group-hover:whitespace-normal transition-all" style="color: #6B7280;">
+                    {{ movimiento.referencia_tipo === 'reparacion' ? 'Reparación' : (movimiento.motivo || '-') }}
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
       
       <!-- Empty state -->
@@ -274,6 +337,17 @@ const getTipoLabel = (tipo) => {
     'salida': 'Salida'
   }
   return labels[tipo] || tipo
+}
+
+const formatearFechaCorta = (fecha) => {
+  if (!fecha) return ''
+  const date = new Date(fecha)
+  const dia = date.getDate().toString().padStart(2, '0')
+  const mes = (date.getMonth() + 1).toString().padStart(2, '0')
+  const año = date.getFullYear().toString().slice(-2)
+  const horas = date.getHours().toString().padStart(2, '0')
+  const minutos = date.getMinutes().toString().padStart(2, '0')
+  return `${dia}/${mes}/${año}, ${horas}:${minutos}`
 }
 
 const actualizarFechasPorPeriodo = () => {

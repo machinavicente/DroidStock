@@ -114,7 +114,8 @@
           </div>
         </div>
 
-        <div class="overflow-x-auto">
+        <!-- Desktop Table View -->
+        <div class="hidden md:block overflow-x-auto">
           <table class="w-full text-left border-collapse min-w-[900px]">
             <thead>
               <tr class="bg-[#065F46]">
@@ -194,6 +195,112 @@
               </tr>
             </tbody>
           </table>
+        </div>
+
+        <!-- Mobile Card View -->
+        <div class="md:hidden p-4 space-y-4">
+          <div v-if="cargando" class="py-16 text-center">
+            <div class="flex flex-col items-center gap-4">
+              <div class="w-12 h-12 border-4 border-[#10B981] border-t-transparent rounded-full animate-spin"></div>
+              <span class="text-xs font-mono text-gray-400 uppercase tracking-widest">Loading_Database...</span>
+            </div>
+          </div>
+          
+          <div v-else-if="reparacionesPaginadas.length === 0" class="py-16 text-center">
+            <i class="ri-error-warning-line text-5xl text-gray-200 mb-4 block"></i>
+            <p class="text-gray-400 font-medium">No se encontraron registros en este sector.</p>
+          </div>
+
+          <div v-for="reparacion in reparacionesPaginadas" :key="reparacion.id" 
+               :data-reparacion-id="reparacion.id"
+               class="bg-white rounded-xl border border-[#D1D5DB] shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden">
+            <!-- Card Header -->
+            <div class="bg-[#065F46] px-4 py-3 border-b border-[#D1D5DB]">
+              <div class="flex justify-between items-start">
+                <div class="flex-1">
+                  <p class="font-black text-white text-sm uppercase tracking-tight">
+                    {{ reparacion.clientes?.nombre_completo || 'ID_NULL' }}
+                  </p>
+                  <p class="text-white/80 text-xs font-mono mt-1">
+                    {{ reparacion.clientes?.telefono }}
+                  </p>
+                </div>
+                <div class="text-right">
+                  <p class="text-white/60 text-xs font-mono">{{ formatearFecha(reparacion.fecha_ingreso) }}</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card Body -->
+            <div class="p-4 space-y-3">
+              <!-- Equipment Info -->
+              <div class="bg-[#F8FAFC] rounded-lg p-3 border border-[#E5E7EB]">
+                <div class="flex items-start justify-between">
+                  <div class="flex-1">
+                    <p class="font-bold text-[#065F46] text-sm uppercase">{{ reparacion.equipo_marca_modelo }}</p>
+                    <div class="flex items-center gap-2 mt-1">
+                      <span class="text-[10px] bg-gray-100 text-gray-600 px-2 py-1 rounded font-mono">{{ reparacion.equipo_tipo }}</span>
+                      <span class="text-[10px] text-gray-500">{{ reparacion.clientes?.telefono }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Failure Description -->
+              <div class="bg-gray-50 rounded-lg p-3 border border-[#E5E7EB]">
+                <p class="text-xs font-semibold text-gray-700 mb-1 uppercase tracking-wider">Falla Reportada</p>
+                <p class="text-xs text-gray-600 leading-relaxed">{{ reparacion.falla_reportada }}</p>
+              </div>
+
+              <!-- Technician Info -->
+              <div class="flex items-center gap-2 text-xs">
+                <div class="w-6 h-6 rounded-full bg-[#10B981]/10 flex items-center justify-center">
+                  <i class="ri-user-settings-line text-[#065F46] text-xs"></i>
+                </div>
+                <span class="font-semibold text-gray-600">Técnico: {{ reparacion.tecnicos?.nombre || 'UNASSIGNED' }}</span>
+              </div>
+
+              <!-- Status Select (Full Width) -->
+              <div class="space-y-2">
+                <label class="text-[10px] font-black text-[#334155] uppercase tracking-wider">Estado del Servicio</label>
+                <select
+                  :value="reparacion.estado_servicio"
+                  @change="cambiarEstado(reparacion.id, $event.target.value)"
+                  :class="[estadoClass(reparacion.estado_servicio), 'w-full status-select text-xs px-3 py-3 font-medium']"
+                >
+                  <option value="Recibido" :disabled="reparacion.estado_servicio !== 'Recibido'">Recibido</option>
+                  <option value="En reparacion" :disabled="!validarTransicion(reparacion.estado_servicio, 'En reparacion')">En reparación</option>
+                  <option value="Finalizado" :disabled="!validarTransicion(reparacion.estado_servicio, 'Finalizado')">Finalizado</option>
+                  <option value="Entregado" :disabled="!validarTransicion(reparacion.estado_servicio, 'Entregado')">Entregado</option>
+                </select>
+              </div>
+
+              <!-- Action Button -->
+              <div class="pt-2 border-t border-[#E5E7EB]">
+                <button
+                  v-if="reparacion.estado_servicio === 'En reparacion'"
+                  @click="abrirModalRepuestos(reparacion)"
+                  class="w-full px-4 py-3 bg-[#10B981] text-white rounded-lg hover:bg-[#059669] text-sm font-black uppercase tracking-tighter flex items-center justify-center gap-2 transition-all shadow-md hover:shadow-[#10B981]/20 border-b-4 border-[#047857] active:border-b-0 active:translate-y-1"
+                >
+                  <i class="ri-cpu-line text-base"></i>
+                  <span>Registrar Repuestos</span>
+                  <div v-if="!reparacion.tiene_repuestos" class="ml-auto">
+                    <span class="bg-yellow-400 text-yellow-900 text-xs px-2 py-1 rounded-full font-bold">PENDIENTE</span>
+                  </div>
+                </button>
+                
+                <div v-else-if="reparacion.estado_servicio === 'Finalizado'" 
+                     class="w-full px-4 py-3 bg-[#10B981]/10 border border-[#10B981]/30 rounded-lg flex items-center justify-center gap-2">
+                  <i class="ri-shield-check-fill text-[#10B981] text-base"></i>
+                  <span class="text-[#10B981] font-bold text-sm">Listo para Entregar</span>
+                </div>
+
+                <div v-else class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg flex items-center justify-center">
+                  <span class="text-gray-500 text-sm font-medium">{{ reparacion.estado_servicio }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -438,8 +545,15 @@ const cambiarEstado = async (id, nuevoEstado) => {
   }
 
   try {
+    // Add immediate visual feedback
+    const cardElement = document.querySelector(`[data-reparacion-id="${id}"]`)
+    if (cardElement) {
+      cardElement.classList.add('state-changing')
+      setTimeout(() => cardElement.classList.remove('state-changing'), 1000)
+    }
+
     await $fetch(`/api/reparaciones/${id}/estado`, { method: 'PATCH', body: { nuevoEstado } })
-    mostrarNotificacion('Estado actualizado', 'success')
+    mostrarNotificacion(`Estado actualizado a: ${nuevoEstado}`, 'success')
     cargarReparaciones()
   } catch (e) { mostrarNotificacion('Error al actualizar', 'error') }
 }
@@ -673,5 +787,41 @@ watch([repuestoSeleccionado, cantidadRepuesto], ([nuevoRepuesto, nuevaCantidad])
 @keyframes spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+.state-changing {
+  animation: statePulse 1s ease-in-out;
+  border-color: #10B981 !important;
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.3) !important;
+}
+
+@keyframes statePulse {
+  0% {
+    transform: scale(1);
+    border-color: #D1D5DB;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  50% {
+    transform: scale(1.02);
+    border-color: #10B981;
+    box-shadow: 0 0 25px rgba(16, 185, 129, 0.4);
+  }
+  100% {
+    transform: scale(1);
+    border-color: #D1D5DB;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* Mobile-specific optimizations */
+@media (max-width: 767px) {
+  .status-select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236B7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+    padding-right: 2.5rem;
+  }
 }
 </style>

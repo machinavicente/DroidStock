@@ -112,10 +112,10 @@
           <!-- Card footer - Acción técnica -->
           <div class="px-5 py-3 bg-[#F8FAFC] border-t border-[#D1D5DB]">
             <NuxtLink
-              :to="`/reparaciones?tecnico=${tecnico.id}`"
-              class="text-[10px] font-black uppercase tracking-widest text-[#065F46] hover:text-[#10B981] flex items-center gap-2 transition-colors group"
+              :to="`/reparaciones-cards?tecnico=${tecnico.id}`"
+              class="text-[10px] font-black uppercase tracking-widest text-[#065F46] flex items-center gap-2"
             >
-              <i class="ri-eye-line text-sm group-hover:scale-110 transition-transform"></i>
+              <i class="ri-eye-line text-sm"></i>
               VER_REPARACIONES_ASIGNADAS
             </NuxtLink>
           </div>

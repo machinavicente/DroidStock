@@ -111,6 +111,7 @@
               <option value="hoy"><i class="ri-calendar-today-fill"></i> REGISTROS DE HOY</option>
               <option value="semana"><i class="ri-calendar-2-fill"></i> ÚLTIMOS 7 DÍAS</option>
               <option value="mes"><i class="ri-calendar-fill"></i> ÚLTIMOS 30 DÍAS</option>
+              <option value="año"><i class="ri-calendar-check-fill"></i> ÚLTIMO AÑO</option>
             </select>
           </div>
         </div>
@@ -137,8 +138,8 @@
         <p class="text-gray-500 mt-2 max-w-sm mx-auto">No se encontraron repuestos defectuosos con los filtros aplicados actualmente.</p>
       </div>
 
-      <!-- Tabla Principal: Estética PCB -->
-      <div v-else class="bg-white rounded-xl shadow-lg border border-[#D1D5DB] overflow-hidden">
+      <!-- Tabla Principal: Estética PCB (Desktop) -->
+      <div v-if="!cargando && defectuososFiltrados.length > 0" class="bg-white rounded-xl shadow-lg border border-[#D1D5DB] overflow-hidden hidden lg:block">
         <!-- Pagination Bar Superior -->
         <div class="px-6 py-4 bg-[#F8FAFC] border-b border-[#D1D5DB] flex flex-col md:flex-row justify-between items-center gap-4">
           <span class="text-xs font-mono text-gray-500">
@@ -192,6 +193,76 @@
           </table>
         </div>
       </div>
+
+      <!-- Cards Mobile: Diseño Agresivo de Pérdidas -->
+      <div v-if="!cargando && defectuososFiltrados.length > 0" class="lg:hidden space-y-4">
+        <!-- Pagination Bar Superior Mobile -->
+        <div class="px-4 py-3 bg-white rounded-xl shadow-md border border-[#D1D5DB] flex flex-col sm:flex-row justify-between items-center gap-3">
+          <span class="text-xs font-mono text-gray-500">
+            DATA_STREAM: <span class="text-[#065F46] font-bold">{{ inicioMostrando }}-{{ finMostrando }}</span> / TOTAL: {{ defectuososFiltrados.length }}
+          </span>
+          <div class="flex items-center gap-2">
+            <button @click="paginaAnterior" :disabled="paginaActual === 1" class="pagination-btn-sm"><i class="ri-arrow-left-s-line"></i></button>
+            <div class="flex gap-1">
+              <button v-for="p in paginasMostradas" :key="p" @click="irPagina(p)" :class="['page-num-sm', paginaActual === p ? 'active' : '']">{{ p }}</button>
+            </div>
+            <button @click="paginaSiguiente" :disabled="paginaActual === totalPaginas" class="pagination-btn-sm"><i class="ri-arrow-right-s-line"></i></button>
+          </div>
+        </div>
+
+        <!-- Cards de Pérdida -->
+        <div class="space-y-4">
+          <div v-for="item in defectuososPaginados" :key="item.id" class="bg-white rounded-xl shadow-lg border border-[#D1D5DB] overflow-hidden hover:shadow-xl transition-shadow">
+            <!-- Header con Fecha y Pérdida Agresiva -->
+            <div class="flex justify-between items-center px-5 py-4 bg-gradient-to-r from-red-50 to-orange-50 border-b border-[#FEE2E2]">
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+                <span class="text-xs font-mono text-gray-600 font-bold">{{ formatearFecha(item.created_at) }}</span>
+              </div>
+              <div class="flex items-center gap-1 bg-red-600 px-3 py-1.5 rounded-full shadow-md">
+                <i class="ri-money-dollar-circle-fill text-white text-sm"></i>
+                <span class="text-white font-black text-sm">-${{ (item.perdida_total || 0).toFixed(2) }}</span>
+              </div>
+            </div>
+
+            <!-- Cuerpo Central -->
+            <div class="px-5 py-4">
+              <!-- Nombre del Repuesto -->
+              <div class="mb-4">
+                <h3 class="text-lg font-black text-[#1F2937] leading-tight">
+                  {{ item.stock_repuestos?.nombre_repuesto || 'N/A' }}
+                </h3>
+              </div>
+
+              <!-- Línea de Auditoría -->
+              <div class="flex justify-between items-center py-3 bg-gray-50 rounded-lg px-4 mb-3">
+                <div class="flex items-center gap-2">
+                  <div class="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center">
+                    <i class="ri-stack-fill text-red-600 text-sm"></i>
+                  </div>
+                  <div>
+                    <span class="text-xs text-gray-500 font-medium">Cantidad:</span>
+                    <span class="ml-1 text-sm font-black text-[#1F2937]">{{ item.cantidad }} UDS</span>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <span class="text-xs text-gray-500 font-medium">Costo Unit:</span>
+                  <span class="ml-1 text-sm font-black text-[#1F2937]">${{ (item.precio_unitario_costo || 0).toFixed(2) }}</span>
+                </div>
+              </div>
+
+              <!-- Motivo como Footer -->
+              <div class="flex items-start gap-2 pt-3 border-t border-gray-100">
+                <span class="w-1.5 h-1.5 bg-red-500 rounded-full mt-1.5 flex-shrink-0"></span>
+                <div class="flex-1">
+                  <span class="text-xs text-gray-500 font-medium uppercase tracking-wider">Motivo:</span>
+                  <p class="text-sm font-medium text-gray-700 mt-0.5">{{ item.motivo }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Toast Notificación -->
@@ -242,6 +313,7 @@ const getFechaPorPeriodo = (periodo) => {
     case 'hoy': fecha.setHours(0, 0, 0, 0); break
     case 'semana': fecha.setDate(hoy.getDate() - 7); break
     case 'mes': fecha.setMonth(hoy.getMonth() - 1); break
+    case 'año': fecha.setFullYear(hoy.getFullYear() - 1); break
     default: return null
   }
   return fecha
@@ -461,15 +533,25 @@ onMounted(cargarDefectuosos)
   @apply p-2 rounded-lg border border-[#D1D5DB] bg-white hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-[#334155];
 }
 
+.pagination-btn-sm {
+  @apply p-1.5 rounded-lg border border-[#D1D5DB] bg-white hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-[#334155] text-sm;
+}
+
 .page-num {
   @apply w-8 h-8 rounded-lg text-xs font-mono font-bold transition-all border border-transparent;
 }
 
-.page-num.active {
+.page-num-sm {
+  @apply w-7 h-7 rounded-lg text-xs font-mono font-bold transition-all border border-transparent;
+}
+
+.page-num.active,
+.page-num-sm.active {
   @apply bg-[#065F46] text-white shadow-md;
 }
 
-.page-num:not(.active) {
+.page-num:not(.active),
+.page-num-sm:not(.active) {
   @apply text-[#334155] hover:bg-[#F0FDF4] hover:text-[#065F46];
 }
 

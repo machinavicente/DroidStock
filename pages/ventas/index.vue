@@ -146,7 +146,8 @@
           </div>
         </div>
 
-        <div class="overflow-x-auto">
+        <!-- Desktop Table -->
+        <div class="hidden lg:block overflow-x-auto">
           <table class="w-full text-left border-collapse min-w-[800px]">
             <thead>
               <tr class="bg-[#065F46]">
@@ -206,6 +207,73 @@
               </tr>
             </tbody>
           </table>
+        </div>
+
+        <!-- Mobile Cards -->
+        <div class="lg:hidden space-y-4 p-4">
+          <div v-if="cargando" class="py-16 text-center">
+            <div class="flex flex-col items-center gap-4">
+              <div class="w-12 h-12 border-4 border-[#10B981] border-t-transparent rounded-full animate-spin"></div>
+              <span class="text-xs font-mono text-gray-400 uppercase tracking-widest">Loading_Database...</span>
+            </div>
+          </div>
+          <div v-else-if="ventasPaginadas.length === 0" class="py-16 text-center">
+            <i class="ri-shopping-cart-line text-5xl text-gray-200 mb-4 block"></i>
+            <p class="text-gray-400 font-medium">No se encontraron registros en este sector.</p>
+          </div>
+          <div v-for="venta in ventasPaginadas" :key="venta.id" class="bg-white rounded-xl shadow-md border border-[#D1D5DB] overflow-hidden hover:shadow-lg transition-all duration-300">
+            <!-- Header: Fecha y Total -->
+            <div class="bg-gradient-to-r from-[#065F46] to-[#047857] px-4 py-3 flex justify-between items-center">
+              <span class="text-white text-xs font-mono">{{ formatearFecha(venta.created_at) }}</span>
+              <span class="text-white font-bold text-lg">${{ formatearTotal(venta.total) }}</span>
+            </div>
+            
+            <!-- Customer Info -->
+            <div class="px-4 py-3 border-b border-gray-100">
+              <h3 class="font-bold text-[#334155] text-base mb-1">{{ venta.clientes?.nombre_completo || 'Cliente General' }}</h3>
+              <a 
+                v-if="venta.clientes?.telefono" 
+                :href="`tel:${venta.clientes.telefono}`" 
+                class="text-sm text-gray-500 hover:text-[#10B981] transition-colors flex items-center gap-1"
+              >
+                <i class="ri-phone-line text-sm"></i>
+                {{ venta.clientes.telefono }}
+              </a>
+              <span v-else class="text-sm text-gray-400">TEL_NULL</span>
+            </div>
+            
+            <!-- Product Details -->
+            <div class="px-4 py-3">
+              <div class="flex items-start justify-between mb-2">
+                <div class="flex-1">
+                  <h4 class="font-bold text-[#065F46] text-sm mb-1">{{ venta.stock_repuestos?.nombre_repuesto || 'N/A' }}</h4>
+                  <div class="flex items-center gap-4 text-xs text-gray-600">
+                    <span class="flex items-center gap-1">
+                      <i class="ri-stack-line text-gray-400"></i>
+                      Cantidad: <strong>{{ venta.cantidad }} uds</strong>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Montaje Info -->
+              <div v-if="venta.incluye_montaje" class="mt-3 pt-3 border-t border-gray-100">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <span class="text-[#10B981]">🔧</span>
+                    <span class="text-xs font-bold text-[#10B981]">Montaje: Incluido</span>
+                  </div>
+                  <span class="text-xs text-gray-500">+${{ formatearTotal((venta.stock_repuestos?.precio_montaje || 0) * venta.cantidad) }}</span>
+                </div>
+              </div>
+              <div v-else class="mt-3 pt-3 border-t border-gray-100">
+                <div class="flex items-center gap-2">
+                  <span class="text-gray-400">🔧</span>
+                  <span class="text-xs text-gray-400">Sin montaje</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

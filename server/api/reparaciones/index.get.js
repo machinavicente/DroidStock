@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
   const tiendaId = session.tienda_id
 
   const query = getQuery(event)
-  const { estado, cliente_id } = query
+  const { estado, cliente_id, tecnico } = query
 
   const supabase = createServerClient()
 
@@ -25,6 +25,9 @@ export default defineEventHandler(async (event) => {
   }
   if (cliente_id) {
     queryBuilder = queryBuilder.eq('cliente_id', cliente_id)
+  }
+  if (tecnico) {
+    queryBuilder = queryBuilder.eq('tecnico_id', tecnico)
   }
 
   const { data: reparaciones, error } = await queryBuilder
