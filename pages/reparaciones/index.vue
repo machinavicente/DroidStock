@@ -104,8 +104,8 @@
               <button @click="paginaAnterior" :disabled="paginaActual === 1" class="pagination-btn p-2">
                 <i class="ri-arrow-left-s-line text-base"></i>
               </button>
-              <div class="flex gap-1">
-                <button v-for="p in paginasMostradas" :key="p" @click="irPagina(p)" :class="['page-num w-8 h-8 text-xs', paginaActual === p ? 'active' : '']">{{ p }}</button>
+              <div class="px-3 py-1 rounded-lg bg-gray-100 min-w-[60px] text-center">
+                <span class="text-sm font-mono font-bold" style="color: #065F46;">{{ paginaActual }}</span>
               </div>
               <button @click="paginaSiguiente" :disabled="paginaActual === totalPaginas" class="pagination-btn p-2">
                 <i class="ri-arrow-right-s-line text-base"></i>
@@ -436,16 +436,7 @@ const reparacionesPaginadas = computed(() => {
 const inicioMostrando = computed(() => reparacionesFiltradas.value.length === 0 ? 0 : (paginaActual.value - 1) * ITEMS_POR_PAGINA + 1)
 const finMostrando = computed(() => Math.min(paginaActual.value * ITEMS_POR_PAGINA, reparacionesFiltradas.value.length))
 
-const paginasMostradas = computed(() => {
-  const total = totalPaginas.value
-  const actual = paginaActual.value
-  let inicio = Math.max(1, actual - 2)
-  let fin = Math.min(total, inicio + 4)
-  if (fin - inicio < 4) inicio = Math.max(1, fin - 4)
-  return Array.from({ length: fin - inicio + 1 }, (_, i) => inicio + i)
-})
 
-const irPagina = (p) => paginaActual.value = p
 const paginaAnterior = () => { if (paginaActual.value > 1) paginaActual.value-- }
 const paginaSiguiente = () => { if (paginaActual.value < totalPaginas.value) paginaActual.value++ }
 

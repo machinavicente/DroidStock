@@ -136,8 +136,8 @@
               <button @click="paginaAnterior" :disabled="paginaActual === 1" class="pagination-btn p-2">
                 <i class="ri-arrow-left-s-line text-base"></i>
               </button>
-              <div class="flex gap-1">
-                <button v-for="p in paginasMostradas" :key="p" @click="irPagina(p)" :class="['page-num w-8 h-8 text-xs', paginaActual === p ? 'active' : '']">{{ p }}</button>
+              <div class="px-3 py-1 rounded-lg bg-gray-100 min-w-[60px] text-center">
+                <span class="text-sm font-mono font-bold" style="color: #065F46;">{{ paginaActual }}</span>
               </div>
               <button @click="paginaSiguiente" :disabled="paginaActual === totalPaginas" class="pagination-btn p-2">
                 <i class="ri-arrow-right-s-line text-base"></i>
@@ -370,25 +370,6 @@ const finMostrando = computed(() => {
   return Math.min(fin, ventasFiltradas.value.length)
 })
 
-// Array de números de página
-const paginasMostradas = computed(() => {
-  const total = totalPaginas.value
-  const actual = paginaActual.value
-  const maxMostrar = 5
-  
-  if (total <= maxMostrar) {
-    return Array.from({ length: total }, (_, i) => i + 1)
-  }
-  
-  let inicio = Math.max(1, actual - 2)
-  let fin = Math.min(total, inicio + maxMostrar - 1)
-  
-  if (fin - inicio + 1 < maxMostrar) {
-    inicio = Math.max(1, fin - maxMostrar + 1)
-  }
-  
-  return Array.from({ length: fin - inicio + 1 }, (_, i) => inicio + i)
-})
 
 // Navegación
 const paginaAnterior = () => {
@@ -399,9 +380,6 @@ const paginaSiguiente = () => {
   if (paginaActual.value < totalPaginas.value) paginaActual.value++
 }
 
-const irPagina = (pagina) => {
-  paginaActual.value = pagina
-}
 
 // Reiniciar página si cambian los filtros
 watch([() => filtros.busqueda, () => filtros.fecha_fin], () => {

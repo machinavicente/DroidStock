@@ -131,8 +131,8 @@
               <button @click="paginaAnterior" :disabled="paginaActual === 1" class="pagination-btn p-2">
                 <i class="ri-arrow-left-s-line text-base"></i>
               </button>
-              <div class="flex gap-1">
-                <button v-for="p in paginasMostradas" :key="p" @click="irPagina(p)" :class="['page-num w-8 h-8 text-xs', paginaActual === p ? 'active' : '']">{{ p }}</button>
+              <div class="px-3 py-1 rounded-lg bg-gray-100 min-w-[60px] text-center">
+                <span class="text-sm font-mono font-bold" style="color: #065F46;">{{ paginaActual }}</span>
               </div>
               <button @click="paginaSiguiente" :disabled="paginaActual === totalPaginas" class="pagination-btn p-2">
                 <i class="ri-arrow-right-s-line text-base"></i>
@@ -285,21 +285,12 @@ const { tienda } = useAuth()
 // Estado
 const exportando = ref(false)
 const paginaActual = ref(1)
+const totalRegistros = ref(0)
 
 // Variables computadas para paginación
-const totalMovimientos = computed(() => movimientos.value?.length || 0)
+const totalMovimientos = computed(() => totalRegistros.value)
 const totalPaginas = computed(() => Math.ceil(totalMovimientos.value / 7))
 
-const paginasMostradas = computed(() => {
-  const total = totalPaginas.value
-  const actual = paginaActual.value
-  let inicio = Math.max(1, actual - 2)
-  let fin = Math.min(total, inicio + 4)
-  if (fin - inicio < 4) inicio = Math.max(1, fin - 4)
-  return Array.from({ length: fin - inicio + 1 }, (_, i) => inicio + i)
-})
-
-const irPagina = (p) => paginaActual.value = p
 
 // Toast notification
 const toast = ref({
@@ -416,7 +407,7 @@ const paginaAnterior = () => {
 }
 
 const paginaSiguiente = () => {
-  if (movimientos.value.length >= parseInt(filtros.limit)) {
+  if (paginaActual.value < totalPaginas.value) {
     paginaActual.value++
     filtros.offset = (paginaActual.value - 1) * parseInt(filtros.limit)
     cargarMovimientos()
@@ -430,10 +421,14 @@ const cargarMovimientos = async () => {
   }
   
   try {
-    await obtenerMovimientos({
+    const response = await obtenerMovimientos({
       tienda_id: tienda.value.id,
       ...filtros
     })
+    // Actualizar el total de registros desde la respuesta de la API
+    if (response?.pagination?.total !== undefined) {
+      totalRegistros.value = response.pagination.total
+    }
   } catch (error) {
     console.error('Error al cargar movimientos:', error)
     mostrarToast('Error al cargar movimientos', 'error')

@@ -163,13 +163,21 @@
 
     <!-- Resumen de hoy - Flujo de Trabajo -->
     <div class="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden border border-slate-200/50">
-      <div class="px-6 py-4 bg-gradient-to-r from-emerald-50 to-emerald-100 border-b border-emerald-200/50 flex items-center gap-3">
-        <div class="w-10 h-10 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg">
-          <i class="ri-calendar-check-line text-white text-lg"></i>
-        </div>
-        <div>
-          <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider">Flujo de Trabajo del Día</h3>
-          <p class="text-xs font-medium text-slate-500">Estado actual de reparaciones</p>
+      <div class="px-6 py-4 bg-gradient-to-r from-emerald-50 to-emerald-100 border-b border-emerald-200/50">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg">
+              <i class="ri-calendar-check-line text-white text-lg"></i>
+            </div>
+            <div>
+              <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider">Flujo de Trabajo del Día</h3>
+              <p class="text-xs font-medium text-slate-500">Estado actual de reparaciones</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 bg-white/80 px-3 py-2 rounded-lg border border-emerald-200/50">
+            <i class="ri-calendar-line text-emerald-600 text-lg"></i>
+            <span class="text-sm font-bold text-emerald-700">{{ fechaActual }}</span>
+          </div>
         </div>
       </div>
       <div class="p-6">

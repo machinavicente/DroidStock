@@ -10,10 +10,10 @@ export default defineEventHandler(async (event) => {
   const { nombre_completo, dni_cedula, telefono, email, direccion } = body
 
   // Validar campos requeridos
-  if (!nombre_completo || !dni_cedula) {
+  if (!nombre_completo) {
     throw createError({
       statusCode: 400,
-      message: 'Nombre completo y DNI/Cédula son requeridos'
+      message: 'Nombre completo es requerido'
     })
   }
 
@@ -34,20 +34,22 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  // Verificar si otro cliente tiene el mismo DNI
-  const { data: duplicado } = await supabase
-    .from('clientes')
-    .select('id')
-    .eq('tienda_id', tiendaId)
-    .eq('dni_cedula', dni_cedula)
-    .neq('id', id)
-    .maybeSingle()
+  // Verificar si otro cliente tiene el mismo DNI (solo si se proporciona DNI)
+  if (dni_cedula) {
+    const { data: duplicado } = await supabase
+      .from('clientes')
+      .select('id')
+      .eq('tienda_id', tiendaId)
+      .eq('dni_cedula', dni_cedula)
+      .neq('id', id)
+      .maybeSingle()
 
-  if (duplicado) {
-    throw createError({
-      statusCode: 400,
-      message: 'Ya existe otro cliente con este DNI/Cédula'
-    })
+    if (duplicado) {
+      throw createError({
+        statusCode: 400,
+        message: 'Ya existe otro cliente con este DNI/Cédula'
+      })
+    }
   }
 
   // Actualizar cliente
@@ -55,7 +57,7 @@ export default defineEventHandler(async (event) => {
     .from('clientes')
     .update({
       nombre_completo: nombre_completo.trim(),
-      dni_cedula: dni_cedula.trim(),
+      dni_cedula: dni_cedula ? dni_cedula.trim() : '',
       telefono: telefono || null,
       email: email || null,
       direccion: direccion || null
