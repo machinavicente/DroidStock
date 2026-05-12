@@ -107,11 +107,11 @@
               v-model="filtros.periodo" 
               class="w-full px-3 py-2.5 bg-[#F8FAFC] border border-[#D1D5DB] rounded-lg focus:ring-2 focus:ring-[#10B981] text-sm font-medium"
             >
-              <option value=""><i class="ri-bar-chart-fill"></i> TODO EL HISTORIAL</option>
-              <option value="hoy"><i class="ri-calendar-today-fill"></i> REGISTROS DE HOY</option>
-              <option value="semana"><i class="ri-calendar-2-fill"></i> ÚLTIMOS 7 DÍAS</option>
-              <option value="mes"><i class="ri-calendar-fill"></i> ÚLTIMOS 30 DÍAS</option>
-              <option value="año"><i class="ri-calendar-check-fill"></i> ÚLTIMO AÑO</option>
+              <option value="">TODO EL HISTORIAL</option>
+              <option value="hoy">REGISTROS DE HOY</option>
+              <option value="semana">ÚLTIMOS 7 DÍAS</option>
+              <option value="mes">ÚLTIMOS 30 DÍAS</option>
+              <option value="año">ÚLTIMO AÑO</option>
             </select>
           </div>
         </div>

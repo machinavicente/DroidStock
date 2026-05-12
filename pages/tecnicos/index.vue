@@ -88,24 +88,24 @@
           <!-- Card body - Datos técnicos -->
           <div class="p-5 space-y-3">
             <div class="flex items-center gap-3 text-sm">
-              <div class="w-8 h-8 rounded-lg bg-[#F3F4F6] flex items-center justify-center">
-                <i class="ri-phone-line text-[#065F46] text-sm"></i>
+              <div class="w-8 h-8 rounded-lg bg-[#F3F4F6] flex items-center justify-center flex-shrink-0">
+                <i class="ri-phone-line text-[#065F46] text-sm leading-none"></i>
               </div>
-              <span class="text-gray-600 font-mono text-[11px]">{{ tecnico.telefono || 'SIN_CONTACTO' }}</span>
+              <span class="text-gray-600 font-mono text-[11px] leading-none">{{ tecnico.telefono || 'SIN_CONTACTO' }}</span>
             </div>
             <div class="flex items-center gap-3 text-sm">
-              <div class="w-8 h-8 rounded-lg bg-[#F3F4F6] flex items-center justify-center">
-                <i class="ri-tools-line text-[#065F46] text-sm"></i>
+              <div class="w-8 h-8 rounded-lg bg-[#F3F4F6] flex items-center justify-center flex-shrink-0">
+                <i class="ri-tools-line text-[#065F46] text-sm leading-none"></i>
               </div>
-              <span class="text-gray-600">
+              <span class="text-gray-600 leading-none">
                 <span class="font-black text-[#065F46]">{{ tecnico.total_reparaciones || 0 }}</span> reparaciones asignadas
               </span>
             </div>
-            <div v-if="tecnico.reparaciones_activas > 0" class="flex items-center gap-3 text-sm">
-              <div class="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center">
-                <i class="ri-time-line text-[#F59E0B] text-sm"></i>
+            <div class="flex items-center gap-3 text-sm">
+              <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" :class="tecnico.reparaciones_activas > 0 ? 'bg-amber-50' : 'bg-gray-50'">
+                <i class="ri-time-line text-sm leading-none" :class="tecnico.reparaciones_activas > 0 ? 'text-[#F59E0B]' : 'text-gray-400'"></i>
               </div>
-              <span class="text-[#F59E0B] font-bold text-[11px] uppercase">{{ tecnico.reparaciones_activas }} EN_CURSO</span>
+              <span class="font-bold text-[11px] uppercase leading-none" :class="tecnico.reparaciones_activas > 0 ? 'text-[#F59E0B]' : 'text-gray-400'">{{ tecnico.reparaciones_activas || 0 }} EN_CURSO</span>
             </div>
           </div>
 
