@@ -8,10 +8,10 @@ export default defineEventHandler(async (event) => {
     const usuarioId = session.usuario_admin_id
 
     const body = await readBody(event)
-    const { nombre_repuesto, cantidad_disponible, precio_costo, precio_venta, precio_montaje } = body
+    const { nombre_repuesto, cantidad_disponible, precio_costo, precio_venta, precio_montaje, precio_tecnico } = body
 
     console.log('=== CREAR REPUESTO ===')
-    console.log('Datos:', { nombre_repuesto, cantidad_disponible, precio_costo, precio_venta, precio_montaje })
+    console.log('Datos:', { nombre_repuesto, cantidad_disponible, precio_costo, precio_venta, precio_montaje, precio_tecnico })
 
     if (!nombre_repuesto || nombre_repuesto.trim() === '') {
       return {
@@ -46,7 +46,8 @@ export default defineEventHandler(async (event) => {
         cantidad_disponible: cantidad_disponible || 0,
         precio_costo: precio_costo && precio_costo !== '' ? Number(precio_costo) : null,
         precio_venta: precio_venta && precio_venta !== '' ? Number(precio_venta) : null,
-        precio_montaje: precio_montaje && precio_montaje !== '' ? Number(precio_montaje) : 0
+        precio_montaje: precio_montaje && precio_montaje !== '' ? Number(precio_montaje) : 0,
+        precio_tecnico: precio_tecnico ? Number(precio_tecnico) : null
       })
       .select()
       .single()

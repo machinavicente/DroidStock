@@ -92,12 +92,12 @@
               class="w-full px-3 py-2.5 bg-[#F8FAFC] border border-[#D1D5DB] rounded-lg focus:ring-2 focus:ring-[#10B981] text-sm font-medium"
             >
               <option value="">TODOS LOS MOTIVOS</option>
-              <option value="Defecto de fábrica"><i class="ri-tools-fill"></i> DEFECTO DE FÁBRICA</option>
-              <option value="No enciende"><i class="ri-flashlight-fill"></i> NO ENCIENDE</option>
-              <option value="Funcionamiento incorrecto"><i class="ri-refresh-line"></i> FUNCIONAMIENTO INCORRECTO</option>
-              <option value="Daño físico"><i class="ri-error-warning-fill"></i> DAÑO FÍSICO</option>
-              <option value="Componente faltante"><i class="ri-puzzle-fill"></i> COMPONENTE FALTANTE</option>
-              <option value="Otro"><i class="ri-question-fill"></i> OTRO</option>
+              <option value="Defecto de fábrica">DEFECTO DE FÁBRICA</option>
+              <option value="No enciende">NO ENCIENDE</option>
+              <option value="Funcionamiento incorrecto">FUNCIONAMIENTO INCORRECTO</option>
+              <option value="Daño físico">DAÑO FÍSICO</option>
+              <option value="Componente faltante">COMPONENTE FALTANTE</option>
+              <option value="Otro">OTRO</option>
             </select>
           </div>
 

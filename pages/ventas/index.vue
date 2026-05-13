@@ -155,13 +155,12 @@
                 <th class="th-tech px-6 py-4 text-[10px] min-w-[200px]">CLIENTE</th>
                 <th class="th-tech px-6 py-4 text-[10px] min-w-[180px]">REPUESTO</th>
                 <th class="th-tech px-6 py-4 text-[10px] text-center w-20">CANT.</th>
-                <th class="th-tech px-6 py-4 text-[10px] text-right w-32">MONTAJE</th>
                 <th class="th-tech px-6 py-4 text-[10px] text-right w-32">TOTAL</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-[#D1D5DB]">
               <tr v-if="cargando">
-                <td colspan="6" class="py-16 text-center">
+                <td colspan="5" class="py-16 text-center">
                   <div class="flex flex-col items-center gap-4">
                     <div class="w-12 h-12 border-4 border-[#10B981] border-t-transparent rounded-full animate-spin"></div>
                     <span class="text-xs font-mono text-gray-400 uppercase tracking-widest">Loading_Database...</span>
@@ -169,7 +168,7 @@
                 </td>
               </tr>
               <tr v-else-if="ventasPaginadas.length === 0">
-                <td colspan="6" class="py-16 text-center">
+                <td colspan="5" class="py-16 text-center">
                   <i class="ri-shopping-cart-line text-5xl text-gray-200 mb-4 block"></i>
                   <p class="text-gray-400 font-medium">No se encontraron registros en este sector.</p>
                 </td>
@@ -189,17 +188,6 @@
                   <span class="inline-flex items-center justify-center px-2 py-1 text-[10px] font-black rounded-full bg-gray-100 text-[#065F46]">
                     {{ venta.cantidad }} uds
                   </span>
-                </td>
-                <td class="px-6 py-4 text-right align-middle">
-                  <div v-if="venta.incluye_montaje" class="space-y-1">
-                    <span class="inline-flex items-center gap-1 text-[11px] font-bold text-[#10B981]">
-                      <i class="ri-tools-line text-sm"></i> <span class="hidden lg:inline">INCLUIDO</span><span class="lg:hidden">SÍ</span>
-                    </span>
-                    <div class="text-[10px] text-gray-500">
-                      +${{ formatearTotal((venta.stock_repuestos?.precio_montaje || 0) * venta.cantidad) }}
-                    </div>
-                  </div>
-                  <span v-else class="text-[10px] text-gray-400 uppercase">SIN MONTAJE</span>
                 </td>
                 <td class="px-6 py-4 text-right align-middle">
                   <span class="text-base font-black text-[#10B981]">${{ formatearTotal(venta.total) }}</span>
@@ -253,23 +241,6 @@
                       Cantidad: <strong>{{ venta.cantidad }} uds</strong>
                     </span>
                   </div>
-                </div>
-              </div>
-              
-              <!-- Montaje Info -->
-              <div v-if="venta.incluye_montaje" class="mt-3 pt-3 border-t border-gray-100">
-                <div class="flex items-center justify-between">
-                  <div class="flex items-center gap-2">
-                    <span class="text-[#10B981]">🔧</span>
-                    <span class="text-xs font-bold text-[#10B981]">Montaje: Incluido</span>
-                  </div>
-                  <span class="text-xs text-gray-500">+${{ formatearTotal((venta.stock_repuestos?.precio_montaje || 0) * venta.cantidad) }}</span>
-                </div>
-              </div>
-              <div v-else class="mt-3 pt-3 border-t border-gray-100">
-                <div class="flex items-center gap-2">
-                  <span class="text-gray-400">🔧</span>
-                  <span class="text-xs text-gray-400">Sin montaje</span>
                 </div>
               </div>
             </div>
@@ -543,9 +514,7 @@ const exportarPDF = async () => {
                 <th style="padding: 12px; text-align: left;">Cliente</th>
                 <th style="padding: 12px; text-align: left;">Repuesto</th>
                 <th style="padding: 12px; text-align: left;">Cantidad</th>
-                <th style="padding: 12px; text-align: center;">Montaje</th>
                 <th style="padding: 12px; text-align: right;">Precio Venta</th>
-                <th style="padding: 12px; text-align: right;">Monto Montaje</th>
                 <th style="padding: 12px; text-align: right;">Total</th>
               </tr>
             </thead>
@@ -556,16 +525,14 @@ const exportarPDF = async () => {
                   <td style="padding: 10px 12px; color: #065F46; font-weight: 500;">${item.clientes?.nombre_completo || 'N/A'}</td>
                   <td style="padding: 10px 12px; color: #065F46; font-weight: 500;">${item.stock_repuestos?.nombre_repuesto || 'N/A'}</td>
                   <td style="padding: 10px 12px; text-align: center;">${item.cantidad}</td>
-                  <td style="padding: 10px 12px; text-align: center; color: #374151;">${item.incluye_montaje ? 'SÍ' : 'NO'}</td>
                   <td style="padding: 10px 12px; text-align: right; color: #374151;">$${formatearTotal(item.stock_repuestos?.precio_venta || 0)}</td>
-                  <td style="padding: 10px 12px; text-align: right; color: #374151;">$${formatearTotal(item.incluye_montaje ? (item.stock_repuestos?.precio_montaje || 0) * item.cantidad : 0)}</td>
                   <td style="padding: 10px 12px; text-align: right; color: #065F46; font-weight: bold;">$${formatearTotal(item.total)}</td>
                 </tr>
               `).join('')}
             </tbody>
             <tfoot>
               <tr style="background: #F9FAFB; border-top: 2px solid #D1D5DB;">
-                <td style="padding: 12px; font-weight: bold; color: #065F46;" colspan="6">TOTAL:</td>
+                <td style="padding: 12px; font-weight: bold; color: #065F46;" colspan="5">TOTAL:</td>
               </tr>
             </tfoot>
           </table>

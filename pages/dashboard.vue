@@ -69,7 +69,7 @@
     <!-- Tarjetas de estadísticas - Diseño Corporativo Moderno -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
       <!-- Reparaciones Activas -->
-      <div class="group relative bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-slate-200/50 hover:border-slate-300/70">
+      <NuxtLink to="/reparaciones" class="group relative bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-slate-200/50 hover:border-slate-300/70">
         <div class="absolute inset-0 bg-gradient-to-br from-slate-50 to-slate-100 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         <div class="relative p-6">
           <div class="flex items-start justify-between mb-4">
@@ -89,10 +89,10 @@
             <div class="h-full bg-gradient-to-r from-slate-600 to-slate-700 rounded-full transition-all duration-500" style="width: 75%"></div>
           </div>
         </div>
-      </div>
+      </NuxtLink>
 
       <!-- Repuestos en Stock -->
-      <div class="group relative bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-slate-200/50 hover:border-slate-300/70">
+      <NuxtLink to="/repuestos" class="group relative bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-slate-200/50 hover:border-slate-300/70">
         <div class="absolute inset-0 bg-gradient-to-br from-emerald-50 to-emerald-100 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         <div class="relative p-6">
           <div class="flex items-start justify-between mb-4">
@@ -112,10 +112,10 @@
             <div class="h-full bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-full transition-all duration-500" style="width: 85%"></div>
           </div>
         </div>
-      </div>
+      </NuxtLink>
 
       <!-- Técnicos Activos -->
-      <div class="group relative bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-slate-200/50 hover:border-slate-300/70">
+      <NuxtLink to="/tecnicos" class="group relative bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-slate-200/50 hover:border-slate-300/70">
         <div class="absolute inset-0 bg-gradient-to-br from-violet-50 to-violet-100 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         <div class="relative p-6">
           <div class="flex items-start justify-between mb-4">
@@ -135,10 +135,10 @@
             <div class="h-full bg-gradient-to-r from-violet-500 to-violet-600 rounded-full transition-all duration-500" style="width: 60%"></div>
           </div>
         </div>
-      </div>
+      </NuxtLink>
 
       <!-- Repuestos Defectuosos -->
-      <div class="group relative bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-slate-200/50 hover:border-slate-300/70">
+      <NuxtLink to="/reportes/defectuosos" class="group relative bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-slate-200/50 hover:border-slate-300/70">
         <div class="absolute inset-0 bg-gradient-to-br from-red-50 to-red-100 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         <div class="relative p-6">
           <div class="flex items-start justify-between mb-4">
@@ -158,7 +158,7 @@
             <div class="h-full bg-gradient-to-r from-red-500 to-red-600 rounded-full transition-all duration-500" style="width: 25%"></div>
           </div>
         </div>
-      </div>
+      </NuxtLink>
     </div>
 
     <!-- Resumen de hoy - Flujo de Trabajo -->
@@ -574,9 +574,6 @@
                 <div class="flex-1 min-w-0">
                   <p class="text-xs font-black text-slate-700 truncate">{{ truncarNombre(repuesto.nombre_repuesto, 30) }}</p>
                 </div>
-                <div class="text-right ml-2">
-                  <p class="text-sm font-black text-red-600">${{ repuesto.precio_venta || 0 }}</p>
-                </div>
               </div>
               <div class="flex items-center justify-between">
                 <span class="inline-flex px-2 py-0.5 text-[9px] font-black bg-red-100 text-red-700 rounded-full border border-red-200">
@@ -594,7 +591,6 @@
               <tr class="border-b border-gray-200">
                 <th class="px-3 sm:px-4 py-2 text-left text-[8px] sm:text-[9px] font-mono text-gray-600 uppercase tracking-wider">REPUESTO</th>
                 <th class="px-3 sm:px-4 py-2 text-center text-[8px] sm:text-[9px] font-mono text-gray-600 uppercase tracking-wider">STOCK</th>
-                <th class="px-3 sm:px-4 py-2 text-right text-[8px] sm:text-[9px] font-mono text-gray-600 uppercase tracking-wider">PRECIO</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-gray-200">
@@ -605,7 +601,6 @@
                     {{ repuesto.cantidad_disponible }} UDS
                   </span>
                 </td>
-                <td class="px-3 sm:px-4 py-2 text-right text-sm font-black text-red-600">${{ repuesto.precio_venta || 0 }}</td>
               </tr>
               <tr v-if="repuestosStockBajo.length === 0">
                 <td colspan="3" class="px-3 sm:px-4 py-8 text-center">
@@ -882,7 +877,7 @@ const ultimasVentas = computed(() => {
 })
 
 const repuestosStockBajo = computed(() => {
-  return todosRepuestos.value.filter(r => r.cantidad_disponible <= 5 && r.cantidad_disponible > 0)
+  return todosRepuestos.value.filter(r => r.cantidad_disponible <= 3 && r.cantidad_disponible > 0)
 })
 
 // Inicialización

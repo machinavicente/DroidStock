@@ -162,7 +162,7 @@
                 </div>
               </div>
               <div class="space-y-1">
-                <label class="label-circuit">Precio unitario</label>
+                <label class="label-circuit">Precio Talleres</label>
                 <div class="relative">
                   <i class="ri-money-dollar-circle-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
                   <input
@@ -179,38 +179,6 @@
         </div>
       </div>
 
-      <!-- MÓDULO DE MONTAJE (Toggle Switch Técnico) -->
-      <div class="bg-white rounded-2xl shadow-sm border border-[#D1D5DB] overflow-hidden">
-        <div class="px-5 py-3 bg-[#F8FAFC] border-b border-[#D1D5DB]">
-          <div class="flex items-center gap-2">
-            <i class="ri-tools-line text-[#10B981] text-lg"></i>
-            <h2 class="text-[10px] font-black text-[#065F46] uppercase tracking-widest">Módulo_de_Montaje</h2>
-          </div>
-        </div>
-        <div class="p-6">
-          <label class="flex items-center justify-between cursor-pointer">
-            <div>
-              <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">INCLUIR SERVICIO DE INSTALACIÓN</p>
-              <p v-if="repuestoSeleccionado?.precio_montaje" class="text-[11px] font-mono text-[#10B981] mt-1">
-                Costo montaje: ${{ repuestoSeleccionado.precio_montaje }}
-              </p>
-            </div>
-            <div class="relative inline-block w-12 mr-2 align-middle select-none">
-              <input
-                type="checkbox"
-                v-model="ventaForm.incluir_montaje"
-                @change="calcularTotal"
-                class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
-                :class="ventaForm.incluir_montaje ? 'right-0 border-[#10B981]' : 'left-0 border-gray-300'"
-              />
-              <span
-                class="toggle-label block overflow-hidden h-6 rounded-full cursor-pointer"
-                :class="ventaForm.incluir_montaje ? 'bg-[#10B981]' : 'bg-gray-300'"
-              ></span>
-            </div>
-          </label>
-        </div>
-      </div>
 
       <!-- RESUMEN DE LA VENTA (Módulo Crítico) -->
       <div class="bg-[#065F46] rounded-2xl p-6 shadow-xl border-b-8 border-[#044a37]">
@@ -225,10 +193,6 @@
           <div class="flex justify-between items-center py-2 border-b border-white/10">
             <span class="text-[11px] font-mono text-white/60 uppercase tracking-wider">Subtotal</span>
             <span class="text-sm font-bold text-white">${{ subtotal }}</span>
-          </div>
-          <div v-if="ventaForm.incluir_montaje" class="flex justify-between items-center py-2 border-b border-white/10">
-            <span class="text-[11px] font-mono text-white/60 uppercase tracking-wider">+ Montaje</span>
-            <span class="text-sm font-bold text-[#10B981]">${{ montajeTotal }}</span>
           </div>
           <div class="flex justify-between items-center pt-3">
             <span class="text-base font-black text-white uppercase tracking-wider">TOTAL</span>
@@ -330,7 +294,6 @@ const ventaForm = reactive({
   repuesto_id: null,
   cantidad: 1,
   precio_unitario: 0,
-  incluir_montaje: false,
   nota: ''
 })
 
@@ -350,22 +313,11 @@ const subtotal = computed(() => {
   })
 })
 
-// Computed para montaje total
-const montajeTotal = computed(() => {
-  if (ventaForm.incluir_montaje && repuestoSeleccionado.value?.precio_montaje) {
-    return ((repuestoSeleccionado.value.precio_montaje || 0) * (ventaForm.cantidad || 0)).toLocaleString('es-ES', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    })
-  }
-  return '0.00'
-})
 
 // Computed para total final
 const total = computed(() => {
   const sub = (ventaForm.precio_unitario || 0) * (ventaForm.cantidad || 0)
-  const montaje = ventaForm.incluir_montaje ? (repuestoSeleccionado.value?.precio_montaje || 0) * (ventaForm.cantidad || 0) : 0
-  return (sub + montaje).toLocaleString('es-ES', {
+  return sub.toLocaleString('es-ES', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2
   })
@@ -386,7 +338,7 @@ const calcularPrecios = () => {
   const repuesto = repuestosDisponibles.value.find(r => r.id === ventaForm.repuesto_id)
   repuestoSeleccionado.value = repuesto
   if (repuesto) {
-    ventaForm.precio_unitario = repuesto.precio_venta || 0
+    ventaForm.precio_unitario = repuesto.precio_tecnico || 0
   }
   calcularTotal()
 }
@@ -444,7 +396,7 @@ const seleccionarCliente = (cliente) => {
 const cargarRepuestos = async () => {
   try {
     await obtenerRepuestos()
-    repuestosDisponibles.value = repuestos.value.filter(r => r.cantidad_disponible > 0 && r.precio_venta > 0)
+    repuestosDisponibles.value = repuestos.value.filter(r => r.cantidad_disponible > 0 && r.precio_tecnico > 0)
   } catch (error) {
     console.error('Error al cargar repuestos:', error)
   }
@@ -500,15 +452,14 @@ const guardarVenta = async () => {
     }
     
     // Calcular total final
-    const precioFinal = (ventaForm.precio_unitario || 0) + (ventaForm.incluir_montaje ? (repuestoSeleccionado.value?.precio_montaje || 0) : 0)
-    const totalFinal = precioFinal * (ventaForm.cantidad || 0)
+    const totalFinal = (ventaForm.precio_unitario || 0) * (ventaForm.cantidad || 0)
     
     // Registrar la venta
     const result = await crearVenta({
       cliente_id: clienteId,
       repuesto_id: ventaForm.repuesto_id,
       cantidad: ventaForm.cantidad,
-      incluye_montaje: ventaForm.incluir_montaje,
+      incluye_montaje: false,
       total: totalFinal,
       nota: ventaForm.nota
     })

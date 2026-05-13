@@ -76,12 +76,12 @@
                   class="form-select-circuit"
                 >
                   <option value="">-- SELECCIONAR ESPECIALIDAD --</option>
-                  <option value="Celulares">📱 SMARTSPHONES</option>
-                  <option value="Tablets">📟 TABLETS / iPADS</option>
-                  <option value="Laptops">💻 LAPTOPS / NOTEBOOKS</option>
-                  <option value="PC">🖥️ PC / COMPUTADORAS</option>
-                  <option value="Consolas">🎮 CONSOLAS DE JUEGOS</option>
-                  <option value="General">🔧 GENERAL (TODAS)</option>
+                  <option value="Celulares">CELULARES / SMARTSPHONES</option>
+                  <option value="Tablets">TABLETS / iPADS</option>
+                  <option value="Laptops">LAPTOPS / NOTEBOOKS</option>
+                  <option value="PC">COMPUTADORAS / PC</option>
+                  <option value="Consolas">CONSOLAS DE JUEGOS</option>
+                  <option value="General">GENERAL (TODAS)</option>
                 </select>
                 <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                   <i class="ri-arrow-down-s-line text-gray-400"></i>

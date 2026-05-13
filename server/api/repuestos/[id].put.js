@@ -9,11 +9,9 @@ export default defineEventHandler(async (event) => {
 
     const id = getRouterParam(event, 'id')
     const body = await readBody(event)
-    const { nombre_repuesto, cantidad_disponible, precio_costo, precio_venta, precio_montaje } = body
-
-    console.log('=== ACTUALIZAR REPUESTO ===')
-    console.log('Datos recibidos:', { id, nombre_repuesto, cantidad_disponible, precio_costo, precio_venta, precio_montaje })
-
+    const { nombre_repuesto, cantidad_disponible, precio_costo, precio_venta, precio_montaje, precio_tecnico } = body
+    
+    
     if (!nombre_repuesto || nombre_repuesto.trim() === '') {
       throw createError({
         statusCode: 400,
@@ -42,16 +40,23 @@ export default defineEventHandler(async (event) => {
     const nuevoStock = cantidad_disponible
     const diferencia = nuevoStock - stockAnterior
 
-    // Actualizar repuesto con precio_costo, precio_venta y precio_montaje
+    // Actualizar repuesto con todos los precios
+    const updateData = {
+      nombre_repuesto: nombre_repuesto.trim(),
+      cantidad_disponible: nuevoStock,
+      precio_costo: precio_costo !== null && precio_costo !== '' ? Number(precio_costo) : null,
+      precio_venta: precio_venta !== null && precio_venta !== '' ? Number(precio_venta) : null,
+      precio_montaje: precio_montaje !== null && precio_montaje !== '' ? Number(precio_montaje) : null
+    }
+    
+    // Manejar precio_tecnico (opcional)
+    if (precio_tecnico !== undefined && precio_tecnico !== null && precio_tecnico !== '') {
+      updateData.precio_tecnico = Number(precio_tecnico)
+    }
+    
     const { data: repuesto, error } = await supabase
       .from('stock_repuestos')
-      .update({
-        nombre_repuesto: nombre_repuesto.trim(),
-        cantidad_disponible: nuevoStock,
-        precio_costo: precio_costo !== undefined && precio_costo !== '' ? Number(precio_costo) : null,
-        precio_venta: precio_venta !== undefined && precio_venta !== '' ? Number(precio_venta) : null,
-        precio_montaje: precio_montaje !== undefined && precio_montaje !== '' ? Number(precio_montaje) : null
-      })
+      .update(updateData)
       .eq('id', id)
       .select()
       .single()

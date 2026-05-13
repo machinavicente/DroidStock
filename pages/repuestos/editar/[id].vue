@@ -125,6 +125,27 @@
             </div>
             <p class="text-[9px] font-mono text-gray-400">COSTO_DE_INSTALACIÓN_MONTAJE</p>
           </div>
+
+          <!-- Precio Venta a Técnicos -->
+          <div class="space-y-1">
+            <label class="label-circuit">
+              Precio venta a técnicos
+            </label>
+            <div class="relative group">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                
+              </div>
+              <input
+                v-model.number="form.precio_tecnico"
+                type="number"
+                step="0.01"
+                min="0"
+                class="form-input-circuit pl-9"
+                placeholder="0.00"
+              />
+            </div>
+            <p class="text-[9px] font-mono text-gray-400">PRECIO_VENTA_A_OTROS_TÉCNICOS</p>
+          </div>
         </div>
 
         <!-- Tarjeta de información financiera - Estilo técnico -->
@@ -227,7 +248,8 @@ const form = reactive({
   cantidad_disponible: 0,
   precio_costo: null,
   precio_venta: null,
-  precio_montaje: null
+  precio_montaje: null,
+  precio_tecnico: null
 })
 
 // Calcular ganancia potencial
@@ -252,11 +274,14 @@ onMounted(async () => {
     const repuesto = repuestos.find(r => r.id === repuestoId)
     
     if (repuesto) {
+      console.log('Datos del repuesto cargados:', repuesto)
       form.nombre_repuesto = repuesto.nombre_repuesto
       form.cantidad_disponible = repuesto.cantidad_disponible || 0
       form.precio_costo = repuesto.precio_costo || null
       form.precio_venta = repuesto.precio_venta || null
       form.precio_montaje = repuesto.precio_montaje || null
+      form.precio_tecnico = repuesto.precio_tecnico || null
+      console.log('Formulario después de cargar:', form)
     } else {
       mostrarToast('REPUESTO_NO_ENCONTRADO', 'error')
       setTimeout(() => router.push('/repuestos'), 1500)
@@ -278,13 +303,17 @@ const handleActualizar = async () => {
   }
 
   guardando.value = true
-  const result = await actualizarRepuesto(repuestoId, {
+  
+  const datosAEnviar = {
     nombre_repuesto: form.nombre_repuesto,
     cantidad_disponible: form.cantidad_disponible || 0,
     precio_costo: form.precio_costo || 0,
     precio_venta: form.precio_venta || 0,
-    precio_montaje: form.precio_montaje || 0
-  })
+    precio_montaje: form.precio_montaje || 0,
+    precio_tecnico: form.precio_tecnico !== null && form.precio_tecnico !== undefined ? Number(form.precio_tecnico) : null
+  }
+  
+  const result = await actualizarRepuesto(repuestoId, datosAEnviar)
   guardando.value = false
   
   if (result.success) {

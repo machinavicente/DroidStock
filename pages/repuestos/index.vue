@@ -36,17 +36,39 @@
 
     <!-- Buscador -->
     <div class="mb-6">
-      <div class="relative w-full sm:max-w-md">
-        <i class="ri-search-line absolute left-3 top-1/2 transform -translate-y-1/2" style="color: #9CA3AF"></i>
-        <input
-          v-model="busqueda"
-          type="text"
-          placeholder="Buscar repuesto..."
-          class="w-full pl-10 pr-4 py-2 rounded-lg text-sm transition-all duration-200"
-          style="border: 1px solid #D1D5DB; background-color: white;"
-          @focus="e => e.currentTarget.style.borderColor = '#10B981'"
-          @blur="e => e.currentTarget.style.borderColor = '#D1D5DB'"
-        />
+      <div class="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
+        <div class="relative flex-1 sm:max-w-md">
+          <i class="ri-search-line absolute left-3 top-1/2 transform -translate-y-1/2" style="color: #9CA3AF"></i>
+          <input
+            v-model="busqueda"
+            type="text"
+            placeholder="Buscar repuesto..."
+            class="w-full pl-10 pr-4 py-2.5 rounded-lg text-sm transition-all duration-200 shadow-sm"
+            style="border: 1px solid #D1D5DB; background-color: white;"
+            @focus="e => { e.currentTarget.style.borderColor = '#10B981'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(16, 185, 129, 0.1)' }"
+            @blur="e => { e.currentTarget.style.borderColor = '#D1D5DB'; e.currentTarget.style.boxShadow = '0 1px 2px 0 rgba(0, 0, 0, 0.05)' }"
+          />
+        </div>
+        
+        <!-- Chips de filtrado -->
+        <div class="flex gap-2">
+          <button
+            @click="toggleFiltroStockBajo"
+            :class="[
+              'px-4 py-2.5 rounded-lg text-xs font-medium transition-all duration-200 flex items-center gap-2 shadow-sm',
+              filtroStockBajo 
+                ? 'bg-gradient-to-r from-yellow-50 to-amber-50 text-yellow-700 border-yellow-300 shadow-yellow-100' 
+                : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
+            ]"
+            style="border: 1px solid;"
+            @mouseenter="e => { if (!filtroStockBajo) e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }"
+            @mouseleave="e => { if (!filtroStockBajo) e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 1px 2px 0 rgba(0, 0, 0, 0.05)' }"
+          >
+            <i :class="filtroStockBajo ? 'ri-alert-fill text-yellow-600' : 'ri-alert-line text-gray-400'" class="text-sm"></i>
+            <span class="font-medium">Stock bajo</span>
+            <i v-if="filtroStockBajo" class="ri-close-line text-xs ml-1 text-yellow-600"></i>
+          </button>
+        </div>
       </div>
     </div>
 
@@ -100,61 +122,75 @@
       >
         <!-- Card header -->
         <div class="p-3 sm:p-4 lg:p-5 border-b" style="border-color: #D1D5DB">
-          <div class="flex flex-col sm:flex-row sm:items-start gap-3">
-            <div class="flex items-center gap-3 flex-1 min-w-0">
-              <div class="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 rounded-full flex items-center justify-center text-white font-semibold text-sm sm:text-base lg:text-lg shadow-sm flex-shrink-0" style="background: linear-gradient(135deg, #065F46, #10B981)">
-                <i class="ri-stack-line text-sm sm:text-base lg:text-xl"></i>
-              </div>
-              <div class="flex-1 min-w-0">
-                <h3 class="font-semibold text-sm sm:text-base break-words leading-tight" style="color: #065F46">
-                  {{ repuesto.nombre_repuesto }}
-                </h3>
-                <span class="inline-block px-2 py-0.5 text-xs rounded-full mt-1" :class="stockClass(repuesto.cantidad_disponible)">
-                  Stock: {{ repuesto.cantidad_disponible }} uds
+          <div class="flex items-start gap-3">
+            <div class="w-10 h-10 rounded-lg flex items-center justify-center text-white shadow-sm flex-shrink-0" style="background: linear-gradient(135deg, #065F46, #10B981)">
+              <i class="ri-stack-line text-lg"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+              <h3 class="font-semibold text-sm sm:text-base leading-tight text-gray-900 mb-2" style="word-break: break-word; line-height: 1.4;">
+                {{ repuesto.nombre_repuesto }}
+              </h3>
+              <div class="flex items-center gap-2 flex-wrap">
+                <span 
+                  class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium border"
+                  :class="[
+                    repuesto.cantidad_disponible === 0 ? 'bg-red-700 text-red-100 border-red-300' :
+                    repuesto.cantidad_disponible <= 3 ? 'bg-red-100 text-red-700 border-red-300 animate-pulse' :
+                    'bg-green-100 text-green-700 border-green-300'
+                  ]"
+                >
+                  <i 
+                    :class="[
+                      repuesto.cantidad_disponible === 0 ? 'ri-error-warning-line' :
+                      repuesto.cantidad_disponible <= 3 ? 'ri-alert-line' :
+                      'ri-checkbox-circle-line'
+                    ]" 
+                    class="mr-1 text-xs"
+                  ></i>
+                  {{ repuesto.cantidad_disponible }} uds
+                  <span 
+                    v-if="repuesto.cantidad_disponible <= 3 && repuesto.cantidad_disponible > 0"
+                    class="ml-1 font-bold"
+                  >
+                    • ¡Bajo!
+                  </span>
+                  <span 
+                    v-else-if="repuesto.cantidad_disponible === 0"
+                    class="ml-1 font-bold"
+                  >
+                    • ¡Agotado!
+                  </span>
                 </span>
               </div>
             </div>
-            <div class="flex gap-1 flex-shrink-0 sm:ml-2">
-              <!-- Botón Marcar como Defectuoso -->
+            <div class="flex gap-1.5 flex-shrink-0">
               <button
                 @click="abrirModalDefectuoso(repuesto)"
-                class="p-1 sm:p-1.5 rounded-lg transition"
-                style="color: #9CA3AF"
-                @mouseenter="e => { e.currentTarget.style.color = '#EF4444'; e.currentTarget.style.backgroundColor = '#FEF2F2' }"
-                @mouseleave="e => { e.currentTarget.style.color = '#9CA3AF'; e.currentTarget.style.backgroundColor = 'transparent' }"
+                class="p-2 rounded-lg text-gray-500 hover:text-red-600 hover:bg-red-50 transition-all duration-200"
                 title="Marcar como defectuoso"
               >
-                <i class="ri-error-warning-line text-sm sm:text-base lg:text-lg"></i>
+                <i class="ri-error-warning-line text-sm"></i>
               </button>
               <button
                 @click="abrirModalAumentarStock(repuesto)"
-                class="p-1 sm:p-1.5 rounded-lg transition"
-                style="color: #9CA3AF"
-                @mouseenter="e => { e.currentTarget.style.color = '#10B981'; e.currentTarget.style.backgroundColor = '#ECFDF5' }"
-                @mouseleave="e => { e.currentTarget.style.color = '#9CA3AF'; e.currentTarget.style.backgroundColor = 'transparent' }"
+                class="p-2 rounded-lg text-gray-500 hover:text-green-600 hover:bg-green-50 transition-all duration-200"
                 title="Aumentar stock"
               >
-                <i class="ri-add-line text-sm sm:text-base lg:text-lg"></i>
+                <i class="ri-add-line text-sm"></i>
               </button>
               <NuxtLink
                 :to="`/repuestos/editar/${repuesto.id}`"
-                class="p-1 sm:p-1.5 rounded-lg transition"
-                style="color: #9CA3AF"
-                @mouseenter="e => { e.currentTarget.style.color = '#3B82F6'; e.currentTarget.style.backgroundColor = '#EFF6FF' }"
-                @mouseleave="e => { e.currentTarget.style.color = '#9CA3AF'; e.currentTarget.style.backgroundColor = 'transparent' }"
+                class="p-2 rounded-lg text-gray-500 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200"
                 title="Editar"
               >
-                <i class="ri-edit-line text-sm sm:text-base lg:text-lg"></i>
+                <i class="ri-edit-line text-sm"></i>
               </NuxtLink>
               <button
                 @click="confirmarEliminar(repuesto)"
-                class="p-1 sm:p-1.5 rounded-lg transition"
-                style="color: #9CA3AF"
-                @mouseenter="e => { e.currentTarget.style.color = '#EF4444'; e.currentTarget.style.backgroundColor = '#FEF2F2' }"
-                @mouseleave="e => { e.currentTarget.style.color = '#9CA3AF'; e.currentTarget.style.backgroundColor = 'transparent' }"
+                class="p-2 rounded-lg text-gray-500 hover:text-red-600 hover:bg-red-50 transition-all duration-200"
                 title="Eliminar"
               >
-                <i class="ri-delete-bin-line text-sm sm:text-base lg:text-lg"></i>
+                <i class="ri-delete-bin-line text-sm"></i>
               </button>
             </div>
           </div>
@@ -162,23 +198,39 @@
 
         <!-- Card body -->
         <div class="p-3 sm:p-4 lg:p-5 space-y-2 sm:space-y-3 flex-1">
-          <div class="flex items-center gap-2 text-xs sm:text-sm">
-            <i class="ri-shopping-cart-line flex-shrink-0 text-xs sm:text-sm" style="color: #9CA3AF"></i>
-            <span style="color: #6B7280">
-              <span class="hidden sm:inline">Precio costo:</span><span class="sm:hidden">Costo:</span> <span class="font-medium" style="color: #065F46">${{ repuesto.precio_costo || 0 }}</span>
-            </span>
-          </div>
-          <div v-if="repuesto.precio_venta" class="flex items-center gap-2 text-xs sm:text-sm">
-            <i class="ri-money-dollar-circle-line flex-shrink-0 text-xs sm:text-sm" style="color: #9CA3AF"></i>
-            <span style="color: #6B7280">
-              <span class="hidden sm:inline">Precio venta:</span><span class="sm:hidden">Venta:</span> <span class="font-medium" style="color: #10B981">${{ repuesto.precio_venta || 0 }}</span>
-            </span>
-          </div>
-          <div v-if="repuesto.precio_montaje" class="flex items-center gap-2 text-xs sm:text-sm">
-            <i class="ri-tools-line flex-shrink-0 text-xs sm:text-sm" style="color: #9CA3AF"></i>
-            <span style="color: #6B7280">
-              <span class="hidden sm:inline">Montaje:</span><span class="sm:hidden">Mont:</span> <span class="font-medium" style="color: #065F46">${{ repuesto.precio_montaje || 0 }}</span>
-            </span>
+          <!-- Grid de precios 2x2 -->
+          <div class="grid grid-cols-2 gap-2 sm:gap-3">
+            <!-- Precio Costo -->
+            <div class="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
+              <i class="ri-shopping-cart-line flex-shrink-0 text-xs sm:text-sm" style="color: #9CA3AF"></i>
+              <span style="color: #6B7280">
+                <span class="hidden xs:inline">Costo:</span><span class="xs:hidden">$</span> <span class="font-medium" style="color: #065F46">${{ repuesto.precio_costo || 0 }}</span>
+              </span>
+            </div>
+            
+            <!-- Precio Venta -->
+            <div v-if="repuesto.precio_venta" class="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
+              <i class="ri-money-dollar-circle-line flex-shrink-0 text-xs sm:text-sm" style="color: #9CA3AF"></i>
+              <span style="color: #6B7280">
+                <span class="hidden xs:inline">Venta:</span><span class="xs:hidden">$</span> <span class="font-medium" style="color: #10B981">${{ repuesto.precio_venta || 0 }}</span>
+              </span>
+            </div>
+            
+            <!-- Precio Montaje -->
+            <div v-if="repuesto.precio_montaje" class="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
+              <i class="ri-tools-line flex-shrink-0 text-xs sm:text-sm" style="color: #9CA3AF"></i>
+              <span style="color: #6B7280">
+                <span class="hidden xs:inline">Instalación:</span><span class="xs:hidden">$</span> <span class="font-medium" style="color: #065F46">${{ repuesto.precio_montaje || 0 }}</span>
+              </span>
+            </div>
+            
+            <!-- Precio Técnico -->
+            <div class="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
+              <i class="ri-user-settings-line flex-shrink-0 text-xs sm:text-sm" style="color: #9CA3AF"></i>
+              <span style="color: #6B7280">
+                <span class="hidden xs:inline">Otros talleres:</span><span class="xs:hidden">$</span> <span class="font-medium" style="color: #10B981">${{ repuesto.precio_tecnico || 0 }}</span>
+              </span>
+            </div>
           </div>
           
           <!-- PRECIO FINAL -->
@@ -192,6 +244,9 @@
                 <span class="text-base sm:text-lg font-bold" style="color: #F59E0B">
                   ${{ ((repuesto.precio_venta || 0) + (repuesto.precio_montaje || 0)).toFixed(2) }}
                 </span>
+                <div v-if="repuesto.precio_tecnico" class="text-xs text-gray-500 mt-1">
+                  Para otros talleres: ${{ (repuesto.precio_tecnico || 0).toFixed(2) }}
+                </div>
               </div>
             </div>
           </div>
@@ -201,20 +256,6 @@
             <span class="text-xs sm:text-sm truncate" style="color: #6B7280">
               <span class="hidden sm:inline">Agregado:</span><span class="sm:hidden">Add:</span> {{ formatearFecha(repuesto.created_at) }}
             </span>
-          </div>
-        </div>
-
-        <!-- Card footer stock bajo -->
-        <div v-if="repuesto.cantidad_disponible <= 5 && repuesto.cantidad_disponible > 0" class="px-3 sm:px-4 lg:px-5 py-2 sm:py-3 rounded-b-xl border-t" style="background-color: #FEF3C7; border-color: #FDE68A">
-          <div class="flex items-center gap-2 text-xs sm:text-sm" style="color: #D97706">
-            <i class="ri-alert-line flex-shrink-0 text-xs sm:text-sm"></i>
-            <span class="truncate"><span class="hidden sm:inline">Stock bajo. ¡Reabastecer pronto!</span><span class="sm:hidden">Stock bajo</span></span>
-          </div>
-        </div>
-        <div v-else-if="repuesto.cantidad_disponible === 0" class="px-3 sm:px-4 lg:px-5 py-2 sm:py-3 rounded-b-xl border-t" style="background-color: #FEE2E2; border-color: #FECACA">
-          <div class="flex items-center gap-2 text-xs sm:text-sm" style="color: #DC2626">
-            <i class="ri-error-warning-line flex-shrink-0 text-xs sm:text-sm"></i>
-            <span class="truncate"><span class="hidden sm:inline">Sin stock. ¡Urgente reabastecer!</span><span class="sm:hidden">Sin stock</span></span>
           </div>
         </div>
       </div>
@@ -426,6 +467,7 @@ const { repuestos, cargando, obtenerRepuestos, eliminarRepuesto, actualizarRepue
 const { tienda } = useAuth()
 
 const busqueda = ref('')
+const filtroStockBajo = ref(false)
 const modalEliminarVisible = ref(false)
 const repuestoAEliminar = ref(null)
 const eliminando = ref(false)
@@ -475,19 +517,35 @@ const perdidaEstimada = computed(() => {
   return total.toFixed(2)
 })
 
+// Función para alternar filtro de stock bajo
+const toggleFiltroStockBajo = () => {
+  filtroStockBajo.value = !filtroStockBajo.value
+}
+
 // Filtrado de repuestos
 const repuestosFiltrados = computed(() => {
-  if (!busqueda.value) return repuestos.value
-  const termino = busqueda.value.toLowerCase()
-  return repuestos.value.filter(r =>
-    r.nombre_repuesto.toLowerCase().includes(termino)
-  )
+  let filtrados = repuestos.value
+  
+  // Aplicar filtro de stock bajo si está activo
+  if (filtroStockBajo.value) {
+    filtrados = filtrados.filter(r => r.cantidad_disponible <= 3 && r.cantidad_disponible > 0)
+  }
+  
+  // Aplicar búsqueda por nombre
+  if (busqueda.value) {
+    const termino = busqueda.value.toLowerCase()
+    filtrados = filtrados.filter(r =>
+      r.nombre_repuesto.toLowerCase().includes(termino)
+    )
+  }
+  
+  return filtrados
 })
 
 // Clase de stock según cantidad
 const stockClass = (cantidad) => {
   if (cantidad === 0) return 'bg-red-100 text-red-700'
-  if (cantidad <= 5) return 'bg-yellow-100 text-yellow-700'
+  if (cantidad <= 3) return 'bg-yellow-100 text-yellow-700'
   return 'bg-green-100 text-green-700'
 }
 
