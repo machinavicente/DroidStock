@@ -49,7 +49,8 @@
         <div class="space-y-1">
           <label class="label-circuit">
             <i class="ri-store-2-line mr-1 text-[#10B981]"></i>
-            NOMBRE / USUARIO DEL TALLER
+            NOMBRE / USUARIO DEL TALLER:
+            <span class="text-[#10B981] slugLower">[{{ slugLive || 'tu-taller' }}]</span>
           </label>
           <div class="relative group">
             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -72,9 +73,6 @@
               <i class="ri-checkbox-circle-line text-[#10B981] text-base"></i>
             </div>
           </div>
-          <p class="text-[9px] font-mono text-gray-400">
-            TERMINAL: droidstock.com/<span class="text-[#10B981]">{{ slugLive || 'tu-taller' }}</span>
-          </p>
           <p class="text-[8px] font-mono text-gray-400">[REQUISITOS: letras, números, guiones | SIN ESPACIOS | TODO MINÚSCULAS]</p>
         </div>
 
@@ -122,7 +120,7 @@
         <!-- Contraseña -->
         <div class="space-y-1">
           <label class="label-circuit">
-            <i class="ri-lock-line mr-1 text-[10B981]"></i>
+            <i class="ri-lock-line mr-1 text-[#10B981]"></i>
             CONTRASEÑA
           </label>
           <div class="relative group">
@@ -154,7 +152,7 @@
 
       <!-- Link a login -->
       <div class="px-6 sm:px-8 py-6 mt-4 border-t border-[#D1D5DB] bg-[#F8FAFC]">
-        <p class="text-center text-[10px] font-mono text-gray-500">
+        <p class="text-center text-[12px] font-mono text-gray-500">
           ¿Ya tienes un taller registrado?
           <NuxtLink to="/login" class="text-[#10B981] hover:text-[#065F46] font-black uppercase tracking-wider transition-colors">
             INICIA SESIÓN AQUÍ
@@ -389,10 +387,12 @@ const handleRegistro = async () => {
   @apply w-full px-4 py-2.5 bg-[#F8FAFC] border-2 border-[#D1D5DB] rounded-xl focus:ring-0 focus:border-[#10B981] focus:bg-white transition-all text-sm font-bold text-[#334155] placeholder:text-gray-300 shadow-inner outline-none;
 }
 
-.label-circuit {
-  @apply text-[9px] font-black text-gray-400 uppercase tracking-widest flex items-center gap-1;
+.label-circuit{
+  @apply text-[11px] font-black text-gray-400 uppercase tracking-widest flex items-center gap-1;
 }
-
+.slugLower{
+  @apply text-[11px] lowercase 
+}
 @keyframes spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }

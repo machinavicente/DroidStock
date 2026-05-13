@@ -125,7 +125,7 @@
                 <th class="th-tech px-6 py-4 text-[10px] text-center w-32">ESTADO</th>
                 <th class="th-tech px-6 py-4 text-[10px] w-40">TÉCNICO</th>
                 <th class="th-tech px-6 py-4 text-[10px] w-28">ENTRADA</th>
-                <th class="th-tech px-6 py-4 text-[10px] text-center w-24">ACC.</th>
+                <th class="th-tech px-6 py-4 text-[10px] text-center w-24">ACCIÓN</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-[#D1D5DB]">
@@ -186,7 +186,7 @@
                   >
                     <i class="ri-cpu-line text-sm"></i>
                     <span class="hidden lg:inline">LOG_PARTS</span>
-                    <span class="lg:hidden">LOG</span>
+                    <span class="lg:hidden">LOG_PARTS</span>
                   </button>
                   <div v-else-if="reparacion.estado_servicio === 'Finalizado'" class="text-[10px] font-black text-[#10B981] flex items-center justify-center gap-1">
                     <i class="ri-shield-check-fill text-sm"></i> <span class="hidden lg:inline">READY_FOR_PICKUP</span><span class="lg:hidden">READY</span>
@@ -357,8 +357,8 @@
           <div class="flex gap-2 sm:gap-3 pt-2">
             <button @click="modalRepuestosVisible = false" class="flex-1 py-2.5 sm:py-3 text-xs sm:text-sm font-bold text-gray-500 hover:bg-gray-100 rounded-lg transition-colors">DESCARTAR</button>
             <button @click="finalizarConRepuestos" class="flex-[2] py-2.5 sm:py-3 bg-[#065F46] text-white text-xs sm:text-sm font-black rounded-lg shadow-lg hover:shadow-[#065F46]/30 transition-all uppercase tracking-wider border-b-4 border-[#033a2b]">
-              <span class="hidden sm:inline">EJECUTAR CIERRE</span>
-              <span class="sm:hidden">CERRAR</span>
+              <span class="hidden sm:inline">FINALIZAR_REPARACIÓN</span>
+              <span class="sm:hidden">FINALIZAR_REPARACIÓN</span>
             </button>
           </div>
         </div>

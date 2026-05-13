@@ -10,7 +10,7 @@
           <div class="flex justify-center mb-4">
             <div class="relative">
               <div class="w-16 h-16 sm:w-18 sm:h-18 bg-gradient-to-br from-[#065F46] to-[#10B981] rounded-2xl flex items-center justify-center shadow-lg">
-                <i class="ri-smartphone-line text-2xl sm:text-3xl text-white"></i>
+                <i class="ri-store-2-line text-2xl sm:text-3xl text-white"></i>
               </div>
               <div class="absolute -top-1 -right-1 w-3 h-3 bg-[#10B981] rounded-full animate-pulse shadow-lg"></div>
             </div>
@@ -19,7 +19,7 @@
           <div class="text-center mb-6">
             <div class="flex items-center justify-center gap-2 mb-2">
               <span class="h-1.5 w-1.5 bg-[#10B981] rounded-full"></span>
-              <span class="text-[10px] font-mono text-gray-400 uppercase tracking-widest">DroidStock_v5.0</span>
+              <span class="text-[10px] font-mono text-gray-400 uppercase tracking-widest">DroidStock_v1.0</span>
             </div>
             <h2 class="text-xl sm:text-2xl font-black text-[#065F46] uppercase tracking-tighter">Bienvenido</h2>
             <p class="text-[11px] font-mono text-gray-500 mt-1">Accede a tu terminal de gestión técnica</p>
@@ -49,7 +49,8 @@
         <div class="space-y-1">
           <label class="label-circuit">
             <i class="ri-store-2-line mr-1 text-[#10B981]"></i>
-            USUARIO DEL TALLER
+            USUARIO DEL TALLER: 
+            <span class="text-[#10B981] slugLower">[{{ form.slug || 'tu-taller' }}]</span>
           </label>
           <div class="relative group">
             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -73,9 +74,6 @@
               <i class="ri-checkbox-circle-line text-[#10B981] text-base"></i>
             </div>
           </div>
-          <p class="text-[9px] font-mono text-gray-400">
-            Terminal: droidstock.com/<span class="text-[#10B981]">{{ form.slug || 'tu-taller' }}</span>
-          </p>
           <p class="text-[8px] font-mono text-gray-400">[REQUISITOS: mínimo 3 caracteres, máximo 30 | SIN ESPACIOS]</p>
         </div>
 
@@ -114,7 +112,7 @@
 
       <!-- Link a registro -->
       <div class="px-6 sm:px-8 py-6 mt-4 border-t border-[#D1D5DB] bg-[#F8FAFC]">
-        <p class="text-center text-[10px] font-mono text-gray-500">
+        <p class="text-center text-[12px] font-mono text-gray-500">
           ¿Eres dueño de un taller?
           <NuxtLink to="/registro" class="text-[#10B981] hover:text-[#065F46] font-black uppercase tracking-wider transition-colors">
             REGISTRA TU TALLER
@@ -300,7 +298,10 @@ const handleLogin = async () => {
 }
 
 .label-circuit {
-  @apply text-[9px] font-black text-gray-400 uppercase tracking-widest flex items-center gap-1;
+  @apply text-[11px] font-black text-gray-400 uppercase tracking-widest flex items-center gap-1;
+}
+.slugLower{
+  @apply lowercase
 }
 
 @keyframes spin {
