@@ -59,6 +59,7 @@
                   v-model="form.nombre"
                   type="text"
                   required
+                  @input="validarNombre"
                   class="form-input-circuit pl-10"
                   placeholder="EJ: CARLOS RODRIGUEZ"
                 />
@@ -79,13 +80,13 @@
                   v-model="form.especialidad"
                   class="form-select-circuit"
                 >
-                  <option value="">-- SELECCIONAR ESPECIALIDAD --</option>
-                  <option value="Celulares">📱 SMARTPHONES</option>
-                  <option value="Tablets">📟 TABLETS / iPADS</option>
-                  <option value="Laptops">💻 LAPTOPS / NOTEBOOKS</option>
-                  <option value="PC">🖥️ PC / COMPUTADORAS</option>
-                  <option value="Consolas">🎮 CONSOLAS DE JUEGOS</option>
-                  <option value="General">🔧 GENERAL (TODAS)</option>
+                  <option value="" disabled>-- SELECCIONAR ESPECIALIDAD --</option>
+                  <option value="Celulares">CELULARES / SMARTSPHONES</option>
+                  <option value="Tablets">TABLETS / iPADS</option>
+                  <option value="Laptops">LAPTOPS / NOTEBOOKS</option>
+                  <option value="PC">COMPUTADORAS / PC</option>
+                  <option value="Consolas">CONSOLAS DE JUEGOS</option>
+                  <option value="General">GENERAL (TODAS)</option>
                 </select>
                 <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                   <i class="ri-arrow-down-s-line text-gray-400"></i>
@@ -106,6 +107,7 @@
                 <input
                   v-model="form.telefono"
                   type="tel"
+                  @input="validarTelefono"
                   class="form-input-circuit pl-10"
                   placeholder="04XX-XXXXXXX"
                 />
@@ -233,11 +235,34 @@ onMounted(async () => {
   }
 })
 
+const validarNombre = () => {
+  form.nombre = form.nombre.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '').toUpperCase()
+}
+
+const validarTelefono = () => {
+  form.telefono = form.telefono.replace(/[^0-9\-\+]/g, '')
+}
+
 const handleActualizar = async () => {
   // Validar campos requeridos
   if (!form.nombre || form.nombre.trim() === '') {
     mostrarToast('ERROR: NOMBRE_REQUERIDO', 'error')
     return
+  }
+
+  // Validar que el nombre solo contenga letras
+  if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(form.nombre)) {
+    mostrarToast('ERROR: NOMBRE_SOLO_LETRAS', 'error')
+    return
+  }
+
+  // Validar formato de teléfono si está presente
+  if (form.telefono && form.telefono.length > 0) {
+    const digitos = form.telefono.replace(/[^0-9]/g, '')
+    if (digitos.length < 10) {
+      mostrarToast('ERROR: TELEFONO_DEBE_TENER_AL_MENOS_10_DIGITOS', 'error')
+      return
+    }
   }
 
   guardando.value = true

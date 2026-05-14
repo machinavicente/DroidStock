@@ -54,6 +54,7 @@
                   v-model="form.nombre"
                   type="text"
                   required
+                  @input="validarNombre"
                   class="form-input-circuit pl-10"
                   placeholder="EJ: CARLOS RODRIGUEZ"
                 />
@@ -75,7 +76,7 @@
                   required
                   class="form-select-circuit"
                 >
-                  <option value="">-- SELECCIONAR ESPECIALIDAD --</option>
+                  <option value="" disabled>-- SELECCIONAR ESPECIALIDAD --</option>
                   <option value="Celulares">CELULARES / SMARTSPHONES</option>
                   <option value="Tablets">TABLETS / iPADS</option>
                   <option value="Laptops">LAPTOPS / NOTEBOOKS</option>
@@ -103,6 +104,7 @@
                   v-model="form.telefono"
                   type="tel"
                   required
+                  @input="validarTelefono"
                   class="form-input-circuit pl-10"
                   placeholder="04XX-XXXXXXX"
                 />
@@ -192,6 +194,14 @@ const formularioValido = computed(() => {
          form.telefono.trim() !== ''
 })
 
+const validarNombre = () => {
+  form.nombre = form.nombre.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '').toUpperCase()
+}
+
+const validarTelefono = () => {
+  form.telefono = form.telefono.replace(/[^0-9\-\+]/g, '')
+}
+
 const guardarTecnico = async () => {
   // Validar campos requeridos
   if (!form.nombre || form.nombre.trim() === '') {
@@ -206,6 +216,19 @@ const guardarTecnico = async () => {
 
   if (!form.telefono || form.telefono.trim() === '') {
     mostrarToast('ERROR: TELEFONO_REQUERIDO', 'error')
+    return
+  }
+
+  // Validar formato de teléfono (mínimo 10 dígitos)
+  const digitos = form.telefono.replace(/[^0-9]/g, '')
+  if (digitos.length < 10) {
+    mostrarToast('ERROR: TELEFONO_DEBE_TENER_AL_MENOS_10_DIGITOS', 'error')
+    return
+  }
+
+  // Validar que el nombre solo contenga letras
+  if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(form.nombre)) {
+    mostrarToast('ERROR: NOMBRE_SOLO_LETRAS', 'error')
     return
   }
 

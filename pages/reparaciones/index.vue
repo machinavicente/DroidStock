@@ -345,7 +345,10 @@
           </div>
 
           <div v-if="repuestosTemp.length > 0" class="bg-gray-50 rounded-lg p-3 border border-[#D1D5DB]">
-            <span class="text-[10px] font-black text-gray-400 uppercase block mb-2">Queue_Summary</span>
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-[10px] font-black text-gray-400 uppercase">Repuestos Agregados ({{ repuestosTemp.length }})</span>
+              <span class="text-[10px] font-bold text-[#10B981] bg-[#10B981]/10 px-2 py-1 rounded">{{ repuestosTemp.length }} items</span>
+            </div>
             <div class="space-y-2 max-h-32 overflow-y-auto pr-2">
               <div v-for="(item, idx) in repuestosTemp" :key="idx" class="flex justify-between items-center bg-white p-2 rounded border border-gray-200 shadow-sm">
                 <span class="text-xs font-bold text-[#334155]">{{ item.nombre }} <span class="text-[#10B981]">x{{ item.cantidad }}</span></span>
