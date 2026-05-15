@@ -668,6 +668,7 @@ const exportarPDF = async () => {
                 <th style="padding: 12px; text-align: center;">Estado</th>
                 <th style="padding: 12px; text-align: left;">Técnico</th>
                 <th style="padding: 12px; text-align: left;">Fecha Ingreso</th>
+                <th style="padding: 12px; text-align: left;">Repuestos Usados</th>
               </tr>
             </thead>
             <tbody>
@@ -681,19 +682,24 @@ const exportarPDF = async () => {
                   </td>
                   <td style="padding: 10px 12px; color: #374151;">${item.tecnicos?.nombre || 'UNASSIGNED'}</td>
                   <td style="padding: 10px 12px; color: #374151;">${formatearFecha(item.fecha_ingreso)}</td>
+                  <td style="padding: 10px 12px; color: #374151; font-size: 11px;">
+                    ${item.reparacion_repuestos && item.reparacion_repuestos.length > 0 
+                      ? item.reparacion_repuestos.map(r => `${r.stock_repuestos?.nombre_repuesto || 'N/A'} (x${r.cantidad})`).join(', ') 
+                      : '-'}
+                  </td>
                 </tr>
               `).join('')}
             </tbody>
             <tfoot>
               <tr style="background: #F9FAFB; border-top: 2px solid #D1D5DB;">
-                <td style="padding: 12px; font-weight: bold; color: #065F46;" colspan="6">TOTAL REPARACIONES: ${totalReparaciones.value}</td>
+                <td style="padding: 12px; font-weight: bold; color: #065F46;" colspan="7">TOTAL REPARACIONES: ${totalReparaciones.value}</td>
               </tr>
             </tfoot>
           </table>
         </div>
         
-        <div style="margin-top: 30px; padding-top: 15px; border-top: 1px solid #E5E7EB; text-align: center; font-size: 9px; color: #6B7280;">
-          <p>Reporte generado automáticamente por DroidStock - Inventory & Repair Management System</p>
+        <div style="margin-top: 30px; padding-top: 15px; border-top: 1px solid #E5E7EB; text-align: center; font-size: 8px; color: #6B7280;">
+          <p style="margin: 0; line-height: 2.4;">Reporte generado automáticamente por DroidStock<br>Inventory & Repair Management System</p>
         </div>
       </div>
     `

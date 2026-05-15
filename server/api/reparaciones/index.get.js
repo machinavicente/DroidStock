@@ -15,7 +15,16 @@ export default defineEventHandler(async (event) => {
     .select(`
       *,
       clientes (nombre_completo, dni_cedula, telefono),
-      tecnicos (nombre)
+      tecnicos (nombre),
+      reparacion_repuestos (
+        cantidad,
+        precio_unitario,
+        stock_repuestos (
+          id,
+          nombre_repuesto,
+          precio_costo
+        )
+      )
     `)
     .eq('tienda_id', tiendaId)
 
