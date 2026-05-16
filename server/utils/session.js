@@ -20,7 +20,8 @@ export async function getSession(event) {
       usuarios_admin (
         id,
         nombre_apellido,
-        email
+        email,
+        created_at
       ),
       tiendas (
         id,

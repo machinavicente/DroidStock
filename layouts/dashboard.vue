@@ -173,6 +173,17 @@
               <i class="ri-error-warning-line text-xl"></i>
               <span class="ml-3">Repuestos Defectuosos</span>
             </NuxtLink>
+
+            <!-- Perfil -->
+            <NuxtLink
+              to="/perfil"
+              class="flex items-center rounded-lg px-4 py-3 transition group"
+              style="color: #D1D5DB"
+              @click="sidebarAbierta = false"
+            >
+              <i class="ri-user-line text-xl"></i>
+              <span class="ml-3">Mi Perfil</span>
+            </NuxtLink>
           </nav>
 
           <!-- Footer del sidebar -->
@@ -285,6 +296,16 @@
               >
                 <i class="ri-error-warning-line text-xl"></i>
                 <span class="ml-3">Repuestos Defectuosos</span>
+              </NuxtLink>
+              <!-- Perfil -->
+              <NuxtLink
+                to="/perfil"
+                class="flex items-center rounded-lg px-4 py-3 transition group"
+                style="color: #D1D5DB"
+                @click="sidebarAbierta = false"
+              >
+                <i class="ri-user-line text-xl"></i>
+                <span class="ml-3">Mi Perfil</span>
               </NuxtLink>
             </nav>
 
