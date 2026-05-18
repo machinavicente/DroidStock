@@ -270,7 +270,10 @@ const handleLogin = async () => {
       successMessage.value = '[OK] LOGIN_EXITOSO - REDIRIGIENDO...'
       
       setTimeout(() => {
-        router.push('/dashboard')
+        // Verificar si hay una ruta de redirección guardada
+        const route = useRoute()
+        const redirectPath = route.query.redirect || '/dashboard'
+        router.push(redirectPath)
       }, 500)
     } else {
       errorMessage.value = result.error || '[ERR_AUTH] ERROR_AL_INICIAR'

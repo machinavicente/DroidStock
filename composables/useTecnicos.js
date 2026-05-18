@@ -3,12 +3,13 @@ export const useTecnicos = () => {
   const cargando = ref(false)
   const error = ref(null)
 
-  const obtenerTecnicos = async () => {
+  const obtenerTecnicos = async (incluirInactivos = false) => {
     cargando.value = true
     error.value = null
     
     try {
-      const data = await $fetch('/api/tecnicos')
+      const params = incluirInactivos ? { incluir_inactivos: 'true' } : {}
+      const data = await $fetch('/api/tecnicos', { params })
       tecnicos.value = data || []
       return data
     } catch (err) {
@@ -63,15 +64,16 @@ export const useTecnicos = () => {
     }
   }
 
-  const desactivarTecnico = async (id) => {
+  const desactivarTecnico = async (id, motivoDesactivacion) => {
     try {
       const response = await $fetch(`/api/tecnicos/${id}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        body: { motivo_desactivacion: motivoDesactivacion }
       })
       
       if (response.success) {
         await obtenerTecnicos()
-        return { success: true, message: response.message }
+        return { success: true, message: response.message, data: response.data }
       }
       return { success: false, error: 'Error al desactivar técnico' }
     } catch (err) {
@@ -83,6 +85,26 @@ export const useTecnicos = () => {
     }
   }
 
+  const reactivarTecnico = async (id) => {
+    try {
+      const response = await $fetch(`/api/tecnicos/${id}/reactivate`, {
+        method: 'PATCH'
+      })
+      
+      if (response.success) {
+        await obtenerTecnicos()
+        return { success: true, message: response.message }
+      }
+      return { success: false, error: 'Error al reactivar técnico' }
+    } catch (err) {
+      console.error('Error en reactivarTecnico:', err)
+      return { 
+        success: false, 
+        error: err.data?.message || 'Error al reactivar técnico' 
+      }
+    }
+  }
+
   return {
     tecnicos,
     cargando,
@@ -90,6 +112,7 @@ export const useTecnicos = () => {
     obtenerTecnicos,
     crearTecnico,
     actualizarTecnico,
-    desactivarTecnico
+    desactivarTecnico,
+    reactivarTecnico
   }
 }

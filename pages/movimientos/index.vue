@@ -98,10 +98,7 @@
           <label class="block text-sm font-semibold opacity-0" style="color: #065F46">Acciones</label>
           <button 
             @click="limpiarFiltros" 
-            class="w-full px-6 py-3 rounded-xl text-sm font-medium transition-all border-2 hover:bg-gray-50 sm:col-span-2 sm:mx-auto"
-            style="background-color: #F9FAFB; border-color: #E5E7EB; color: #6B7280;"
-            @mouseenter="e => e.currentTarget.style.backgroundColor = '#F3F4F6'"
-            @mouseleave="e => e.currentTarget.style.backgroundColor = '#F9FAFB'"
+            class="w-full px-6 py-3 rounded-xl text-sm font-medium transition-all border-2 bg-white border border-[#D1D5DB] rounded-lg hover:bg-gray-50 sm:col-span-2 sm:mx-auto"
           >
             <i class="ri-refresh-line mr-2"></i>
             <span class="hidden sm:inline">Limpiar filtros</span>
@@ -345,41 +342,41 @@ const actualizarFechasPorPeriodo = () => {
   const hoy = new Date()
   let fechaDesde = null
   let fechaHasta = null
-  
+
   switch (filtros.periodo) {
     case 'hoy':
       fechaDesde = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 0, 0, 0)
-      fechaHasta = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 23, 59, 59)
+      fechaHasta = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 23, 59, 59, 999)
       break
     case 'semana':
       fechaDesde = new Date(hoy.getTime() - (7 * 24 * 60 * 60 * 1000))
-      fechaHasta = hoy
+      fechaHasta = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 23, 59, 59, 999)
       break
     case 'mes':
       fechaDesde = new Date(hoy.getFullYear(), hoy.getMonth() - 1, hoy.getDate())
-      fechaHasta = hoy
+      fechaHasta = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 23, 59, 59, 999)
       break
     case 'ano':
       fechaDesde = new Date(hoy.getFullYear(), 0, 1)
-      fechaHasta = hoy
+      fechaHasta = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 23, 59, 59, 999)
       break
     default:
       fechaDesde = null
       fechaHasta = null
   }
-  
+
   if (fechaDesde) {
-    filtros.fecha_desde = fechaDesde.toISOString().split('T')[0]
+    filtros.fecha_desde = fechaDesde.toISOString()
   } else {
     filtros.fecha_desde = ''
   }
-  
+
   if (fechaHasta) {
-    filtros.fecha_hasta = fechaHasta.toISOString().split('T')[0]
+    filtros.fecha_hasta = fechaHasta.toISOString()
   } else {
     filtros.fecha_hasta = ''
   }
-  
+
   paginaActual.value = 1
   cargarMovimientos()
 }

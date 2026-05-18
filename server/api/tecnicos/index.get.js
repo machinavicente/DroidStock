@@ -6,15 +6,22 @@ export default defineEventHandler(async (event) => {
     const session = await requireAuth(event)
     const tiendaId = session.tienda_id
 
+    const query = getQuery(event)
+    const incluirInactivos = query.incluir_inactivos === 'true'
+
     const supabase = createServerClient()
 
-    // Solo obtener técnicos activos
-    const { data: tecnicos, error } = await supabase
+    // Obtener técnicos (activos o todos según el parámetro)
+    let queryBuilder = supabase
       .from('tecnicos')
       .select('*')
       .eq('tienda_id', tiendaId)
-      .eq('activo', true)  // ← Solo activos
-      .order('created_at', { ascending: false })
+
+    if (!incluirInactivos) {
+      queryBuilder = queryBuilder.eq('activo', true)
+    }
+
+    const { data: tecnicos, error } = await queryBuilder.order('created_at', { ascending: false })
 
     if (error) {
       throw createError({

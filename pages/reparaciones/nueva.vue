@@ -87,16 +87,16 @@
           <div class="p-6 space-y-4">
             <div class="space-y-1">
               <label class="label-circuit">Nombre Completo <span class="text-red-500">*</span></label>
-              <input v-model="form.cliente_nombre" type="text" required class="form-input-circuit" placeholder="EJ: JUAN PEREZ" />
+              <input v-model="form.cliente_nombre" type="text" required class="form-input-circuit" placeholder="EJ: JUAN PEREZ" @input="form.cliente_nombre = form.cliente_nombre.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '')" />
             </div>
             <div class="grid grid-cols-2 gap-4">
               <div class="space-y-1">
                 <label class="label-circuit">Teléfono <span class="text-red-500">*</span></label>
-                <input v-model="form.cliente_telefono" required type="tel" class="form-input-circuit" placeholder="0414-1234567" />
+                <input v-model="form.cliente_telefono" required type="tel" class="form-input-circuit" placeholder="0414-1234567" @input="form.cliente_telefono = form.cliente_telefono.replace(/[^0-9\-]/g, '')" />
               </div>
               <div class="space-y-1">
                 <label class="label-circuit">DNI (opcional)</label>
-                <input v-model="form.cliente_dni" type="text" class="form-input-circuit" placeholder="V-12345678" />
+                <input v-model="form.cliente_dni" type="text" class="form-input-circuit" placeholder="V-12345678" @input="form.cliente_dni = form.cliente_dni.replace(/[^0-9Vv\-]/g, '')" />
               </div>
             </div>
             <div class="space-y-1">

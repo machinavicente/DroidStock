@@ -6,13 +6,22 @@ export default defineEventHandler(async (event) => {
   const tiendaId = session.tienda_id
 
   const id = getRouterParam(event, 'id')
+  const body = await readBody(event)
+  const { motivo_desactivacion } = body
+
+  if (!motivo_desactivacion) {
+    throw createError({
+      statusCode: 400,
+      message: 'El motivo de desactivación es requerido'
+    })
+  }
 
   const supabase = createServerClient()
 
   // Verificar si el técnico existe y pertenece a la tienda
   const { data: tecnico, error: findError } = await supabase
     .from('tecnicos')
-    .select('id, activo')
+    .select('id, activo, nombre')
     .eq('id', id)
     .eq('tienda_id', tiendaId)
     .single()
@@ -31,10 +40,22 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  // En lugar de eliminar, desactivamos
+  // Verificar reparaciones activas
+  const { count: reparacionesActivas } = await supabase
+    .from('reparaciones')
+    .select('id', { count: 'exact', head: true })
+    .eq('tecnico_id', id)
+    .in('estado_servicio', ['En curso', 'En reparacion'])
+
+  // En lugar de eliminar, desactivamos con motivo y fecha
   const { error: updateError } = await supabase
     .from('tecnicos')
-    .update({ activo: false })
+    .update({
+      activo: false,
+      fecha_desactivacion: new Date().toISOString(),
+      motivo_desactivacion: motivo_desactivacion,
+      fecha_reactivacion: null
+    })
     .eq('id', id)
 
   if (updateError) {
@@ -46,6 +67,9 @@ export default defineEventHandler(async (event) => {
 
   return {
     success: true,
-    message: 'Técnico desactivado exitosamente'
+    message: 'Técnico desactivado exitosamente',
+    data: {
+      reparaciones_activas: reparacionesActivas || 0
+    }
   }
 })

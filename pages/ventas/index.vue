@@ -288,6 +288,7 @@ const mostrarNotificacion = (mensaje, tipo = 'success') => {
 const filtros = reactive({
   busqueda: '',
   periodo: '',
+  fecha_inicio: '',
   fecha_fin: ''
 })
 
@@ -308,10 +309,10 @@ const ventasFiltradas = computed(() => {
     )
   }
 
-  if (filtros.fecha_fin) {
+  if (filtros.fecha_inicio && filtros.fecha_fin) {
     resultado = resultado.filter(v => {
       const fechaVenta = new Date(v.created_at).toISOString().split('T')[0]
-      return fechaVenta <= filtros.fecha_fin
+      return fechaVenta >= filtros.fecha_inicio && fechaVenta <= filtros.fecha_fin
     })
   }
 
@@ -353,7 +354,7 @@ const paginaSiguiente = () => {
 
 
 // Reiniciar página si cambian los filtros
-watch([() => filtros.busqueda, () => filtros.fecha_fin], () => {
+watch([() => filtros.busqueda, () => filtros.fecha_inicio, () => filtros.fecha_fin], () => {
   paginaActual.value = 1
 })
 
@@ -397,24 +398,29 @@ const aplicarPeriodo = () => {
   
   switch (filtros.periodo) {
     case 'hoy':
+      filtros.fecha_inicio = hoy.toISOString().split('T')[0]
       filtros.fecha_fin = hoy.toISOString().split('T')[0]
       break
     case 'ultima_semana':
       const inicioSemana = new Date(hoy)
       inicioSemana.setDate(hoy.getDate() - 7)
+      filtros.fecha_inicio = inicioSemana.toISOString().split('T')[0]
       filtros.fecha_fin = hoy.toISOString().split('T')[0]
       break
     case 'ultimo_mes':
       const inicioMes = new Date(hoy)
       inicioMes.setMonth(hoy.getMonth() - 1)
+      filtros.fecha_inicio = inicioMes.toISOString().split('T')[0]
       filtros.fecha_fin = hoy.toISOString().split('T')[0]
       break
     case 'ultimo_ano':
       const inicioAno = new Date(hoy)
       inicioAno.setFullYear(hoy.getFullYear() - 1)
+      filtros.fecha_inicio = inicioAno.toISOString().split('T')[0]
       filtros.fecha_fin = hoy.toISOString().split('T')[0]
       break
     default:
+      filtros.fecha_inicio = ''
       filtros.fecha_fin = ''
   }
 }
@@ -422,6 +428,7 @@ const aplicarPeriodo = () => {
 const limpiarFiltros = () => {
   filtros.busqueda = ''
   filtros.periodo = ''
+  filtros.fecha_inicio = ''
   filtros.fecha_fin = ''
   mostrarNotificacion('Filtros reiniciados', 'success')
 }

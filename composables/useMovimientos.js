@@ -13,6 +13,8 @@ export const useMovimientos = () => {
       if (filters.tienda_id) queryParams.append('tienda_id', filters.tienda_id)
       if (filters.tipo) queryParams.append('tipo', filters.tipo)
       if (filters.repuesto_id) queryParams.append('repuesto_id', filters.repuesto_id)
+      if (filters.fecha_desde) queryParams.append('fecha_desde', filters.fecha_desde)
+      if (filters.fecha_hasta) queryParams.append('fecha_hasta', filters.fecha_hasta)
       if (filters.limit) queryParams.append('limit', filters.limit)
       if (filters.offset) queryParams.append('offset', filters.offset)
       

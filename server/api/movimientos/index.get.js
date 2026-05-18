@@ -4,7 +4,7 @@ export default defineEventHandler(async (event) => {
   try {
     const supabase = createServerClient()
     const query = getQuery(event)
-    const { tienda_id, tipo, repuesto_id, limit = 50, offset = 0 } = query
+    const { tienda_id, tipo, repuesto_id, fecha_desde, fecha_hasta, limit = 50, offset = 0 } = query
 
     if (!tienda_id) {
       throw createError({
@@ -37,6 +37,12 @@ export default defineEventHandler(async (event) => {
     if (repuesto_id) {
       queryBuilder = queryBuilder.eq('repuesto_id', repuesto_id)
     }
+    if (fecha_desde) {
+      queryBuilder = queryBuilder.gte('created_at', fecha_desde)
+    }
+    if (fecha_hasta) {
+      queryBuilder = queryBuilder.lte('created_at', fecha_hasta)
+    }
 
     const { data: movimientos, error } = await queryBuilder
 
@@ -48,10 +54,26 @@ export default defineEventHandler(async (event) => {
     }
 
     // Obtener total de registros para paginación
-    const { count, error: countError } = await supabase
+    let countQuery = supabase
       .from('movimientos_inventario')
       .select('*', { count: 'exact', head: true })
       .eq('tienda_id', tienda_id)
+
+    // Aplicar los mismos filtros de fecha al contador
+    if (tipo) {
+      countQuery = countQuery.eq('tipo', tipo)
+    }
+    if (repuesto_id) {
+      countQuery = countQuery.eq('repuesto_id', repuesto_id)
+    }
+    if (fecha_desde) {
+      countQuery = countQuery.gte('created_at', fecha_desde)
+    }
+    if (fecha_hasta) {
+      countQuery = countQuery.lte('created_at', fecha_hasta)
+    }
+
+    const { count, error: countError } = await countQuery
 
     if (countError) {
       console.error('Error al obtener el total de movimientos:', countError)
