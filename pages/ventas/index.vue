@@ -72,8 +72,8 @@
               class="w-full px-4 sm:px-6 py-2.5 text-[#334155] font-bold bg-white border border-[#D1D5DB] rounded-lg hover:bg-gray-50 transition-all text-xs flex items-center justify-center gap-2"
             >
               <i class="ri-refresh-line"></i>
-              <span class="hidden sm:inline">RESET FILTROS</span>
-              <span class="sm:hidden">RESET</span>
+              <span class="hidden sm:inline">Limpiar Filtros</span>
+              <span class="sm:hidden">Limpiar</span>
             </button>
           </div>
         </div>
@@ -543,10 +543,6 @@ const exportarPDF = async () => {
               </tr>
             </tfoot>
           </table>
-        </div>
-        
-        <div style="margin-top: 30px; padding-top: 15px; border-top: 1px solid #E5E7EB; text-align: center; font-size: 9px; color: #6B7280;">
-          <p>Reporte generado automáticamente por DroidStock - Inventory & Repair Management System</p>
         </div>
       </div>
     `

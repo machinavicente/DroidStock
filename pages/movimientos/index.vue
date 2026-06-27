@@ -547,10 +547,6 @@ const exportarMovimientosPDF = async () => {
             </tbody>
           </table>
         </div>
-        
-        <div style="margin-top: 30px; padding-top: 15px; border-top: 1px solid #E5E7EB; text-align: center; font-size: 9px; color: #6B7280;">
-          <p>Reporte generado automáticamente por DroidStock - Inventory & Repair Management System</p>
-        </div>
       </div>
     `
     

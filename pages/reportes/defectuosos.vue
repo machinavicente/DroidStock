@@ -119,7 +119,7 @@
         <div class="flex justify-end mt-4">
           <button @click="limpiarFiltros" class="px-4 py-2 bg-white border border-gray-300 rounded-lg flex items-center gap-2 font-bold text-blue-900 hover:bg-gray-50 transition-colors">
             <i class="ri-refresh-line text-blue-900"></i>
-            RESET FILTROS
+            Limpiar Filtros
           </button>
         </div>
       </div>
@@ -484,10 +484,6 @@ const exportarPDF = async () => {
               </tr>
             </tfoot>
           </table>
-        </div>
-        
-        <div style="margin-top: 30px; padding-top: 15px; border-top: 1px solid #E5E7EB; text-align: center; font-size: 9px; color: #6B7280;">
-          <p>Reporte generado automáticamente por DroidStock - Inventory & Repair Management System</p>
         </div>
       </div>
     `

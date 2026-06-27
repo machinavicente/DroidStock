@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="min-h-screen bg-[#F3F4F6]">
     <!-- ============================================ -->
     <!-- NAVBAR CON PRUEBA SOCIAL Y ESCASEZ EN HEADER -->
@@ -141,17 +141,14 @@
               <div class="flex flex-col justify-center text-left text-sm text-gray-500">
                 <div class="flex items-center gap-3">
                   <div class="flex items-center gap-1">
-                    <i class="ri-checkbox-circle-fill text-[#10B981] text-xs"></i>
                     <span>6 meses gratis</span>
                   </div>
                   <div class="w-px h-3 bg-gray-300"></div>
                   <div class="flex items-center gap-1">
-                    <i class="ri-checkbox-circle-fill text-[#10B981] text-xs"></i>
                     <span>Sin tarjeta</span>
                   </div>
                   <div class="w-px h-3 bg-gray-300"></div>
                   <div class="flex items-center gap-1">
-                    <i class="ri-checkbox-circle-fill text-[#10B981] text-xs"></i>
                     <span>Cancelas cuando quieras</span>
                   </div>
                 </div>
@@ -412,10 +409,10 @@
             <div class="flex items-center gap-3">
               <div
                 class="w-10 h-10 rounded-full bg-[#065F46] flex items-center justify-center text-white font-bold text-sm">
-                CM</div>
+                JM</div>
               <div>
-                <p class="text-xs font-black text-[#065F46]">Carlos Méndez</p>
-                <p class="text-[9px] text-gray-400">Dueño · TecnoRepair Center</p>
+                <p class="text-xs font-black text-[#065F46]">Jorge Melendez</p>
+                <p class="text-[9px] text-gray-400">Dueño · TecnoRepair Center - Caracas</p>
               </div>
             </div>
           </div>
@@ -439,7 +436,7 @@
                 AR</div>
               <div>
                 <p class="text-xs font-black text-[#065F46]">Ana Rodríguez</p>
-                <p class="text-[9px] text-gray-400">Gerente · FixTech Solutions</p>
+                <p class="text-[9px] text-gray-400">Dueña · Computronics - Maracay</p>
               </div>
             </div>
           </div>
@@ -463,7 +460,7 @@
                 JL</div>
               <div>
                 <p class="text-xs font-black text-[#065F46]">Javier López</p>
-                <p class="text-[9px] text-gray-400">Fundador · SmartFix</p>
+                <p class="text-[9px] text-gray-400">Dueño · AMGCOMPUTER - Manizales</p>
               </div>
             </div>
           </div>
@@ -486,7 +483,7 @@
             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
             <span class="relative inline-flex rounded-full h-3 w-3 bg-white"></span>
           </span>
-          <span class="text-[10px] font-mono text-white/80 uppercase tracking-widest">Últimas plazas · Oferta
+          <span class="text-[10px] font-mono text-white/80 uppercase tracking-widest">Oferta
             especial</span>
         </div>
 
@@ -508,11 +505,11 @@
 
           <!-- Microcopy de confianza -->
           <div class="flex items-center gap-4 text-[10px] text-white/60">
-            <span class="flex items-center gap-1"><i class="ri-lock-line"></i> Datos seguros</span>
+            <span class="flex items-center gap-1">Datos seguros</span>
             <span>•</span>
-            <span class="flex items-center gap-1"><i class="ri-refund-line"></i> Cancelas cuando quieras</span>
+            <span class="flex items-center gap-1">Cancelas cuando quieras</span>
             <span>•</span>
-            <span class="flex items-center gap-1"><i class="ri-customer-service-line"></i> Soporte 24/7</span>
+            <span class="flex items-center gap-1">Soporte 24/7</span>
           </div>
         </div>
 
@@ -528,62 +525,153 @@
     <!-- ============================================ -->
     <!-- FOOTER                                      -->
     <!-- ============================================ -->
-<footer class="bg-white border-t border-[#D1D5DB] py-8">
-  <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+    <footer class="bg-white border-t border-[#D1D5DB] text-gray-700">
+      <!-- Main Footer Content -->
+      <div class="max-w-7xl mx-auto px-6 py-12">
+        <div class="grid md:grid-cols-4 gap-8">
+          
+          <!-- Columna 1: Brand -->
+          <div class="space-y-4">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-gradient-to-br from-[#065F46] to-[#10B981] rounded-lg flex items-center justify-center shadow-lg">
+                <i class="ri-smartphone-line text-white text-lg"></i>
+              </div>
+              <span class="text-xl font-black text-[#065F46] uppercase tracking-tighter">
+                DROID<span class="text-[#10B981]">STOCK</span>
+              </span>
+            </div>
+            <p class="text-sm text-gray-600 leading-relaxed">
+              Sistema de gestión inteligente para talleres de reparación electrónica. Controla tu inventario, aumenta tus ganancias.
+            </p>
+            <!-- Redes Sociales -->
+            <div class="flex gap-3">
+              <a href="https://instagram.com" target="_blank" class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-[#065F46] hover:text-white transition-all">
+                <i class="ri-instagram-line text-lg"></i>
+              </a>
+              <a href="https://facebook.com" target="_blank" class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-[#065F46] hover:text-white transition-all">
+                <i class="ri-facebook-fill text-lg"></i>
+              </a>
+              <a href="https://linkedin.com" target="_blank" class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-[#065F46] hover:text-white transition-all">
+                <i class="ri-linkedin-fill text-lg"></i>
+              </a>
+              <a href="https://twitter.com" target="_blank" class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-[#065F46] hover:text-white transition-all">
+                <i class="ri-twitter-x-line text-lg"></i>
+              </a>
+            </div>
+          </div>
 
-    <!-- Logo + nombre -->
-    <div class="flex items-center gap-3">
-      <div class="w-8 h-8 bg-gradient-to-br from-[#065F46] to-[#10B981] rounded-lg flex items-center justify-center shadow-sm">
-        <i class="ri-smartphone-line text-white text-sm"></i>
-      </div>
-      <span class="text-base font-black text-[#065F46] uppercase tracking-tighter">
-        DROID<span class="text-[#10B981]">STOCK</span>
-      </span>
-    </div>
+          <!-- Columna 2: Enlaces Rápidos -->
+          <div>
+            <h3 class="text-sm font-black uppercase tracking-wider mb-4 text-[#065F46]">
+              Producto
+            </h3>
+            <ul class="space-y-3">
+              <li>
+                <NuxtLink to="/registro" class="text-sm text-gray-600 hover:text-[#065F46] transition flex items-center gap-2">
+                  <i class="ri-arrow-right-s-line text-[#10B981]"></i>
+                  Comenzar Gratis
+                </NuxtLink>
+              </li>
+              <li>
+                <NuxtLink to="/login" class="text-sm text-gray-600 hover:text-[#065F46] transition flex items-center gap-2">
+                  <i class="ri-arrow-right-s-line text-[#10B981]"></i>
+                  Iniciar Sesión
+                </NuxtLink>
+              </li>
+            </ul>
+          </div>
 
-    <!-- Soporte + contacto (más amigable y visible) -->
-    <div class="flex flex-col md:flex-row gap-4 md:gap-8 text-xs font-mono">
-      <!-- Badge de soporte activo -->
-      <div class="flex items-center gap-2 bg-[#ECFDF5] px-3 py-1 rounded-full">
-        <span class="relative flex h-2 w-2">
-          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#10B981] opacity-75"></span>
-          <span class="relative inline-flex rounded-full h-2 w-2 bg-[#065F46]"></span>
-        </span>
-        <span class="text-[#065F46] font-semibold text-[10px]">Soporte activo</span>
-      </div>
-      
-      <!-- Email -->
-<div class="flex items-center gap-2 group">
-  <i class="ri-mail-line text-[#10B981] text-sm"></i>
-  <a href="https://mail.google.com/mail/?view=cm&fs=1&to=vicentemachina.dev@gmail.com&su=Soporte%20DROIDSTOCK%20-%20Consulta%20t%C3%A9cnica" 
-     target="_blank"
-     class="hover:text-[#065F46] transition text-gray-600">
-     vicentemachina.dev@gmail.com
-  </a>
-</div>
-      
-      <!-- WhatsApp con mensaje directo -->
-      <div class="flex items-center gap-2 group">
-        <i class="ri-whatsapp-line text-[#10B981] text-sm"></i>
-        <a href="https://wa.me/5804267379617?text=Hola%2C%20necesito%20soporte%20t%C3%A9cnico%20para%20DROIDSTOCK" 
-           class="hover:text-[#065F46] transition text-gray-600 group-hover:underline"
-           target="_blank">
-           +58 0426 7379-617
-        </a>
-      </div>
-    </div>
+          <!-- Columna 3: Contacto -->
+          <div>
+            <h3 class="text-sm font-black uppercase tracking-wider mb-4 text-[#065F46]">
+              Contacto
+            </h3>
+            <ul class="space-y-4">
+              <li class="flex items-start gap-3">
+                <div class="w-8 h-8 bg-[#ECFDF5] rounded-lg flex items-center justify-center flex-shrink-0">
+                  <i class="ri-mail-line text-[#065F46]"></i>
+                </div>
+                <div>
+                  <p class="text-xs text-gray-400">Email</p>
+                  <a href="mailto:vicentemachina.dev@gmail.com" class="text-sm text-gray-600 hover:text-[#065F46] transition">
+                    vicentemachina.dev@gmail.com
+                  </a>
+                </div>
+              </li>
+              <li class="flex items-start gap-3">
+                <div class="w-8 h-8 bg-[#ECFDF5] rounded-lg flex items-center justify-center flex-shrink-0">
+                  <i class="ri-whatsapp-line text-[#065F46]"></i>
+                </div>
+                <div>
+                  <p class="text-xs text-gray-400">WhatsApp</p>
+                  <a href="https://wa.me/5804267379617" target="_blank" class="text-sm text-gray-600 hover:text-[#065F46] transition">
+                    +58 0426 7379-617
+                  </a>
+                </div>
+              </li>
+              <li class="flex items-start gap-3">
+                <div class="w-8 h-8 bg-[#ECFDF5] rounded-lg flex items-center justify-center flex-shrink-0">
+                  <i class="ri-global-line text-[#065F46]"></i>
+                </div>
+                <div>
+                  <p class="text-xs text-gray-400">Sitio Web</p>
+                  <a href="https://machinasystems.netlify.app" target="_blank" class="text-sm text-gray-600 hover:text-[#065F46] transition">
+                    machinasystems.netlify.app
+                  </a>
+                </div>
+              </li>
+            </ul>
+          </div>
 
-    <!-- Copyright y certificación -->
-    <div class="text-center md:text-right">
-      <p class="text-[10px] font-mono text-gray-400">
-        © 2026 <span class="text-[#065F46] font-bold">VICENTE MACHINA SYSTEMS</span>
-      </p>
-      <p class="text-[8px] text-gray-400 mt-1">
-        Sistema certificado para talleres de reparación electrónica
-      </p>
-    </div>
-  </div>
-</footer>
+          <!-- Columna 4: Legal -->
+          <div>
+            <h3 class="text-sm font-black uppercase tracking-wider mb-4 text-[#065F46]">
+              Legal
+            </h3>
+            <ul class="space-y-3">
+              <li>
+                <a href="#" class="text-sm text-gray-600 hover:text-[#065F46] transition flex items-center gap-2">
+                  <i class="ri-file-text-line text-[#10B981]"></i>
+                  Términos de Servicio
+                </a>
+              </li>
+              <li>
+                <a href="#" class="text-sm text-gray-600 hover:text-[#065F46] transition flex items-center gap-2">
+                  <i class="ri-shield-check-line text-[#10B981]"></i>
+                  Política de Privacidad
+                </a>
+              </li>
+              <li>
+                <a href="#" class="text-sm text-gray-600 hover:text-[#065F46] transition flex items-center gap-2">
+                  <i class="ri-cookie-line text-[#10B981]"></i>
+                  Política de Cookies
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Bar -->
+      <div class="border-t border-[#D1D5DB]">
+        <div class="max-w-7xl mx-auto px-6 py-6">
+          <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+            <p class="text-xs text-gray-500 text-center md:text-left">
+              © 2026 <span class="text-[#065F46] font-bold">MACHINA SYSTEMS</span>. Todos los derechos reservados.
+            </p>
+            <div class="flex items-center gap-2">
+              <span class="relative flex h-2 w-2">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#10B981] opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-[#10B981]"></span>
+              </span>
+              <span class="text-[10px] text-gray-400 font-mono uppercase tracking-wider">
+                Sistema certificado para talleres de reparación electrónica
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
   </div>
 </template>
 
