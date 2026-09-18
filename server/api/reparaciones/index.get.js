@@ -49,5 +49,20 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  return reparaciones
+  const reparacionIds = (reparaciones || []).map(reparacion => reparacion.id)
+  if (reparacionIds.length > 0) {
+    const { data: facturas } = await supabase
+      .from('facturas_reparaciones')
+      .select('id, reparacion_id, serie, numero, estado')
+      .eq('tienda_id', tiendaId)
+      .in('reparacion_id', reparacionIds)
+
+    const facturasPorReparacion = new Map((facturas || []).map(factura => [factura.reparacion_id, factura]))
+    return reparaciones.map(reparacion => ({
+      ...reparacion,
+      facturas_reparaciones: facturasPorReparacion.get(reparacion.id) || null
+    }))
+  }
+
+  return reparaciones || []
 })

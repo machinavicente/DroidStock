@@ -105,27 +105,6 @@
             <p class="text-[9px] font-mono text-gray-400">PRECIO_DE_VENTA_SIN_INSTALACIÓN</p>
           </div>
 
-          <!-- Precio Montaje (Servicio) -->
-          <div class="space-y-1">
-            <label class="label-circuit">
-              Precio montaje / Servicio
-            </label>
-            <div class="relative group">
-              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                
-              </div>
-              <input
-                v-model.number="form.precio_montaje"
-                type="number"
-                step="0.01"
-                min="0"
-                class="form-input-circuit pl-9"
-                placeholder="0.00"
-              />
-            </div>
-            <p class="text-[9px] font-mono text-gray-400">COSTO_DE_INSTALACIÓN_MONTAJE</p>
-          </div>
-
           <!-- Precio Venta a Técnicos -->
           <div class="space-y-1">
             <label class="label-circuit">
@@ -160,10 +139,6 @@
             <div class="p-2 bg-white rounded-lg border border-[#D1D5DB]">
               <p class="text-[8px] font-mono text-gray-400 uppercase tracking-wider">GANANCIA POR UNIDAD</p>
               <p class="text-base font-black text-[#10B981]">${{ gananciaPotencial }}</p>
-            </div>
-            <div class="p-2 bg-white rounded-lg border border-[#D1D5DB]">
-              <p class="text-[8px] font-mono text-gray-400 uppercase tracking-wider">INGRESO POR MONTAJE</p>
-              <p class="text-base font-black text-[#F59E0B]">${{ form.precio_montaje || 0 }}</p>
             </div>
           </div>
           <div class="mt-3 p-2 bg-gradient-to-r from-[#065F46] to-[#10B981] rounded-lg">
@@ -248,7 +223,6 @@ const form = reactive({
   cantidad_disponible: 0,
   precio_costo: null,
   precio_venta: null,
-  precio_montaje: null,
   precio_tecnico: null
 })
 
@@ -258,13 +232,6 @@ const gananciaPotencial = computed(() => {
     return (form.precio_venta - form.precio_costo).toFixed(2)
   }
   return '0.00'
-})
-
-// Calcular precio final al cliente
-const precioFinal = computed(() => {
-  const venta = form.precio_venta || 0
-  const montaje = form.precio_montaje || 0
-  return (venta + montaje).toFixed(2)
 })
 
 onMounted(async () => {
@@ -279,7 +246,6 @@ onMounted(async () => {
       form.cantidad_disponible = repuesto.cantidad_disponible || 0
       form.precio_costo = repuesto.precio_costo || null
       form.precio_venta = repuesto.precio_venta || null
-      form.precio_montaje = repuesto.precio_montaje || null
       form.precio_tecnico = repuesto.precio_tecnico || null
       console.log('Formulario después de cargar:', form)
     } else {
@@ -309,7 +275,6 @@ const handleActualizar = async () => {
     cantidad_disponible: form.cantidad_disponible || 0,
     precio_costo: form.precio_costo || 0,
     precio_venta: form.precio_venta || 0,
-    precio_montaje: form.precio_montaje || 0,
     precio_tecnico: form.precio_tecnico !== null && form.precio_tecnico !== undefined ? Number(form.precio_tecnico) : null
   }
   

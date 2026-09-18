@@ -156,11 +156,12 @@
                 <th class="th-tech px-6 py-4 text-[10px] min-w-[180px]">REPUESTO</th>
                 <th class="th-tech px-6 py-4 text-[10px] text-center w-20">CANT.</th>
                 <th class="th-tech px-6 py-4 text-[10px] text-right w-32">TOTAL</th>
+                <th class="th-tech px-6 py-4 text-[10px] text-center w-28">TICKET</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-[#D1D5DB]">
               <tr v-if="cargando">
-                <td colspan="5" class="py-16 text-center">
+                <td colspan="6" class="py-16 text-center">
                   <div class="flex flex-col items-center gap-4">
                     <div class="w-12 h-12 border-4 border-[#10B981] border-t-transparent rounded-full animate-spin"></div>
                     <span class="text-xs font-mono text-gray-400 uppercase tracking-widest">Loading_Database...</span>
@@ -168,12 +169,14 @@
                 </td>
               </tr>
               <tr v-else-if="ventasPaginadas.length === 0">
-                <td colspan="5" class="py-16 text-center">
+                <td colspan="6" class="py-16 text-center">
                   <i class="ri-shopping-cart-line text-5xl text-gray-200 mb-4 block"></i>
                   <p class="text-gray-400 font-medium">No se encontraron registros en este sector.</p>
                 </td>
               </tr>
-              <tr v-for="venta in ventasPaginadas" :key="venta.id" class="hover:bg-[#F0FDF4]/50 transition-colors group">
+              <tr v-for="venta in ventasPaginadas" :key="venta.id" 
+                  @click="venta.facturas?.id && abrirFactura(venta)"
+                  class="cursor-pointer hover:bg-[#F0FDF4]/50 transition-colors group">
                 <td class="px-6 py-4 font-mono text-[11px] text-gray-500 align-middle">
                   {{ formatearFecha(venta.created_at) }}
                 </td>
@@ -192,6 +195,16 @@
                 <td class="px-6 py-4 text-right align-middle">
                   <span class="text-base font-black text-[#10B981]">${{ formatearTotal(venta.total) }}</span>
                 </td>
+                <td class="px-6 py-4 text-center align-middle">
+                  <button
+                    v-if="venta.facturas?.id"
+                    @click.stop="abrirFactura(venta)"
+                    class="mx-auto flex w-fit items-center gap-1 text-[10px] font-black uppercase text-[#065F46] hover:text-[#10B981]"
+                    title="Ver factura"
+                  >
+                    <i class="ri-file-text-line"></i> Factura
+                  </button>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -209,11 +222,16 @@
             <i class="ri-shopping-cart-line text-5xl text-gray-200 mb-4 block"></i>
             <p class="text-gray-400 font-medium">No se encontraron registros en este sector.</p>
           </div>
-          <div v-for="venta in ventasPaginadas" :key="venta.id" class="bg-white rounded-xl shadow-md border border-[#D1D5DB] overflow-hidden hover:shadow-lg transition-all duration-300">
+          <div v-for="venta in ventasPaginadas" :key="venta.id" @click="venta.facturas?.id && abrirFactura(venta)" class="bg-white rounded-xl shadow-md border border-[#D1D5DB] overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer">
             <!-- Header: Fecha y Total -->
             <div class="bg-gradient-to-r from-[#065F46] to-[#047857] px-4 py-3 flex justify-between items-center">
               <span class="text-white text-xs font-mono">{{ formatearFecha(venta.created_at) }}</span>
-              <span class="text-white font-bold text-lg">${{ formatearTotal(venta.total) }}</span>
+              <div class="flex items-center gap-3">
+                <span class="text-white font-bold text-lg">${{ formatearTotal(venta.total) }}</span>
+                <button v-if="venta.facturas?.id" @click.stop="abrirFactura(venta)" class="text-white" title="Ver factura">
+                  <i class="ri-file-text-line text-lg"></i>
+                </button>
+              </div>
             </div>
             
             <!-- Customer Info -->
@@ -245,11 +263,19 @@
               </div>
             </div>
           </div>
-        </div>
-      </div>
+</div>
     </div>
+  </div>
 
-    <!-- Toast Notificación -->
+  <!-- Modal de factura usando componente reutilizable -->
+  <FacturaModal
+    v-model:abierto="modalFacturaAbierto"
+    :factura-id="facturaSeleccionadaId"
+    tipo="venta"
+    @cerrar="cerrarFactura"
+  />
+
+  <!-- Toast Notificación -->
     <div v-if="toast.visible" class="fixed bottom-6 right-6 z-50 animate-slide-up">
       <div :class="[
         'px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3 min-w-[300px] border-l-4',
@@ -267,6 +293,8 @@
 
 <script setup>
 import { ref, reactive, computed, onMounted, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import FacturaModal from '~/components/FacturaModal.vue'
 
 definePageMeta({
   layout: 'dashboard'
@@ -275,9 +303,31 @@ definePageMeta({
 // Acceso al composable de ventas
 const { ventas, cargando, obtenerVentas } = useVentas()
 
+const route = useRoute()
+const router = useRouter()
+
 const toast = ref({ visible: false, mensaje: '', tipo: 'success' })
 const exportando = ref(false)
 const tienda = ref(null)
+const modalFacturaAbierto = ref(false)
+const facturaSeleccionadaId = ref(null)
+
+const abrirFactura = (venta) => {
+  const facturaId = venta.facturas?.id
+  if (!facturaId) {
+    mostrarNotificacion('Esta venta no tiene una factura asociada.', 'error')
+    return
+  }
+  facturaSeleccionadaId.value = facturaId
+  modalFacturaAbierto.value = true
+}
+
+const cerrarFactura = () => {
+  modalFacturaAbierto.value = false
+  facturaSeleccionadaId.value = null
+}
+
+
 
 const mostrarNotificacion = (mensaje, tipo = 'success') => {
   toast.value = { visible: true, mensaje, tipo }
@@ -441,6 +491,14 @@ onMounted(async () => {
     tienda.value = session?.session?.tienda || null
   } catch (e) {
     tienda.value = null
+  }
+
+  // Si viene factura_id en query params, abrir modal
+  if (route.query.factura_id) {
+    facturaSeleccionadaId.value = route.query.factura_id
+    modalFacturaAbierto.value = true
+    // Limpiar query param para que no se abra de nuevo al recargar
+    router.replace({ query: { ...route.query, factura_id: undefined } })
   }
 })
 

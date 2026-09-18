@@ -216,14 +216,6 @@
               </span>
             </div>
             
-            <!-- Precio Montaje -->
-            <div v-if="repuesto.precio_montaje" class="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
-              <i class="ri-tools-line flex-shrink-0 text-xs sm:text-sm" style="color: #9CA3AF"></i>
-              <span style="color: #6B7280">
-                <span class="hidden xs:inline">Instalación:</span><span class="xs:hidden">$</span> <span class="font-medium" style="color: #065F46">${{ repuesto.precio_montaje || 0 }}</span>
-              </span>
-            </div>
-            
             <!-- Precio Técnico -->
             <div class="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
               <i class="ri-user-settings-line flex-shrink-0 text-xs sm:text-sm" style="color: #9CA3AF"></i>
@@ -233,7 +225,7 @@
             </div>
           </div>
           
-          <!-- PRECIO FINAL -->
+          <!-- PRECIO DE VENTA -->
           <div class="mt-3 pt-2 border-t" style="border-color: #D1D5DB">
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-2">
@@ -242,7 +234,7 @@
               </div>
               <div class="px-3 py-1.5 rounded-lg" style="background: linear-gradient(135deg, #FEF3C7, #FFFBEB)">
                 <span class="text-base sm:text-lg font-bold" style="color: #F59E0B">
-                  ${{ ((repuesto.precio_venta || 0) + (repuesto.precio_montaje || 0)).toFixed(2) }}
+                  ${{ (repuesto.precio_venta || 0).toFixed(2) }}
                 </span>
                 <div v-if="repuesto.precio_tecnico" class="text-xs text-gray-500 mt-1">
                   Para otros talleres: ${{ (repuesto.precio_tecnico || 0).toFixed(2) }}
@@ -698,7 +690,6 @@ const aumentarStock = async () => {
       cantidad_disponible: nuevoStock,
       precio_costo: repuestoSeleccionado.value.precio_costo,
       precio_venta: repuestoSeleccionado.value.precio_venta,
-      precio_montaje: repuestoSeleccionado.value.precio_montaje
     })
     
     modalAumentarVisible.value = false

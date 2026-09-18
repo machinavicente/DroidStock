@@ -109,22 +109,6 @@
                 </div>
               </div>
 
-              <!-- Servicio de Montaje -->
-              <div>
-                <label class="block text-xs font-black text-[#065F46] mb-2 uppercase tracking-widest">Servicio de Montaje ($) <span class="text-red-500">*</span></label>
-                <div class="relative">
-                  <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none font-mono text-[#065F46]">$</div>
-                  <input
-                    v-model.number="form.precio_montaje"
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    class="block w-full pl-8 py-2.5 border-2 border-[#065F46] rounded-lg focus:ring-4 focus:ring-[#065F46]/20 text-sm bg-[#F0FDF4] font-bold text-[#065F46] text-ellipsis overflow-hidden"
-                    placeholder="0.00"
-                  />
-                </div>
-              </div>
-
               <!-- Precio Venta a Técnicos -->
               <div>
                 <label class="block text-xs font-black text-[#334155] mb-2 uppercase tracking-widest">Precio Venta a Técnicos ($)</label>
@@ -150,7 +134,6 @@
             <i class="ri-information-fill text-[#F59E0B] text-xl mt-0.5"></i>
             <div class="text-sm text-[#92400E]">
               <p class="font-bold mb-1 uppercase text-xs tracking-wider">Nota del Sistema</p>
-              <p class="text-xs leading-relaxed break-words">El precio de montaje se anexará automáticamente al diagnóstico del técnico al seleccionar este componente en el módulo de taller.</p>
               <p class="text-xs leading-relaxed break-words mt-2">El precio para técnicos se usará en ventas a otros talleres y técnicos externos.</p>
             </div>
           </div>
@@ -219,7 +202,6 @@ const form = reactive({
   cantidad_disponible: 0,
   precio_costo: null,
   precio_venta: null,
-  precio_montaje: null,
   precio_tecnico: null
 })
 
@@ -231,9 +213,7 @@ const formularioValido = computed(() => {
          form.precio_costo !== null && 
          form.precio_costo >= 0 && 
          form.precio_venta !== null && 
-         form.precio_venta >= 0 && 
-         form.precio_montaje !== null && 
-         form.precio_montaje >= 0
+         form.precio_venta >= 0
   // precio_tecnico es opcional, no se valida
 })
 
@@ -263,7 +243,6 @@ const guardarRepuesto = async () => {
       cantidad_disponible: form.cantidad_disponible || 0,
       precio_costo: form.precio_costo || null,
       precio_venta: form.precio_venta || null,
-      precio_montaje: form.precio_montaje || null,
       precio_tecnico: form.precio_tecnico || null
     }
     console.log('Datos que se enviarán:', datosAEnviar)

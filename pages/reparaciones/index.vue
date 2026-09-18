@@ -58,7 +58,7 @@
               <option value="Recibido">RECIBIDO</option>
               <option value="En reparacion">EN REPARACIÓN</option>
               <option value="Finalizado">FINALIZADO</option>
-              <option value="Entregado">ENTREGADO</option>
+              <option value="Entregada">ENTREGADA</option>
             </select>
           </div>
 
@@ -74,7 +74,7 @@
 
       <!-- Indicadores de Placa Base (Stats) -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-8">
-        <div v-for="(color, label) in { Recibido: 'blue', 'En reparacion': 'yellow', Finalizado: 'green', Entregado: 'gray' }" :key="label" 
+        <div v-for="(color, label) in { Recibido: 'blue', 'En reparacion': 'yellow', Finalizado: 'green', Entregada: 'gray' }" :key="label" 
              class="bg-white p-6 rounded-xl border border-[#D1D5DB] shadow-sm relative overflow-hidden group hover:shadow-md transition-all duration-300">
           <div class="flex items-center justify-between relative z-10">
             <div class="flex-1">
@@ -125,7 +125,7 @@
                 <th class="th-tech px-6 py-4 text-[10px] text-center w-32">ESTADO</th>
                 <th class="th-tech px-6 py-4 text-[10px] w-40">TÉCNICO</th>
                 <th class="th-tech px-6 py-4 text-[10px] w-28">ENTRADA</th>
-                <th class="th-tech px-6 py-4 text-[10px] text-center w-24">ACCIÓN</th>
+                <th class="th-tech px-6 py-4 text-[10px] text-center w-24">TICKET</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-[#D1D5DB]">
@@ -143,7 +143,9 @@
                   <p class="text-gray-400 font-medium">No se encontraron registros en este sector.</p>
                 </td>
               </tr>
-              <tr v-for="reparacion in reparacionesPaginadas" :key="reparacion.id" class="hover:bg-[#F0FDF4]/50 transition-colors group">
+              <tr v-for="reparacion in reparacionesPaginadas" :key="reparacion.id" 
+                  @click="reparacion.facturas_reparaciones?.id && abrirFacturaReparacion(reparacion.facturas_reparaciones.id)"
+                  class="hover:bg-[#F0FDF4]/50 transition-colors group cursor-pointer">
                 <td class="px-6 py-4 align-middle">
                   <div class="font-bold text-[#334155] text-sm">{{ reparacion.clientes?.nombre_completo || 'ID_NULL' }}</div>
                   <div class="text-[10px] font-mono text-gray-500">{{ reparacion.clientes?.telefono }}</div>
@@ -157,6 +159,7 @@
                 </td>
                 <td class="px-6 py-4 align-middle">
                   <select
+                    @click.stop
                     :value="reparacion.estado_servicio"
                     @change="cambiarEstado(reparacion.id, $event.target.value)"
                     :class="[estadoClass(reparacion.estado_servicio), 'status-select text-[10px] px-3 py-2']"
@@ -164,7 +167,7 @@
                     <option value="Recibido" :disabled="reparacion.estado_servicio !== 'Recibido'">Recibido</option>
                     <option value="En reparacion" :disabled="!validarTransicion(reparacion.estado_servicio, 'En reparacion')">En reparación</option>
                     <option value="Finalizado" :disabled="!validarTransicion(reparacion.estado_servicio, 'Finalizado')">Finalizado</option>
-                    <option value="Entregado" :disabled="!validarTransicion(reparacion.estado_servicio, 'Entregado')">Entregado</option>
+                    <option value="Entregada" :disabled="!validarTransicion(reparacion.estado_servicio, 'Entregada')">Entregada</option>
                   </select>
                 </td>
                 <td class="px-6 py-4 align-middle">
@@ -181,7 +184,7 @@
                 <td class="px-6 py-4 text-center align-middle">
                   <button
                     v-if="reparacion.estado_servicio === 'En reparacion'"
-                    @click="abrirModalRepuestos(reparacion)"
+                    @click.stop="abrirModalRepuestos(reparacion)"
                     class="mx-auto px-3 py-2 bg-[#10B981] text-white rounded-md hover:bg-[#059669] text-[10px] font-black uppercase tracking-tighter flex items-center gap-1 transition-all shadow-sm"
                   >
                     <i class="ri-cpu-line text-sm"></i>
@@ -191,6 +194,13 @@
                   <div v-else-if="reparacion.estado_servicio === 'Finalizado'" class="text-[10px] font-black text-[#10B981] flex items-center justify-center gap-1">
                     <i class="ri-shield-check-fill text-sm"></i> <span class="hidden lg:inline">READY_FOR_PICKUP</span><span class="lg:hidden">READY</span>
                   </div>
+                  <button
+                    v-if="reparacion.facturas_reparaciones?.id"
+                    @click.stop="abrirFacturaReparacion(reparacion.facturas_reparaciones.id)"
+                    class="mx-auto mt-2 flex w-fit items-center gap-1 text-[10px] font-black uppercase text-[#065F46] hover:text-[#10B981]"
+                  >
+                    <i class="ri-file-text-line"></i> Factura
+                  </button>
                 </td>
               </tr>
             </tbody>
@@ -211,9 +221,10 @@
             <p class="text-gray-400 font-medium">No se encontraron registros en este sector.</p>
           </div>
 
-          <div v-for="reparacion in reparacionesPaginadas" :key="reparacion.id" 
-               :data-reparacion-id="reparacion.id"
-               class="bg-white rounded-xl border border-[#D1D5DB] shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden">
+<div v-for="reparacion in reparacionesPaginadas" :key="reparacion.id" 
+                 :data-reparacion-id="reparacion.id"
+                 @click="reparacion.facturas_reparaciones?.id && abrirFacturaReparacion(reparacion.facturas_reparaciones.id)"
+                 class="bg-white rounded-xl border border-[#D1D5DB] shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden cursor-pointer">
             <!-- Card Header -->
             <div class="bg-[#065F46] px-4 py-3 border-b border-[#D1D5DB]">
               <div class="flex justify-between items-start">
@@ -264,6 +275,7 @@
               <div class="space-y-2">
                 <label class="text-[10px] font-black text-[#334155] uppercase tracking-wider">Estado del Servicio</label>
                 <select
+                  @click.stop
                   :value="reparacion.estado_servicio"
                   @change="cambiarEstado(reparacion.id, $event.target.value)"
                   :class="[estadoClass(reparacion.estado_servicio), 'w-full status-select text-xs px-3 py-3 font-medium']"
@@ -271,7 +283,7 @@
                   <option value="Recibido" :disabled="reparacion.estado_servicio !== 'Recibido'">Recibido</option>
                   <option value="En reparacion" :disabled="!validarTransicion(reparacion.estado_servicio, 'En reparacion')">En reparación</option>
                   <option value="Finalizado" :disabled="!validarTransicion(reparacion.estado_servicio, 'Finalizado')">Finalizado</option>
-                  <option value="Entregado" :disabled="!validarTransicion(reparacion.estado_servicio, 'Entregado')">Entregado</option>
+                  <option value="Entregada" :disabled="!validarTransicion(reparacion.estado_servicio, 'Entregada')">Entregada</option>
                 </select>
               </div>
 
@@ -279,7 +291,7 @@
               <div class="pt-2 border-t border-[#E5E7EB]">
                 <button
                   v-if="reparacion.estado_servicio === 'En reparacion'"
-                  @click="abrirModalRepuestos(reparacion)"
+                  @click.stop="abrirModalRepuestos(reparacion)"
                   class="w-full px-4 py-3 bg-[#10B981] text-white rounded-lg hover:bg-[#059669] text-sm font-black uppercase tracking-tighter flex items-center justify-center gap-2 transition-all shadow-md hover:shadow-[#10B981]/20 border-b-4 border-[#047857] active:border-b-0 active:translate-y-1"
                 >
                   <i class="ri-cpu-line text-base"></i>
@@ -298,6 +310,14 @@
                 <div v-else class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg flex items-center justify-center">
                   <span class="text-gray-500 text-sm font-medium">{{ reparacion.estado_servicio }}</span>
                 </div>
+
+                <button
+                  v-if="reparacion.facturas_reparaciones?.id"
+                  @click.stop="abrirFacturaReparacion(reparacion.facturas_reparaciones.id)"
+                  class="w-full px-4 py-3 bg-[#F0FDF4] border border-[#10B981]/30 rounded-lg flex items-center justify-center gap-2 text-[#065F46] font-bold text-sm hover:bg-[#DCFCE7]"
+                >
+                  <i class="ri-file-text-line"></i> Ver factura de reparación
+                </button>
               </div>
             </div>
           </div>
@@ -309,59 +329,160 @@
     <div v-if="modalRepuestosVisible" class="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4">
       <div class="absolute inset-0 bg-[#065F46]/40 backdrop-blur-sm" @click="modalRepuestosVisible = false"></div>
       
-      <div class="relative bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-hidden border border-[#D1D5DB] animate-slide-up">
-        <div class="bg-[#065F46] p-6 text-white">
-          <div class="flex justify-between items-start">
+      <div class="relative w-full max-w-lg overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl animate-slide-up">
+        <div class="bg-[#065F46] px-5 py-4 text-white sm:px-6">
+          <div class="flex items-center justify-between">
             <div>
-              <h3 class="text-xl font-black tracking-tight uppercase">Finalizar Proceso</h3>
-              <p class="text-white/60 text-xs font-mono mt-1">{{ reparacionSeleccionada?.equipo_marca_modelo }}</p>
+              <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-white/60">Repuestos utilizados</p>
+              <h3 class="mt-1 text-lg font-black tracking-tight">{{ reparacionSeleccionada?.equipo_marca_modelo }}</h3>
             </div>
-            <button @click="modalRepuestosVisible = false" class="hover:rotate-90 transition-transform"><i class="ri-close-circle-fill text-2xl"></i></button>
+            <button @click="modalRepuestosVisible = false" aria-label="Cerrar" class="rounded-lg p-2 text-white/70 hover:bg-white/10 hover:text-white"><i class="ri-close-line text-2xl"></i></button>
           </div>
         </div>
         
-        <div class="p-4 sm:p-6 space-y-4 sm:space-y-5 overflow-y-auto max-h-[calc(90vh-120px)]">
-          <div class="bg-[#F0FDF4] border-l-4 border-[#10B981] p-3">
-            <p class="text-[11px] text-[#065F46] leading-relaxed font-medium">
-              Registre los componentes utilizados. El stock se actualizará automáticamente.
-            </p>
+        <div class="max-h-[calc(90vh-88px)] space-y-5 overflow-y-auto p-4 sm:p-6">
+          <div class="flex items-center gap-3 text-xs text-gray-500">
+            <span class="flex h-7 w-7 items-center justify-center rounded-full bg-[#D1FAE5] font-black text-[#065F46]">1</span>
+            <span>Busca un repuesto del inventario y escribe la cantidad usada.</span>
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-            <div>
-              <label class="block text-[10px] font-black text-[#334155] mb-2 uppercase tracking-widest">Seleccionar Componente</label>
-              <select v-model="repuestoSeleccionado" class="w-full p-3 bg-[#F8FAFC] border border-[#D1D5DB] rounded-lg text-sm font-medium focus:ring-2 focus:ring-[#10B981]">
-                <option :value="null">-- HARDWARE_ID --</option>
-                <option v-for="r in repuestosDisponibles" :key="r.id" :value="r">
-                  {{ r.nombre_repuesto }} [STK: {{ r.cantidad_disponible }}]
-                </option>
-              </select>
+          <div class="grid grid-cols-1 gap-3 sm:grid-cols-[minmax(0,1fr)_6rem] sm:gap-4">
+            <div class="relative">
+              <label class="mb-2 block text-xs font-bold text-gray-700">Repuesto</label>
+              <div class="relative">
+                <i class="ri-search-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                <input
+                  :value="busquedaRepuesto"
+                  @input="cambiarBusquedaRepuesto($event.target.value)"
+                  @focus="mostrarSugerencias = true"
+                  @blur="ocultarSugerencias"
+                  type="text"
+                  autocomplete="off"
+                  placeholder="Escribe nombre o código..."
+                  class="w-full rounded-lg border border-[#D1D5DB] bg-[#F8FAFC] p-3 pl-10 text-sm font-medium focus:border-[#10B981] focus:ring-2 focus:ring-[#10B981]"
+                />
+              </div>
+              <div v-if="mostrarSugerencias && busquedaRepuesto && !repuestoSeleccionado" class="absolute left-0 right-0 top-full z-20 mt-1 max-h-52 overflow-y-auto rounded-lg border border-[#D1D5DB] bg-white shadow-xl">
+                <button
+                  v-for="repuesto in repuestosFiltrados"
+                  :key="repuesto.id"
+                  type="button"
+                  @mousedown.prevent="seleccionarRepuesto(repuesto)"
+                  class="flex w-full items-center justify-between border-b border-gray-100 px-3 py-3 text-left hover:bg-[#F0FDF4]"
+                >
+                  <span class="min-w-0">
+                    <span class="block truncate text-sm font-bold text-[#334155]">{{ repuesto.nombre_repuesto }}</span>
+                    <span class="block text-[10px] font-mono text-gray-400">ID: {{ repuesto.id }}</span>
+                  </span>
+                  <span class="ml-3 whitespace-nowrap text-[10px] font-black text-[#065F46]">STK: {{ repuesto.cantidad_disponible }}</span>
+                </button>
+                <p v-if="repuestosFiltrados.length === 0" class="p-3 text-xs text-gray-500">No hay repuestos disponibles.</p>
+              </div>
+              <p v-if="repuestoSeleccionado" class="mt-2 text-[11px] font-medium text-[#065F46]">
+                Seleccionado · Stock disponible: {{ repuestoSeleccionado.cantidad_disponible }}
+                <button type="button" @click="limpiarRepuestoSeleccionado" class="ml-2 font-bold underline hover:text-[#10B981]">Cambiar</button>
+              </p>
             </div>
-            
+
             <div>
-              <label class="block text-[10px] font-black text-[#334155] mb-2 uppercase tracking-widest">Unidades</label>
-              <input v-model.number="cantidadRepuesto" type="number" min="1" class="w-full p-3 bg-[#F8FAFC] border border-[#D1D5DB] rounded-lg text-sm" />
+              <label class="mb-2 block text-xs font-bold text-gray-700">Cantidad</label>
+              <input
+                v-model.number="cantidadRepuesto"
+                @change="agregarRepuestoALista"
+                @keyup.enter="agregarRepuestoALista"
+                type="number"
+                min="0"
+                :max="repuestoSeleccionado?.cantidad_disponible || undefined"
+                class="w-full rounded-lg border border-[#D1D5DB] bg-[#F8FAFC] p-3 text-center text-sm font-bold focus:border-[#10B981] focus:ring-2 focus:ring-[#10B981]"
+              />
             </div>
           </div>
 
-          <div v-if="repuestosTemp.length > 0" class="bg-gray-50 rounded-lg p-3 border border-[#D1D5DB]">
-            <div class="flex justify-between items-center mb-2">
-              <span class="text-[10px] font-black text-gray-400 uppercase">Repuestos Agregados ({{ repuestosTemp.length }})</span>
-              <span class="text-[10px] font-bold text-[#10B981] bg-[#10B981]/10 px-2 py-1 rounded">{{ repuestosTemp.length }} items</span>
+          <div>
+            <label class="mb-2 block text-xs font-bold text-gray-700">Servicio de montaje / mano de obra</label>
+            <div class="relative">
+              <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 font-mono text-gray-400">$</span>
+              <input
+                v-model.number="presupuestoReparacion"
+                type="number"
+                min="0"
+                step="0.01"
+                class="w-full rounded-lg border border-[#D1D5DB] bg-[#F8FAFC] p-3 pl-8 text-sm font-bold focus:border-[#10B981] focus:ring-2 focus:ring-[#10B981]"
+                placeholder="0.00"
+              />
             </div>
-            <div class="space-y-2 max-h-32 overflow-y-auto pr-2">
-              <div v-for="(item, idx) in repuestosTemp" :key="idx" class="flex justify-between items-center bg-white p-2 rounded border border-gray-200 shadow-sm">
-                <span class="text-xs font-bold text-[#334155]">{{ item.nombre }} <span class="text-[#10B981]">x{{ item.cantidad }}</span></span>
-                <button @click="eliminarRepuestoDeLista(idx)" class="text-red-400 hover:text-red-600 transition-colors"><i class="ri-close-line"></i></button>
+            <p class="mt-1 text-[11px] text-gray-500">Se cobrará como servicio en la factura de esta reparación.</p>
+          </div>
+
+          <div class="rounded-xl border border-gray-200 bg-gray-50 p-3">
+            <div class="mb-2 flex items-center justify-between">
+              <h4 class="text-xs font-bold text-gray-700">Agregados</h4>
+              <span class="rounded-full bg-[#D1FAE5] px-2 py-1 text-[10px] font-bold text-[#065F46]">{{ repuestosTemp.length }}</span>
+            </div>
+            <div v-if="repuestosTemp.length > 0" class="space-y-2">
+              <div v-for="(item, idx) in repuestosTemp" :key="idx" class="flex items-center justify-between rounded-lg bg-white px-3 py-2 shadow-sm">
+                <span class="min-w-0 truncate text-sm font-semibold text-gray-700">{{ item.nombre }}</span>
+                <div class="ml-3 flex items-center gap-3">
+                  <span class="text-sm font-black text-[#065F46]">x{{ item.cantidad }}</span>
+                  <button @click="eliminarRepuestoDeLista(idx)" aria-label="Quitar repuesto" class="text-gray-400 hover:text-red-600"><i class="ri-delete-bin-line"></i></button>
+                </div>
               </div>
             </div>
+            <p v-else class="py-3 text-center text-xs text-gray-400">Aún no hay repuestos agregados.</p>
           </div>
           
-          <div class="flex gap-2 sm:gap-3 pt-2">
-            <button @click="modalRepuestosVisible = false" class="flex-1 py-2.5 sm:py-3 text-xs sm:text-sm font-bold text-gray-500 hover:bg-gray-100 rounded-lg transition-colors">DESCARTAR</button>
-            <button @click="finalizarConRepuestos" class="flex-[2] py-2.5 sm:py-3 bg-[#065F46] text-white text-xs sm:text-sm font-black rounded-lg shadow-lg hover:shadow-[#065F46]/30 transition-all uppercase tracking-wider border-b-4 border-[#033a2b]">
-              <span class="hidden sm:inline">FINALIZAR_REPARACIÓN</span>
-              <span class="sm:hidden">FINALIZAR_REPARACIÓN</span>
+          <div class="flex gap-3 border-t border-gray-100 pt-4">
+            <button @click="modalRepuestosVisible = false" class="flex-1 rounded-lg border border-gray-200 py-3 text-sm font-bold text-gray-600 hover:bg-gray-50">Cancelar</button>
+            <button @click="finalizarConRepuestos" :disabled="repuestosTemp.length === 0 && Number(presupuestoReparacion || 0) <= 0" class="flex-[1.5] rounded-lg bg-[#065F46] py-3 text-sm font-bold text-white shadow-lg hover:bg-[#047857] disabled:cursor-not-allowed disabled:opacity-40">
+              Finalizar reparación
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de cobro y factura de reparación -->
+    <div v-if="modalEntregaVisible" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div class="absolute inset-0 bg-[#065F46]/40 backdrop-blur-sm" @click="cerrarModalEntrega"></div>
+      <div class="relative w-full max-w-md overflow-hidden rounded-2xl bg-white shadow-2xl">
+        <div class="bg-[#065F46] px-5 py-4 text-white">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-[10px] font-bold uppercase tracking-widest text-white/60">Factura de reparación</p>
+              <h3 class="mt-1 text-lg font-black">Confirmar entrega</h3>
+            </div>
+            <button @click="cerrarModalEntrega" aria-label="Cerrar" class="rounded-lg p-2 text-white/70 hover:bg-white/10 hover:text-white"><i class="ri-close-line text-2xl"></i></button>
+          </div>
+        </div>
+        <div class="space-y-5 p-5">
+          <div class="rounded-xl border border-[#A7F3D0] bg-[#F0FDF4] p-4">
+            <p class="text-xs text-gray-500">Cliente</p>
+            <p class="font-bold text-[#065F46]">{{ reparacionEntrega?.clientes?.nombre_completo }}</p>
+            <div class="mt-3 flex items-end justify-between border-t border-[#A7F3D0] pt-3">
+              <span class="text-sm text-gray-600">Total a cobrar</span>
+              <span class="text-2xl font-black text-[#065F46]">${{ formatearTotal(totalReparacion(reparacionEntrega) + Number(reparacionEntrega?.presupuesto || 0)) }}</span>
+            </div>
+            <div class="mt-3 space-y-1 text-xs text-gray-500">
+              <div class="flex justify-between"><span>Costo de repuestos</span><span>${{ formatearTotal(totalReparacion(reparacionEntrega)) }}</span></div>
+              <div class="flex justify-between"><span>Instalación</span><span>${{ formatearTotal(reparacionEntrega?.presupuesto || 0) }}</span></div>
+            </div>
+          </div>
+          <div>
+            <label class="mb-2 block text-xs font-bold text-gray-700">Método de pago</label>
+            <select v-model="metodoPagoReparacion" class="w-full rounded-lg border border-gray-300 bg-white p-3 text-sm focus:border-[#10B981] focus:ring-2 focus:ring-[#10B981]">
+              <option value="">Seleccionar método</option>
+              <option value="efectivo">Efectivo</option>
+              <option value="transferencia">Transferencia</option>
+              <option value="tarjeta">Tarjeta</option>
+              <option value="pago_movil">Pago móvil</option>
+              <option value="otro">Otro</option>
+            </select>
+          </div>
+          <div class="flex gap-3 border-t border-gray-100 pt-4">
+            <button @click="cerrarModalEntrega" class="flex-1 rounded-lg border border-gray-200 py-3 text-sm font-bold text-gray-600 hover:bg-gray-50">Cancelar</button>
+            <button @click="confirmarEntrega" :disabled="!metodoPagoReparacion || guardandoEntrega" class="flex-[1.5] rounded-lg bg-[#065F46] py-3 text-sm font-bold text-white hover:bg-[#047857] disabled:cursor-not-allowed disabled:opacity-40">
+              <i v-if="guardandoEntrega" class="ri-loader-4-line mr-1 animate-spin"></i>
+              {{ guardandoEntrega ? 'Procesando...' : 'Cobrar y entregar' }}
             </button>
           </div>
         </div>
@@ -381,11 +502,20 @@
         </div>
       </div>
     </div>
+
+    <!-- Modal de factura de reparación -->
+    <FacturaModal
+      v-model:abierto="modalFacturaReparacionAbierto"
+      :factura-id="facturaReparacionSeleccionadaId"
+      tipo="reparacion"
+      @cerrar="cerrarFacturaReparacion"
+    />
   </div>
 </template>
 
 <script setup>
 import { ref, reactive, computed, onMounted, watch } from 'vue'
+import FacturaModal from '~/components/FacturaModal.vue'
 
 definePageMeta({
   layout: 'dashboard'
@@ -397,10 +527,19 @@ const repuestosDisponibles = ref([])
 const modalRepuestosVisible = ref(false)
 const reparacionSeleccionada = ref(null)
 const repuestoSeleccionado = ref(null)
-const cantidadRepuesto = ref(1)
+const busquedaRepuesto = ref('')
+const mostrarSugerencias = ref(false)
+const cantidadRepuesto = ref(0)
 const repuestosTemp = ref([])
+const presupuestoReparacion = ref(0)
+const modalEntregaVisible = ref(false)
+const reparacionEntrega = ref(null)
+const metodoPagoReparacion = ref('')
+const guardandoEntrega = ref(false)
 const exportando = ref(false)
 const tienda = ref(null)
+const modalFacturaReparacionAbierto = ref(false)
+const facturaReparacionSeleccionadaId = ref(null)
 
 const filtros = reactive({
   busqueda: '',
@@ -443,15 +582,26 @@ const finMostrando = computed(() => Math.min(paginaActual.value * ITEMS_POR_PAGI
 const paginaAnterior = () => { if (paginaActual.value > 1) paginaActual.value-- }
 const paginaSiguiente = () => { if (paginaActual.value < totalPaginas.value) paginaActual.value++ }
 
+const repuestosFiltrados = computed(() => {
+  const termino = busquedaRepuesto.value.trim().toLowerCase()
+  if (!termino) return repuestosDisponibles.value.slice(0, 20)
+  return repuestosDisponibles.value
+    .filter(repuesto =>
+      repuesto.nombre_repuesto?.toLowerCase().includes(termino) ||
+      repuesto.id?.toLowerCase().includes(termino)
+    )
+    .slice(0, 20)
+})
+
 // ========== LÓGICA DE NEGOCIO ==========
 const resumenEstados = computed(() => {
-  const resumen = { 'Recibido': 0, 'En reparacion': 0, 'Finalizado': 0, 'Entregado': 0 }
+  const resumen = { 'Recibido': 0, 'En reparacion': 0, 'Finalizado': 0, 'Entregada': 0 }
   reparacionesFiltradas.value.forEach(r => { if (resumen[r.estado_servicio] !== undefined) resumen[r.estado_servicio]++ })
   return resumen
 })
 
 const getIcon = (estado) => {
-  const icons = { 'Recibido': 'ri-inbox-archive-line', 'En reparacion': 'ri-tools-line', 'Finalizado': 'ri-checkbox-circle-line', 'Entregado': 'ri-truck-line' }
+  const icons = { 'Recibido': 'ri-inbox-archive-line', 'En reparacion': 'ri-tools-line', 'Finalizado': 'ri-checkbox-circle-line', 'Entregada': 'ri-truck-line' }
   return icons[estado] || 'ri-loader-line'
 }
 
@@ -460,9 +610,15 @@ const estadoClass = (estado) => {
     'Recibido': 'bg-blue-50 text-blue-600 border border-blue-200',
     'En reparacion': 'bg-yellow-50 text-yellow-600 border border-yellow-200',
     'Finalizado': 'bg-green-50 text-green-600 border border-green-200',
-    'Entregado': 'bg-gray-50 text-gray-500 border border-gray-200'
+    'Entregada': 'bg-gray-50 text-gray-500 border border-gray-200'
   }
   return clases[estado] || 'bg-gray-50 text-gray-500'
+}
+
+const totalReparacion = (reparacion) => {
+  return (reparacion?.reparacion_repuestos || []).reduce((total, item) => {
+    return total + Number(item.precio_unitario || 0) * Number(item.cantidad || 0)
+  }, 0)
 }
 
 const mostrarNotificacion = (mensaje, tipo = 'success') => {
@@ -470,9 +626,24 @@ const mostrarNotificacion = (mensaje, tipo = 'success') => {
   setTimeout(() => notificacion.value.visible = false, 3000)
 }
 
+const abrirFacturaReparacion = (facturaId) => {
+  facturaReparacionSeleccionadaId.value = facturaId
+  modalFacturaReparacionAbierto.value = true
+}
+
+const cerrarFacturaReparacion = () => {
+  modalFacturaReparacionAbierto.value = false
+  facturaReparacionSeleccionadaId.value = null
+}
+
 const abrirModalRepuestos = async (reparacion) => {
   reparacionSeleccionada.value = reparacion
   repuestosTemp.value = []
+  repuestoSeleccionado.value = null
+  busquedaRepuesto.value = ''
+  mostrarSugerencias.value = false
+  cantidadRepuesto.value = 0
+  presupuestoReparacion.value = Number(reparacion.presupuesto || 0)
   try {
     const todos = await $fetch('/api/repuestos')
     repuestosDisponibles.value = todos.filter(r => r.cantidad_disponible > 0)
@@ -480,20 +651,67 @@ const abrirModalRepuestos = async (reparacion) => {
   } catch (e) { mostrarNotificacion('Error de conexión', 'error') }
 }
 
-const agregarRepuestoALista = () => {
-  if (!repuestoSeleccionado.value || !cantidadRepuesto.value || cantidadRepuesto.value <= 0) {
+const cambiarBusquedaRepuesto = (valor) => {
+  busquedaRepuesto.value = valor
+  mostrarSugerencias.value = true
+
+  if (repuestoSeleccionado.value && valor !== repuestoSeleccionado.value.nombre_repuesto) {
+    repuestoSeleccionado.value = null
+  }
+}
+
+const seleccionarRepuesto = (repuesto) => {
+  const repuestoValido = repuestosDisponibles.value.find(item => item.id === repuesto.id)
+  if (!repuestoValido) {
+    mostrarNotificacion('El repuesto seleccionado no existe en el inventario', 'error')
     return
   }
-  if (cantidadRepuesto.value > repuestoSeleccionado.value.cantidad_disponible) {
+
+  repuestoSeleccionado.value = repuestoValido
+  busquedaRepuesto.value = repuestoValido.nombre_repuesto
+  mostrarSugerencias.value = false
+}
+
+const limpiarRepuestoSeleccionado = () => {
+  repuestoSeleccionado.value = null
+  busquedaRepuesto.value = ''
+  mostrarSugerencias.value = true
+}
+
+const ocultarSugerencias = () => {
+  setTimeout(() => { mostrarSugerencias.value = false }, 150)
+}
+
+const agregarRepuestoALista = () => {
+  if (!repuestoSeleccionado.value) {
+    return mostrarNotificacion('Selecciona un repuesto existente del inventario', 'error')
+  }
+
+  const repuestoValido = repuestosDisponibles.value.find(item => item.id === repuestoSeleccionado.value.id)
+  const cantidad = Number(cantidadRepuesto.value)
+
+  if (!repuestoValido || !Number.isInteger(cantidad) || cantidad <= 0) {
+    return mostrarNotificacion('Selecciona un repuesto válido y una cantidad entera', 'error')
+  }
+
+  const existente = repuestosTemp.value.find(item => item.id === repuestoValido.id)
+  const cantidadAcumulada = (existente?.cantidad || 0) + cantidad
+  if (cantidadAcumulada > repuestoValido.cantidad_disponible) {
     return mostrarNotificacion('Stock insuficiente', 'error')
   }
-  repuestosTemp.value.push({
-    id: repuestoSeleccionado.value.id,
-    nombre: repuestoSeleccionado.value.nombre_repuesto,
-    cantidad: cantidadRepuesto.value
-  })
-  repuestoSeleccionado.value = null
-  cantidadRepuesto.value = 1
+
+  if (existente) {
+    existente.cantidad = cantidadAcumulada
+  } else {
+    repuestosTemp.value.push({
+      id: repuestoValido.id,
+      nombre: repuestoValido.nombre_repuesto,
+      cantidad
+    })
+  }
+
+  limpiarRepuestoSeleccionado()
+  cantidadRepuesto.value = 0
 }
 
 const eliminarRepuestoDeLista = (idx) => repuestosTemp.value.splice(idx, 1)
@@ -508,19 +726,70 @@ const finalizarConRepuestos = async () => {
     }
     await $fetch(`/api/reparaciones/${reparacionSeleccionada.value.id}/estado`, {
       method: 'PATCH',
-      body: { nuevoEstado: 'Finalizado' }
+      body: {
+        nuevoEstado: 'Finalizado',
+        presupuesto: Math.max(Number(presupuestoReparacion.value || 0), 0)
+      }
     })
     modalRepuestosVisible.value = false
     mostrarNotificacion('Proceso finalizado', 'success')
     cargarReparaciones()
-  } catch (e) { mostrarNotificacion('Error al finalizar', 'error') }
+  } catch (e) {
+    mostrarNotificacion(e.data?.message || e.message || 'Error al finalizar', 'error')
+  }
 }
 
-const ordenEstados = ['Recibido', 'En reparacion', 'Finalizado', 'Entregado']
+const abrirModalEntrega = (reparacion) => {
+  reparacionEntrega.value = reparacion
+  metodoPagoReparacion.value = ''
+  modalEntregaVisible.value = true
+}
+
+const cerrarModalEntrega = () => {
+  if (guardandoEntrega.value) return
+  modalEntregaVisible.value = false
+  reparacionEntrega.value = null
+  cargarReparaciones()
+}
+
+const confirmarEntrega = async () => {
+  if (!reparacionEntrega.value || !metodoPagoReparacion.value) return
+  guardandoEntrega.value = true
+
+  try {
+    const respuesta = await $fetch(`/api/reparaciones/${reparacionEntrega.value.id}/estado`, {
+      method: 'PATCH',
+      body: {
+        nuevoEstado: 'Entregada',
+        metodo_pago: metodoPagoReparacion.value
+      }
+    })
+    modalEntregaVisible.value = false
+    if (respuesta.data?.factura_id) {
+      facturaReparacionSeleccionadaId.value = respuesta.data.factura_id
+      modalFacturaReparacionAbierto.value = true
+    } else {
+      mostrarNotificacion('Reparación facturada y entregada', 'success')
+      await cargarReparaciones()
+    }
+  } catch (error) {
+    const mensaje = error.data?.message || error.statusMessage || error.message || 'No se pudo generar la factura'
+    mostrarNotificacion(`Error ${error.status || ''}: ${mensaje}`.trim(), 'error')
+  } finally {
+    guardandoEntrega.value = false
+    reparacionEntrega.value = null
+  }
+}
+
+const ordenEstados = ['Recibido', 'En reparacion', 'Finalizado', 'Entregada']
 
 const validarTransicion = (estadoActual, nuevoEstado) => {
-  const indiceActual = ordenEstados.indexOf(estadoActual)
-  const indiceNuevo = ordenEstados.indexOf(nuevoEstado)
+  const estadosNormalizados = {
+    Finalizada: 'Finalizado',
+    Entregado: 'Entregada'
+  }
+  const indiceActual = ordenEstados.indexOf(estadosNormalizados[estadoActual] || estadoActual)
+  const indiceNuevo = ordenEstados.indexOf(estadosNormalizados[nuevoEstado] || nuevoEstado)
   return indiceNuevo > indiceActual
 }
 
@@ -538,6 +807,10 @@ const cambiarEstado = async (id, nuevoEstado) => {
     return abrirModalRepuestos(reparacion)
   }
 
+  if (nuevoEstado === 'Entregada') {
+    return abrirModalEntrega(reparacion)
+  }
+
   try {
     // Add immediate visual feedback
     const cardElement = document.querySelector(`[data-reparacion-id="${id}"]`)
@@ -549,22 +822,27 @@ const cambiarEstado = async (id, nuevoEstado) => {
     await $fetch(`/api/reparaciones/${id}/estado`, { method: 'PATCH', body: { nuevoEstado } })
     mostrarNotificacion(`Estado actualizado a: ${nuevoEstado}`, 'success')
     cargarReparaciones()
-  } catch (e) { mostrarNotificacion('Error al actualizar', 'error') }
+  } catch (e) {
+    mostrarNotificacion(e.data?.message || e.message || 'Error al actualizar', 'error')
+    cargarReparaciones()
+  }
 }
 
 const cargarReparaciones = async () => {
   cargando.value = true
   try { 
-    reparaciones.value = await $fetch('/api/reparaciones')
+    const datos = await $fetch('/api/reparaciones')
+    reparaciones.value = (datos || []).map(reparacion => ({
+      ...reparacion,
+      estado_servicio: reparacion.estado_servicio === 'Entregado'
+        ? 'Entregada'
+        : reparacion.estado_servicio
+    }))
     // Obtener datos de la tienda
     try {
       const session = await $fetch('/api/auth/session')
-      console.log('Respuesta sesión:', session)
-      console.log('Tienda extraída:', session?.session?.tienda)
       tienda.value = session?.session?.tienda || null
-      console.log('Tienda asignada:', tienda.value)
     } catch (e) {
-      console.error('Error obteniendo sesión:', e)
       tienda.value = null
     }
   } 
@@ -572,12 +850,16 @@ const cargarReparaciones = async () => {
 }
 
 const formatearFecha = (f) => f ? new Date(f).toLocaleDateString('es-ES') : '--'
+const formatearTotal = (total) => Number(total || 0).toLocaleString('es-ES', {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2
+})
 const limpiarFiltros = () => { filtros.busqueda = ''; filtros.estado = '' }
 
 // ESTADÍSTICAS PARA REPORTE
 const totalReparaciones = computed(() => reparacionesFiltradas.value.length)
 const reparacionesPorEstado = computed(() => {
-  const estados = { 'Recibido': 0, 'En reparacion': 0, 'Finalizado': 0, 'Entregado': 0 }
+  const estados = { 'Recibido': 0, 'En reparacion': 0, 'Finalizado': 0, 'Entregada': 0 }
   reparacionesFiltradas.value.forEach(r => {
     if (estados[r.estado_servicio] !== undefined) estados[r.estado_servicio]++
   })
@@ -589,8 +871,6 @@ const exportarPDF = async () => {
   if (exportando.value) return
   exportando.value = true
   
-  console.log('Valor de tienda al exportar PDF:', tienda.value)
-  console.log('Nombre del taller:', tienda.value?.nombre_tienda)
 
   try {
     const html2pdfModule = await import('html2pdf.js')
@@ -649,7 +929,7 @@ const exportarPDF = async () => {
             <div style="display: flex; justify-content: space-between; align-items: center;">
               <div>
                 <p style="color: #065F46; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">Entregados: </p>
-                <p style="color: #374151; font-size: 20px; font-weight: 900; margin: 5px 0;">${reparacionesPorEstado.value['Entregado']}</p>
+                <p style="color: #374151; font-size: 20px; font-weight: 900; margin: 5px 0;">${reparacionesPorEstado.value['Entregada']}</p>
               </div>
               <div style="width: 40px; height: 40px; color: black; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
                 <i class="ri-truck-fill" style="font-size: 30px;"></i>
@@ -726,20 +1006,13 @@ const getEstadoColor = (estado) => {
     'Recibido': '#3B82F6',
     'En reparacion': '#F59E0B',
     'Finalizado': '#10B981',
-    'Entregado': '#6B7280'
+    'Entregada': '#6B7280'
   }
   return colores[estado] || '#6B7280'
 }
 
 onMounted(cargarReparaciones)
 watch([() => filtros.busqueda, () => filtros.estado], () => paginaActual.value = 1)
-
-// Watcher para auto-agregar repuesto cuando se seleccione y especifique cantidad
-watch([repuestoSeleccionado, cantidadRepuesto], ([nuevoRepuesto, nuevaCantidad]) => {
-  if (nuevoRepuesto && nuevaCantidad && nuevaCantidad > 0) {
-    agregarRepuestoALista()
-  }
-})
 </script>
 
 <style scoped>

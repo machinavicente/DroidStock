@@ -205,6 +205,27 @@
       <div class="bg-white rounded-2xl shadow-sm border border-[#D1D5DB] overflow-hidden">
         <div class="px-5 py-3 bg-[#F8FAFC] border-b border-[#D1D5DB]">
           <div class="flex items-center gap-2">
+            <i class="ri-bank-card-line text-[#10B981] text-lg"></i>
+            <h2 class="text-[10px] font-black text-[#065F46] uppercase tracking-widest">Datos_de_Facturación</h2>
+          </div>
+        </div>
+        <div class="p-6">
+          <label class="label-circuit">Método de pago</label>
+          <select v-model="ventaForm.metodo_pago" class="form-input-circuit mt-1">
+            <option value="">NO ESPECIFICADO</option>
+            <option value="efectivo">EFECTIVO</option>
+            <option value="transferencia">TRANSFERENCIA</option>
+            <option value="tarjeta">TARJETA</option>
+            <option value="pago_movil">PAGO MÓVIL</option>
+            <option value="otro">OTRO</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- NOTA OPCIONAL -->
+      <div class="bg-white rounded-2xl shadow-sm border border-[#D1D5DB] overflow-hidden">
+        <div class="px-5 py-3 bg-[#F8FAFC] border-b border-[#D1D5DB]">
+          <div class="flex items-center gap-2">
             <i class="ri-file-list-line text-[#10B981] text-lg"></i>
             <h2 class="text-[10px] font-black text-[#065F46] uppercase tracking-widest">Campo_de_Observaciones</h2>
           </div>
@@ -294,7 +315,8 @@ const ventaForm = reactive({
   repuesto_id: null,
   cantidad: 1,
   precio_unitario: 0,
-  nota: ''
+  nota: '',
+  metodo_pago: ''
 })
 
 // Computed para stock disponible
@@ -461,13 +483,18 @@ const guardarVenta = async () => {
       cantidad: ventaForm.cantidad,
       incluye_montaje: false,
       total: totalFinal,
-      nota: ventaForm.nota
+      nota: ventaForm.nota,
+      metodo_pago: ventaForm.metodo_pago
     })
     
     if (result.success) {
       mostrarToast('VENTA REGISTRADA EXITOSAMENTE', 'success')
       setTimeout(() => {
-        router.push('/ventas')
+        if (result.data?.factura_id) {
+          router.push(`/ventas?factura_id=${result.data.factura_id}`)
+        } else {
+          router.push('/ventas')
+        }
       }, 1500)
     } else {
       mostrarToast(result.error || 'Error al registrar la venta', 'error')

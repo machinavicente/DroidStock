@@ -23,6 +23,12 @@ export default defineEventHandler(async (event) => {
         precio_costo,
         precio_venta,
         precio_montaje
+      ),
+      facturas (
+        id,
+        serie,
+        numero,
+        estado
       )
     `)
     .eq('tienda_id', tiendaId)
