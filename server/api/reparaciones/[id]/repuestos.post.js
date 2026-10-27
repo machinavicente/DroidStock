@@ -43,7 +43,7 @@ export default defineEventHandler(async (event) => {
   // Verificar que el repuesto pertenece a la tienda y obtener stock
   const { data: repuesto, error: repuestoError } = await supabase
     .from('stock_repuestos')
-    .select('id, nombre_repuesto, cantidad_disponible, precio_costo')
+    .select('id, nombre_repuesto, cantidad_disponible, precio_costo, precio_venta')
     .eq('id', repuesto_id)
     .eq('tienda_id', tiendaId)
     .single()
@@ -52,6 +52,18 @@ export default defineEventHandler(async (event) => {
     throw createError({
       statusCode: 404,
       message: 'Repuesto no encontrado'
+    })
+  }
+
+  if (
+    repuesto.precio_venta === null ||
+    repuesto.precio_venta === undefined ||
+    !Number.isFinite(Number(repuesto.precio_venta)) ||
+    Number(repuesto.precio_venta) < 0
+  ) {
+    throw createError({
+      statusCode: 400,
+      message: 'Configura el precio en reparación de este repuesto antes de asignarlo'
     })
   }
 
@@ -85,7 +97,7 @@ export default defineEventHandler(async (event) => {
       reparacion_id: id,
       repuesto_id: repuesto_id,
       cantidad: cantidad,
-      precio_unitario: repuesto.precio_costo
+      precio_unitario: repuesto.precio_venta
     })
     .select()
     .single()
@@ -119,7 +131,7 @@ export default defineEventHandler(async (event) => {
       referencia_id: id,
       motivo: `Reparación #${id.slice(0, 8)}`,
       precio_unitario_costo: repuesto.precio_costo,
-      precio_unitario_venta: repuesto.precio_costo
+      precio_unitario_venta: repuesto.precio_venta
     })
 
   if (movimientoError) {

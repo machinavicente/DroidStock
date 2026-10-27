@@ -61,7 +61,13 @@ export default defineEventHandler(async (event) => {
       }
     }
 
-    const precioUnitario = Number(repuesto.precio_tecnico || repuesto.precio_venta || 0)
+    const precioUnitario = Number(repuesto.precio_tecnico || 0)
+    if (precioUnitario <= 0) {
+      return {
+        success: false,
+        message: 'Este repuesto no tiene configurado un precio para otros talleres'
+      }
+    }
     const subtotal = precioUnitario * Number(cantidad)
     const impuestoCalculado = Number(impuesto) || 0
     const descuentoCalculado = Number(descuento) || 0

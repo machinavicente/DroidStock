@@ -1,11 +1,11 @@
 <template>
   <!-- Fondo Gris Técnico #F3F4F6 -->
   <div class="min-h-screen bg-[#F3F4F6]">
-    <div class="max-w-3xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-      
+    <div class="w-full">
+
       <!-- Header con breadcrumb técnico -->
-      <div class="mb-8">
-        <div class="flex items-center gap-2 text-sm text-gray-500 mb-4 font-mono flex-wrap">
+      <div class="mb-6">
+        <div class="flex items-center gap-2 text-sm text-gray-500 mb-3 font-mono flex-wrap">
           <NuxtLink to="/repuestos" class="hover:text-[#065F46] flex items-center gap-1 transition-colors truncate">
             <i class="ri-cpu-line"></i>
             REPUESTOS
@@ -13,172 +13,207 @@
           <i class="ri-arrow-right-s-line text-sm"></i>
           <span class="text-[#065F46] font-bold tracking-tighter truncate">NUEVO_COMPONENTE</span>
         </div>
-        
-        <div class="flex justify-between items-end gap-4">
-          <div>
+
+        <div class="flex justify-between items-end gap-3">
+          <div class="min-w-0">
             <h1 class="text-2xl sm:text-3xl font-black text-[#065F46] tracking-tight break-words">Nuevo Repuesto</h1>
-            <p class="text-gray-500 text-xs sm:text-sm mt-1 break-words">Registro de componentes y microelectrónica para inventario</p>
+            <p class="text-gray-500 text-xs sm:text-sm mt-1 break-words">Registro de componentes y microelectrónica</p>
           </div>
         </div>
       </div>
 
-      <form @submit.prevent="guardarRepuesto" class="space-y-6">
-        
-        <!-- Tarjeta principal: Estética de Placa Base -->
-        <div class="bg-white rounded-xl shadow-md border border-[#D1D5DB] overflow-hidden">
-          <!-- Header de tarjeta en Verde Pino #065F46 -->
-          <div class="px-6 py-4 bg-gradient-to-r from-[#065F46] to-[#0A8967] border-b border-[#D1D5DB]">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center backdrop-blur-sm border border-white/20">
-                <i class="ri-tools-fill text-[#10B981] text-xl"></i>
-              </div>
-              <div>
-                <h2 class="text-base font-bold text-white uppercase tracking-wider">Información del Hardware</h2>
-                <p class="text-xs text-white/70 font-mono">Ingrese especificaciones técnicas</p>
-              </div>
-            </div>
-          </div>
+      <form @submit.prevent="guardarRepuesto" class="space-y-4">
 
-          <div class="p-6 space-y-6">
-            <!-- Nombre del repuesto con enfoque en UI -->
-            <div>
-              <label class="block text-xs font-black text-[#334155] mb-2 uppercase tracking-widest">
-                Identificación del componente <span class="text-red-500">*</span>
-              </label>
-              <div class="relative group">
-                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <i class="ri-qr-code-line text-gray-400 group-focus-within:text-[#065F46] transition-colors"></i>
-                </div>
-                <input
-                  v-model="form.nombre_repuesto"
-                  type="text"
-                  required
-                  class="block w-full pl-10 pr-3 py-3 border border-[#D1D5DB] rounded-lg focus:ring-2 focus:ring-[#065F46] focus:border-[#065F46] text-sm placeholder-gray-400 bg-[#F8FAFC] focus:bg-white transition-all font-medium text-ellipsis overflow-hidden text-[#334155]"
-                  placeholder="Ej: Módulo Pantalla OLED - iPhone 13 Pro"
-                />
-              </div>
-            </div>
+        <!-- ============ GRID PRINCIPAL ============ -->
+        <div class="grid grid-cols-1 lg:grid-cols-5 gap-4">
 
-            <!-- Grid de Datos Numéricos -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-              <!-- Stock Disponible -->
-              <div>
-                <label class="block text-xs font-black text-[#334155] mb-2 uppercase tracking-widest">Stock Disponible <span class="text-red-500">*</span></label>
-                <div class="relative">
-                  <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <i class="ri-archive-line text-gray-400 group-focus-within:text-[#065F46] transition-colors"></i>
+          <!-- ===== COLUMNA IZQUIERDA (3/5) ===== -->
+          <div class="lg:col-span-3 space-y-4">
+
+            <!-- 01 — Identificación -->
+            <section class="bg-white rounded-xl border border-[#D1D5DB] shadow-sm overflow-hidden">
+              <header class="px-4 py-2.5 bg-[#F8FAFC] border-b border-[#D1D5DB] flex items-center gap-2">
+                <span class="text-[9px] font-mono font-black text-[#10B981] bg-white border border-[#10B981]/30 rounded px-1.5 py-0.5">01</span>
+                <i class="ri-tools-fill text-[#10B981] text-base"></i>
+                <h2 class="text-[10px] font-black text-[#065F46] uppercase tracking-widest">Identificación</h2>
+              </header>
+
+              <div class="p-4">
+                <div class="space-y-1">
+                  <label class="label-circuit">Nombre del componente <span class="text-red-500">*</span></label>
+                  <div class="relative">
+                    <i class="ri-qr-code-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-base pointer-events-none"></i>
+                    <input
+                      v-model="form.nombre_repuesto"
+                      type="text"
+                      required
+                      class="form-input-circuit pl-10 pr-3 py-2.5 text-sm"
+                      placeholder="Ej: Módulo Pantalla OLED - iPhone 13 Pro"
+                    />
                   </div>
-                  <input
-                    v-model.number="form.cantidad_disponible"
-                    type="number"
-                    min="0"
-                    class="block w-full pl-10 py-2.5 border border-[#D1D5DB] rounded-lg focus:ring-2 focus:ring-[#065F46] text-sm bg-[#F8FAFC] text-ellipsis overflow-hidden"
-                  />
                 </div>
               </div>
+            </section>
 
-              <!-- Costo Proveedor -->
-              <div>
-                <label class="block text-xs font-black text-[#334155] mb-2 uppercase tracking-widest">Costo Proveedor ($) <span class="text-red-500">*</span></label>
-                <div class="relative">
-                  <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none font-mono text-gray-400">$</div>
-                  <input
-                    v-model.number="form.precio_costo"
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    class="block w-full pl-8 py-2.5 border border-[#D1D5DB] rounded-lg focus:ring-2 focus:ring-[#065F46] text-sm bg-[#F8FAFC] text-ellipsis overflow-hidden"
-                    placeholder="0.00"
-                  />
-                </div>
-              </div>
+            <!-- 02 — Precios -->
+            <section class="bg-white rounded-xl border border-[#D1D5DB] shadow-sm overflow-hidden">
+              <header class="px-4 py-2.5 bg-[#F8FAFC] border-b border-[#D1D5DB] flex items-center gap-2">
+                <span class="text-[9px] font-mono font-black text-[#10B981] bg-white border border-[#10B981]/30 rounded px-1.5 py-0.5">02</span>
+                <i class="ri-money-dollar-circle-line text-[#10B981] text-base"></i>
+                <h2 class="text-[10px] font-black text-[#065F46] uppercase tracking-widest">Precios</h2>
+              </header>
 
-              <!-- Precio Venta -->
-              <div>
-                <label class="block text-xs font-black text-[#334155] mb-2 uppercase tracking-widest">Precio Venta ($) <span class="text-red-500">*</span></label>
-                <div class="relative">
-                  <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none font-mono text-gray-400">$</div>
-                  <input
-                    v-model.number="form.precio_venta"
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    class="block w-full pl-8 py-2.5 border border-[#D1D5DB] rounded-lg focus:ring-2 focus:ring-[#065F46] text-sm bg-[#F8FAFC] text-ellipsis overflow-hidden"
-                    placeholder="0.00"
-                  />
+              <div class="p-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <!-- Costo Proveedor -->
+                <div class="space-y-1">
+                  <label class="label-circuit">Costo proveedor ($) <span class="text-red-500">*</span></label>
+                  <div class="relative">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 font-mono text-gray-400 text-sm pointer-events-none">$</span>
+                    <input
+                      v-model.number="form.precio_costo"
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      class="form-input-circuit pl-8 pr-3 py-2.5 text-sm"
+                      placeholder="0.00"
+                    />
+                  </div>
                 </div>
-              </div>
 
-              <!-- Precio Venta a Técnicos -->
-              <div>
-                <label class="block text-xs font-black text-[#334155] mb-2 uppercase tracking-widest">Precio Venta a Técnicos ($)</label>
-                <div class="relative">
-                  <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none font-mono text-gray-400">$</div>
-                  <input
-                    v-model.number="form.precio_tecnico"
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    class="block w-full pl-8 py-2.5 border border-[#D1D5DB] rounded-lg focus:ring-2 focus:ring-[#10B981] text-sm bg-[#F8FAFC] text-ellipsis overflow-hidden"
-                    placeholder="0.00"
-                  />
+                <!-- Precio reparación -->
+                <div class="space-y-1">
+                  <label class="label-circuit">Precio en reparación ($) <span class="text-red-500">*</span></label>
+                  <div class="relative">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 font-mono text-gray-400 text-sm pointer-events-none">$</span>
+                    <input
+                      v-model.number="form.precio_venta"
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      class="form-input-circuit pl-8 pr-3 py-2.5 text-sm"
+                      placeholder="0.00"
+                    />
+                  </div>
+                </div>
+
+                <!-- Precio otros talleres -->
+                <div class="space-y-1 sm:col-span-2">
+                  <label class="label-circuit">Precio a otros talleres ($)</label>
+                  <div class="relative">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 font-mono text-gray-400 text-sm pointer-events-none">$</span>
+                    <input
+                      v-model.number="form.precio_tecnico"
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      class="form-input-circuit pl-8 pr-3 py-2.5 text-sm"
+                      placeholder="0.00"
+                    />
+                  </div>
+                  <p class="mt-1 text-[10px] text-gray-500">Usado al vender este repuesto a otro taller.</p>
                 </div>
               </div>
-            </div>
+            </section>
+          </div>
+
+          <!-- ===== COLUMNA DERECHA (2/5) ===== -->
+          <div class="lg:col-span-2">
+            <section class="bg-white rounded-xl border border-[#D1D5DB] shadow-sm overflow-hidden h-full flex flex-col">
+              <header class="px-4 py-2.5 bg-[#F8FAFC] border-b border-[#D1D5DB] flex items-center gap-2">
+                <span class="text-[9px] font-mono font-black text-[#10B981] bg-white border border-[#10B981]/30 rounded px-1.5 py-0.5">03</span>
+                <i class="ri-archive-line text-[#10B981] text-base"></i>
+                <h2 class="text-[10px] font-black text-[#065F46] uppercase tracking-widest">Inventario</h2>
+              </header>
+
+              <div class="p-4 space-y-4 flex-1">
+                <div class="space-y-1">
+                  <label class="label-circuit">Stock disponible <span class="text-red-500">*</span></label>
+                  <div class="relative">
+                    <i class="ri-archive-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-base pointer-events-none"></i>
+                    <input
+                      v-model.number="form.cantidad_disponible"
+                      type="number"
+                      min="0"
+                      class="form-input-circuit pl-10 pr-3 py-2.5 text-sm"
+                    />
+                  </div>
+                </div>
+
+                <!-- Resumen visual -->
+                <div class="rounded-lg border border-[#D1D5DB] bg-[#F8FAFC] p-3 space-y-2">
+                  <p class="text-[9px] font-black text-gray-400 uppercase tracking-widest">Resumen</p>
+                  <div class="flex items-center justify-between text-xs">
+                    <span class="text-gray-500">Stock:</span>
+                    <span class="font-black text-[#065F46]">{{ form.cantidad_disponible || 0 }} UNID</span>
+                  </div>
+                  <div class="flex items-center justify-between text-xs">
+                    <span class="text-gray-500">Costo total:</span>
+                    <span class="font-black text-[#065F46]">
+                      ${{ ((form.precio_costo || 0) * (form.cantidad_disponible || 0)).toFixed(2) }}
+                    </span>
+                  </div>
+                  <div class="flex items-center justify-between text-xs border-t border-[#D1D5DB] pt-2">
+                    <span class="text-gray-500">Margen x unidad:</span>
+                    <span class="font-black" :class="(form.precio_venta - form.precio_costo) >= 0 ? 'text-[#10B981]' : 'text-red-500'">
+                      ${{ ((form.precio_venta || 0) - (form.precio_costo || 0)).toFixed(2) }}
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Nota -->
+                <div class="bg-[#FFFBEB] rounded-lg border border-[#FEF3C7] p-3">
+                  <div class="flex items-start gap-2">
+                    <i class="ri-information-fill text-[#F59E0B] text-base mt-0.5 shrink-0"></i>
+                    <p class="text-[10px] text-[#92400E] leading-relaxed">
+                      El precio para técnicos se usa en ventas a otros talleres.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </section>
           </div>
         </div>
 
-        <!-- Alerta de Información Técnica en Ámbar #F59E0B -->
-        <div class="bg-[#FFFBEB] rounded-lg border border-[#FEF3C7] p-4 shadow-sm">
-          <div class="flex items-start gap-3">
-            <i class="ri-information-fill text-[#F59E0B] text-xl mt-0.5"></i>
-            <div class="text-sm text-[#92400E]">
-              <p class="font-bold mb-1 uppercase text-xs tracking-wider">Nota del Sistema</p>
-              <p class="text-xs leading-relaxed break-words mt-2">El precio para técnicos se usará en ventas a otros talleres y técnicos externos.</p>
-            </div>
-          </div>
-        </div>
+        <!-- ============ FOOTER ACCIONES ============ -->
+        <div class="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-3 pt-2 pb-6">
+          <NuxtLink
+            to="/repuestos"
+            class="px-5 py-2.5 bg-white text-gray-400 border border-gray-200 rounded-lg hover:text-red-500 hover:border-red-200 transition-all text-[10px] font-black uppercase tracking-widest text-center"
+          >
+            Cancelar
+          </NuxtLink>
 
-        <!-- Botones de acción industriales -->
-        <div class="flex flex-col sm:flex-row justify-end gap-3 sm:gap-4 pt-4 button-group-mobile">
           <button
             type="submit"
             :disabled="guardando || !formularioValido"
-            class="w-full sm:w-auto px-6 sm:px-8 py-3 text-xs sm:text-sm font-black text-white bg-[#065F46] rounded-lg hover:bg-[#065F46] transition-all disabled:opacity-50 shadow-lg hover:shadow-[#065F46]/30 flex items-center justify-center gap-2 border-b-4 border-[#033a2b] active:border-b-0 active:translate-y-1 btn-mobile touch-target"
+            class="px-8 py-3 bg-[#065F46] text-white rounded-lg hover:bg-[#054a37] transition-all disabled:opacity-50 disabled:cursor-not-allowed text-xs font-black uppercase tracking-[0.2em] shadow-md shadow-[#065F46]/20 flex items-center justify-center gap-2 border-b-4 border-[#033a2b] active:border-b-0 active:translate-y-1"
           >
-            <i v-if="guardando" class="ri-loader-4-line animate-spin text-base sm:text-lg"></i>
-            <i v-else class="ri-save-3-fill text-base sm:text-lg"></i>
-            <span class="hidden xs:inline">{{ guardando ? 'PROCESANDO...' : 'GUARDAR COMPONENTE' }}</span>
-            <span class="xs:hidden">{{ guardando ? 'PROCESANDO...' : 'GUARDAR' }}</span>
+            <i v-if="guardando" class="ri-loader-4-line animate-spin text-base"></i>
+            <i v-else class="ri-save-3-fill text-base"></i>
+            {{ guardando ? 'Procesando...' : 'Guardar componente' }}
           </button>
-          <NuxtLink
-            to="/repuestos"
-            class="w-full sm:w-auto px-4 sm:px-6 py-3 text-xs sm:text-sm font-bold text-[#334155] bg-white border border-[#D1D5DB] rounded-lg hover:bg-gray-50 transition-all flex items-center justify-center gap-2 btn-mobile touch-target"
-          >
-            <i class="ri-close-circle-line text-base sm:text-lg"></i>
-            <span class="hidden xs:inline">CANCELAR</span>
-            <span class="xs:hidden">CERRAR</span>
-          </NuxtLink>
         </div>
       </form>
     </div>
 
-    <!-- Toast de notificación: Estética Dark Tech -->
-    <div v-if="toast.visible" class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 animate-slide-up max-w-[calc(100vw-2rem)] sm:max-w-none">
-      <div :class="[
-        'px-4 sm:px-6 py-3 sm:py-4 rounded-xl shadow-2xl flex items-center gap-3 sm:gap-4 min-w-[280px] sm:min-w-[320px] max-w-[calc(100vw-2rem)] border-l-4 transition-all',
-        toast.tipo === 'success' ? 'bg-[#065F46] border-[#10B981] text-white' : 'bg-red-900 border-red-500 text-white'
-      ]">
-        <i :class="toast.tipo === 'success' ? 'ri-checkbox-circle-fill text-[#10B981] text-2xl' : 'ri-error-warning-fill text-red-400 text-2xl'"></i>
-        <div class="flex-1">
-          <p class="text-[10px] uppercase font-bold opacity-60 tracking-widest">Notificación del Sistema</p>
-          <p class="text-sm font-medium break-words">{{ toast.mensaje }}</p>
+    <!-- Toast -->
+    <Transition name="slide-fade">
+      <div v-if="toast.visible" class="fixed top-3 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-1.5rem)] max-w-sm">
+        <div :class="[
+          'px-3 py-2 rounded-lg shadow-xl flex items-center gap-2 border-l-4 backdrop-blur-md',
+          toast.tipo === 'success' ? 'bg-[#065F46]/95 text-white border-[#10B981]' : 'bg-red-600/95 text-white border-red-800'
+        ]">
+          <i :class="toast.tipo === 'success' ? 'ri-checkbox-circle-fill text-base text-[#10B981]' : 'ri-error-warning-fill text-base text-red-200'"></i>
+          <div class="flex-1 min-w-0">
+            <p class="text-[8px] font-black uppercase tracking-[0.2em] opacity-60 italic">DroidStock</p>
+            <p class="text-xs font-bold tracking-tight break-words">{{ toast.mensaje }}</p>
+          </div>
+          <button @click="toast.visible = false" class="text-white/70 hover:text-white p-0.5" aria-label="Cerrar">
+            <i class="ri-close-line text-base"></i>
+          </button>
         </div>
-        <button @click="toast.visible = false" class="hover:rotate-90 transition-transform">
-          <i class="ri-close-line text-xl"></i>
-        </button>
       </div>
-    </div>
+    </Transition>
   </div>
 </template>
 
@@ -206,15 +241,14 @@ const form = reactive({
 })
 
 const formularioValido = computed(() => {
-  return form.nombre_repuesto && 
-         form.nombre_repuesto.trim() !== '' && 
-         form.cantidad_disponible !== null && 
-         form.cantidad_disponible >= 0 && 
-         form.precio_costo !== null && 
-         form.precio_costo >= 0 && 
-         form.precio_venta !== null && 
+  return form.nombre_repuesto &&
+         form.nombre_repuesto.trim() !== '' &&
+         form.cantidad_disponible !== null &&
+         form.cantidad_disponible >= 0 &&
+         form.precio_costo !== null &&
+         form.precio_costo >= 0 &&
+         form.precio_venta !== null &&
          form.precio_venta >= 0
-  // precio_tecnico es opcional, no se valida
 })
 
 const mostrarToast = (mensaje, tipo = 'success') => {
@@ -230,25 +264,23 @@ const mostrarToast = (mensaje, tipo = 'success') => {
 
 const guardarRepuesto = async () => {
   if (!form.nombre_repuesto || form.nombre_repuesto.trim() === '') {
-    mostrarToast('El nombre del componente es obligatorio para el log', 'error')
+    mostrarToast('El nombre del componente es obligatorio', 'error')
     return
   }
 
   guardando.value = true
-  
+
   try {
-    // Debug: Ver qué datos se envían
     const datosAEnviar = {
       nombre_repuesto: form.nombre_repuesto,
       cantidad_disponible: form.cantidad_disponible || 0,
       precio_costo: form.precio_costo || null,
-      precio_venta: form.precio_venta || null,
+      precio_venta: form.precio_venta !== null && form.precio_venta !== undefined ? Number(form.precio_venta) : null,
       precio_tecnico: form.precio_tecnico || null
     }
-    console.log('Datos que se enviarán:', datosAEnviar)
-    
+
     const result = await crearRepuesto(datosAEnviar)
-    
+
     if (result.success) {
       mostrarToast('Componente registrado en la base de datos', 'success')
       setTimeout(() => {
@@ -267,6 +299,18 @@ const guardarRepuesto = async () => {
 </script>
 
 <style scoped>
+.form-input-circuit {
+  @apply w-full bg-gray-50 border border-gray-200 rounded-lg focus:ring-0 focus:border-[#10B981] focus:bg-white transition-all font-bold text-[#334155] placeholder:text-gray-300 outline-none;
+}
+
+.form-input-circuit:focus-visible {
+  @apply ring-2 ring-[#10B981]/20;
+}
+
+.label-circuit {
+  @apply text-[9px] font-black text-gray-400 uppercase tracking-widest ml-0.5;
+}
+
 .animate-spin {
   animation: spin 1s linear infinite;
 }
@@ -276,13 +320,12 @@ const guardarRepuesto = async () => {
   to { transform: rotate(360deg); }
 }
 
-@keyframes slideUp {
-  from { transform: translateY(30px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+.slide-fade-enter-active, .slide-fade-leave-active {
+  transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
-
-.animate-slide-up {
-  animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+.slide-fade-enter-from, .slide-fade-leave-to {
+  transform: translateY(-15px) scale(0.95);
+  opacity: 0;
 }
 
 /* Eliminar flechas del input number para look técnico limpio */

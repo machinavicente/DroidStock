@@ -48,6 +48,18 @@ export default defineEventHandler(async (event) => {
       })
     }
 
+    if (
+      repuesto.precio_venta === null ||
+      repuesto.precio_venta === undefined ||
+      !Number.isFinite(Number(repuesto.precio_venta)) ||
+      Number(repuesto.precio_venta) < 0
+    ) {
+      throw createError({
+        statusCode: 400,
+        message: 'Configura el precio en reparación de este repuesto antes de asignarlo'
+      })
+    }
+
     console.log('Repuesto encontrado:', repuesto.nombre_repuesto)
     console.log('Stock actual:', repuesto.cantidad_disponible)
 
@@ -86,7 +98,7 @@ const { data: asignacion, error: insertError } = await supabase
     reparacion_id: id,
     repuesto_id: repuesto_id,
     cantidad: cantidad,
-    precio_unitario: repuesto.precio_costo
+    precio_unitario: repuesto.precio_venta
   })
   .select()
 

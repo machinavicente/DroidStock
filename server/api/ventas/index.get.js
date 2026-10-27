@@ -21,7 +21,6 @@ export default defineEventHandler(async (event) => {
         id,
         nombre_repuesto,
         precio_costo,
-        precio_venta,
         precio_montaje
       ),
       facturas (

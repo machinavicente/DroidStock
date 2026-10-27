@@ -1,7 +1,7 @@
 <template>
   <!-- Fondo Gris Técnico #F3F4F6 -->
   <div class="min-h-screen bg-[#F3F4F6] p-4 sm:p-8">
-    <div class="max-w-7xl mx-auto">
+    <div class="w-full">
       
       <!-- Header Estilo Industrial -->
       <div class="flex flex-col gap-4 mb-6 sm:mb-8">
@@ -15,7 +15,7 @@
               <h1 class="text-xl sm:text-2xl lg:text-3xl font-black text-[#065F46] tracking-tight uppercase leading-tight">
                 {{ tecnico ? `Reparaciones de ${tecnico.nombre}` : 'Reparaciones' }}
               </h1>
-              <div v-if="tecnico" class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-[#065F46] to-[#10B981] flex items-center justify-center text-white font-black text-lg sm:text-xl shadow-md flex-shrink-0">
+              <div v-if="tecnico" class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-[#065F46] flex items-center justify-center text-white font-black text-lg sm:text-xl shadow-md flex-shrink-0">
                 {{ tecnico.nombre.charAt(0).toUpperCase() }}
               </div>
             </div>
@@ -188,7 +188,7 @@
               </div>
 
               <!-- Información Adicional - Entrega -->
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4 p-3 bg-gradient-to-r from-[#F8FAFC] to-[#F3F4F6] rounded-lg border border-[#E5E7EB]">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4 p-3 bg-[#F3F4F6] rounded-lg border border-[#E5E7EB]">
                 <!-- Fecha de Finalización -->
                 <div>
                   <div class="flex items-center gap-1 mb-1">
@@ -206,7 +206,7 @@
               <!-- Técnico y Fechas -->
               <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-4 pt-3 border-t border-[#F3F4F6]">
                 <div class="flex items-center gap-2">
-                  <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-gradient-to-br from-[#065F46] to-[#10B981] flex items-center justify-center text-white font-black text-xs shadow-sm">
+                  <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#065F46] flex items-center justify-center text-white font-black text-xs shadow-sm">
                     {{ reparacion.tecnicos?.nombre?.charAt(0).toUpperCase() || 'T' }}
                   </div>
                   <div>

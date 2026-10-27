@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen bg-[#F3F4F6] p-4 sm:p-8">
-    <div class="max-w-6xl mx-auto">
+    <div class="w-full">
       
       <!-- Navegación Superior -->
       <div class="mb-6 flex items-center justify-between">

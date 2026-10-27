@@ -1,21 +1,20 @@
 <template>
-  <!-- Fondo Gris Técnico #F3F4F6 -->
   <div class="min-h-screen bg-[#F3F4F6] flex items-center justify-center py-8 sm:py-12 px-4">
     <div class="max-w-md w-full bg-white rounded-2xl shadow-xl border border-[#D1D5DB] overflow-hidden animate-slide-up">
-      
-      <!-- Header con LED técnico -->
+
+      <!-- ============ HEADER ============ -->
       <div class="relative">
-        <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#065F46] via-[#10B981] to-[#065F46]"></div>
+        <div class="absolute top-0 left-0 right-0 h-1 bg-[#10B981]"></div>
         <div class="pt-8 px-6 sm:px-8">
           <div class="flex justify-center mb-4">
             <div class="relative">
-              <div class="w-16 h-16 sm:w-18 sm:h-18 bg-gradient-to-br from-[#065F46] to-[#10B981] rounded-2xl flex items-center justify-center shadow-lg">
+              <div class="w-16 h-16 sm:w-18 sm:h-18 bg-[#065F46] rounded-2xl flex items-center justify-center shadow-lg">
                 <i class="ri-store-2-line text-2xl sm:text-3xl text-white"></i>
               </div>
               <div class="absolute -top-1 -right-1 w-3 h-3 bg-[#10B981] rounded-full animate-pulse shadow-lg"></div>
             </div>
           </div>
-          
+
           <div class="text-center mb-6">
             <div class="flex items-center justify-center gap-2 mb-2">
               <span class="h-1.5 w-1.5 bg-[#10B981] rounded-full"></span>
@@ -27,99 +26,115 @@
         </div>
       </div>
 
-      <!-- Alertas - Estilo Técnico -->
-      <div class="px-6 sm:px-8" v-if="errorMessage || successMessage">
-        <div v-if="errorMessage" class="mb-4 p-3 bg-red-50 border-l-4 border-[#DC2626] rounded-r-lg">
-          <div class="flex items-center gap-2">
-            <i class="ri-error-warning-line text-[#DC2626] text-sm"></i>
-            <span class="text-[11px] font-mono text-[#991B1B]">{{ errorMessage }}</span>
+      <!-- ============ ALERTAS ============ -->
+      <Transition name="slide-fade">
+        <div class="px-6 sm:px-8" v-if="errorMessage || successMessage">
+          <div v-if="errorMessage" class="mb-4 p-3 bg-red-50 border-l-4 border-[#DC2626] rounded-r-lg">
+            <div class="flex items-center gap-2">
+              <i class="ri-error-warning-line text-[#DC2626] text-sm"></i>
+              <span class="text-[11px] font-mono text-[#991B1B] break-words">{{ errorMessage }}</span>
+            </div>
+          </div>
+          <div v-if="successMessage" class="mb-4 p-3 bg-[#ECFDF5] border-l-4 border-[#10B981] rounded-r-lg">
+            <div class="flex items-center gap-2">
+              <i class="ri-checkbox-circle-line text-[#10B981] text-sm"></i>
+              <span class="text-[11px] font-mono text-[#065F46]">{{ successMessage }}</span>
+            </div>
           </div>
         </div>
-        <div v-if="successMessage" class="mb-4 p-3 bg-[#ECFDF5] border-l-4 border-[#10B981] rounded-r-lg">
-          <div class="flex items-center gap-2">
-            <i class="ri-checkbox-circle-line text-[#10B981] text-sm"></i>
-            <span class="text-[11px] font-mono text-[#065F46]">{{ successMessage }}</span>
-          </div>
-        </div>
-      </div>
+      </Transition>
 
-      <!-- Formulario de Login -->
-      <form @submit.prevent="handleLogin" class="space-y-5 px-6 sm:px-8">
-        <!-- Slug del taller -->
+      <!-- ============ FORM ============ -->
+      <form @submit.prevent="handleLogin" class="space-y-5 px-6 sm:px-8 pb-2">
+        <!-- Slug -->
         <div class="space-y-1">
           <label class="label-circuit">
-            <i class="ri-store-2-line mr-1 text-[#10B981]"></i>
-            USUARIO DEL TALLER: 
-            <span class="text-[#10B981] slugLower">[{{ form.slug || 'tu-taller' }}]</span>
+            <i class="ri-store-2-line text-[#10B981]"></i>
+            Usuario del taller
+            <span v-if="form.slug" class="text-[#10B981] normal-case">[{{ form.slug }}]</span>
           </label>
-          <div class="relative group">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-             
-            </div>
+          <div class="relative">
+            <i class="ri-at-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-base pointer-events-none"></i>
             <input
               ref="slugInput"
               v-model="form.slug"
               type="text"
               required
-              class="form-input-circuit pl-9 lowercase"
+              autocomplete="username"
+              autocapitalize="none"
+              spellcheck="false"
+              class="form-input-circuit pl-9 pr-9 py-2.5 text-sm lowercase"
               placeholder="mi-taller"
               :disabled="cargando"
+              @input="manejarInputSlug"
               @keydown="manejarTecla"
               @paste="manejarPegar"
             />
-            <div v-if="form.slug && !slugEsValido" class="absolute inset-y-0 right-0 pr-3 flex items-center">
+            <div v-if="form.slug && !slugEsValido" class="absolute right-3 top-1/2 -translate-y-1/2">
               <i class="ri-error-warning-line text-[#DC2626] text-base"></i>
             </div>
-            <div v-else-if="form.slug && slugEsValido && form.slug.length > 0" class="absolute inset-y-0 right-0 pr-3 flex items-center">
+            <div v-else-if="form.slug && slugEsValido" class="absolute right-3 top-1/2 -translate-y-1/2">
               <i class="ri-checkbox-circle-line text-[#10B981] text-base"></i>
             </div>
           </div>
-          <p class="text-[8px] font-mono text-gray-400">[REQUISITOS: mínimo 3 caracteres, máximo 30 | SIN ESPACIOS]</p>
+          <p class="text-[9px] font-mono text-gray-400 uppercase tracking-widest mt-1">
+            Mín. 3 · Máx. 30 · Sin espacios
+          </p>
         </div>
 
         <!-- Contraseña -->
         <div class="space-y-1">
           <label class="label-circuit">
-            <i class="ri-lock-line mr-1 text-[#10B981]"></i>
-            CONTRASEÑA
+            <i class="ri-lock-line text-[#10B981]"></i>
+            Contraseña
           </label>
-          <div class="relative group">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              
-            </div>
+          <div class="relative">
+            <i class="ri-lock-2-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-base pointer-events-none"></i>
             <input
               v-model="form.password"
-              type="password"
+              :type="mostrarPassword ? 'text' : 'password'"
               required
-              class="form-input-circuit pl-9"
+              autocomplete="current-password"
+              class="form-input-circuit pl-9 pr-10 py-2.5 text-sm"
               placeholder="••••••••"
               :disabled="cargando"
             />
+            <button
+              type="button"
+              @click="mostrarPassword = !mostrarPassword"
+              class="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded text-gray-400 hover:text-[#10B981] transition-colors"
+              :aria-label="mostrarPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+            >
+              <i :class="mostrarPassword ? 'ri-eye-off-line' : 'ri-eye-line'" class="text-base"></i>
+            </button>
           </div>
         </div>
 
-        <!-- Botón de login - Estilo Técnico -->
+        <!-- Botón -->
         <button
           type="submit"
           :disabled="cargando || !formularioValido"
-          class="w-full py-3 bg-[#065F46] text-white font-bold rounded-xl hover:bg-[#054a37] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg hover:shadow-[#065F46]/20 border-b-4 border-[#033a2b] active:border-b-0 active:translate-y-1 text-xs sm:text-sm tracking-wider uppercase mt-6"
+          class="w-full py-3 bg-[#065F46] text-white font-black rounded-xl hover:bg-[#054a37] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg shadow-[#065F46]/20 border-b-4 border-[#033a2b] active:border-b-0 active:translate-y-1 text-xs sm:text-sm tracking-wider uppercase mt-6"
         >
           <i v-if="cargando" class="ri-loader-4-line animate-spin text-base"></i>
           <i v-else class="ri-login-circle-line text-base"></i>
-          {{ cargando ? 'PROCESANDO...' : 'INICIAR SESIÓN' }}
+          {{ cargando ? 'Procesando...' : 'Iniciar sesión' }}
         </button>
       </form>
 
-      <!-- Link a registro -->
-      <div class="px-6 sm:px-8 py-6 mt-4 border-t border-[#D1D5DB] bg-[#F8FAFC]">
-        <p class="text-center text-[12px] font-mono text-gray-500">
+      <!-- ============ FOOTER ============ -->
+      <div class="px-6 sm:px-8 py-5 mt-4 border-t border-[#D1D5DB] bg-[#F8FAFC]">
+        <p class="text-center text-xs font-mono text-gray-500">
           ¿Eres dueño de un taller?
-          <NuxtLink to="/registro" class="text-[#10B981] hover:text-[#065F46] font-black uppercase tracking-wider transition-colors">
-            REGISTRA TU TALLER
+          <NuxtLink
+            to="/registro"
+            class="ml-1 text-[#10B981] hover:text-[#065F46] font-black uppercase tracking-wider transition-colors"
+          >
+            Registra tu taller
           </NuxtLink>
         </p>
-        <p class="text-center text-[8px] font-mono text-gray-400 mt-2">
-          DroidStock - Inventory & Repair Management System
+        <p class="text-center text-[9px] font-mono text-gray-400 mt-2 uppercase tracking-widest">
+          DroidStock · Inventory &amp; Repair Management
         </p>
       </div>
     </div>
@@ -127,117 +142,68 @@
 </template>
 
 <script setup>
-// Usar el composable de autenticación
 const { login } = useAuth()
 const router = useRouter()
+const route = useRoute()
 
 const cargando = ref(false)
 const errorMessage = ref('')
 const successMessage = ref('')
 const slugInput = ref(null)
+const mostrarPassword = ref(false)
 
 const form = reactive({
   slug: '',
   password: ''
 })
 
-// Validación del slug en tiempo real
 const slugEsValido = computed(() => {
   if (!form.slug) return false
   return form.slug.length >= 3 && form.slug.length <= 30
 })
 
-// Computed para validar el formulario completo
 const formularioValido = computed(() => {
   return form.slug && slugEsValido.value && form.password && form.password.length >= 1
 })
 
-/**
- * Filtra los caracteres permitidos en tiempo real
- * Solo permite: a-z, 0-9, guiones
- */
+// Permite escribir "-" en cualquier posición mientras se escribe.
+// Solo colapsa guiones múltiples y elimina caracteres inválidos.
 const filtrarCaracteresPermitidos = (texto) => {
   if (!texto) return ''
-  
-  // Convertir espacios a guiones y eliminar cualquier otro caracter no permitido
-  // Convertir a minúsculas automáticamente
-  let filtrado = texto.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
-  
-  // Reemplazar múltiples guiones por uno solo
+  let filtrado = texto.toLowerCase().replace(/\s+/g, '-')
+  filtrado = filtrado.replace(/[^a-z0-9-]/g, '')
   filtrado = filtrado.replace(/-+/g, '-')
-  
-  // Eliminar guiones al inicio y final
-  filtrado = filtrado.replace(/^-+|-+$/g, '')
-  
-  // Limitar a 30 caracteres
-  if (filtrado.length > 30) {
-    filtrado = filtrado.substring(0, 30)
-    filtrado = filtrado.replace(/-+$/, '')
-  }
-  
+  if (filtrado.length > 30) filtrado = filtrado.substring(0, 30)
   return filtrado
 }
 
-/**
- * Maneja el input del usuario en tiempo real
- */
 const manejarInputSlug = (event) => {
-  let valor = event.target.value
-  
-  // Filtrar caracteres no permitidos y convertir a minúsculas
-  let filtrado = filtrarCaracteresPermitidos(valor)
-  
-  // Actualizar el valor
-  form.slug = filtrado
+  form.slug = filtrarCaracteresPermitidos(event.target.value)
 }
 
-
-/**
- * Previene solo el ingreso de espacios
- */
 const manejarTecla = (event) => {
-  // Prevenir solo la tecla ESPACIO
   if (event.key === ' ' || event.key === 'Space' || event.code === 'Space') {
     event.preventDefault()
   }
 }
 
-/**
- * Maneja el pegado de texto (limpia el contenido pegado)
- */
 const manejarPegar = (event) => {
   event.preventDefault()
   const textoPegado = event.clipboardData.getData('text')
-  const textoLimpio = filtrarCaracteresPermitidos(textoPegado)
-  form.slug = textoLimpio
+  form.slug = filtrarCaracteresPermitidos(textoPegado)
 }
 
-// Función para obtener mensajes de error en formato técnico
 const obtenerMensajeError = (error) => {
-  if (!navigator.onLine) {
-    return '[ERR_NETWORK] SIN_CONEXIÓN'
-  }
-  
-  if (error.response?.status === 500) {
-    return '[ERR_SERVER] FALLO_EN_SERVIDOR'
-  }
-  
+  if (!navigator.onLine) return 'SIN_CONEXIÓN'
+  if (error.response?.status === 500) return 'FALLO_EN_SERVIDOR'
   if (error.response?.status === 401) {
     const mensaje = error.data?.message
-    if (mensaje?.includes('Credenciales inválidas')) {
-      return '[ERR_AUTH] CREDENCIALES_INVÁLIDAS'
-    }
-    if (mensaje?.includes('Taller no encontrado')) {
-      return '[ERR_NOT_FOUND] TALLER_NO_ENCONTRADO'
-    }
-    return mensaje || '[ERR_AUTH] ACCESO_DENEGADO'
+    if (mensaje?.includes('Credenciales inválidas')) return 'Credenciales inválidas'
+    if (mensaje?.includes('Taller no encontrado')) return 'Taller no encontrado'
+    return mensaje || 'Acceso denegado'
   }
-  
-  if (error.message?.includes('fetch') || error.message?.includes('network')) {
-    return '[ERR_NETWORK] CONEXION_FALLIDA'
-  }
-  
-  return error.data?.message || '[ERR_UNKNOWN] ERROR_DESCONOCIDO'
+  if (error.message?.includes('fetch') || error.message?.includes('network')) return 'Conexión fallida'
+  return error.data?.message || 'Error desconocido'
 }
 
 const handleLogin = async () => {
@@ -245,38 +211,32 @@ const handleLogin = async () => {
   errorMessage.value = ''
   successMessage.value = ''
 
-  // Validar campos requeridos
   if (!form.slug || !form.password) {
-    errorMessage.value = '[ERR_VALID] CAMPOS_REQUERIDOS'
+    errorMessage.value = 'Campos requeridos'
     cargando.value = false
     return
   }
 
-  // Validar longitud mínima
-  if (!form.slug || form.slug.length < 3) {
-    errorMessage.value = '[ERR_VALID] USUARIO_INVALIDO_MINIMO_3_CARACTERES'
+  if (form.slug.length < 3) {
+    errorMessage.value = 'Usuario inválido (mínimo 3 caracteres)'
     cargando.value = false
     return
   }
+
+  // Limpiar guiones extremos solo al enviar
+  const slugParaEnviar = form.slug.replace(/^-+|-+$/g, '')
 
   try {
-    // Enviar el slug
-    const result = await login({ 
-      slug: form.slug, 
-      password: form.password 
-    })
-    
+    const result = await login({ slug: slugParaEnviar, password: form.password })
+
     if (result.success) {
-      successMessage.value = '[OK] LOGIN_EXITOSO - REDIRIGIENDO...'
-      
+      successMessage.value = 'Login exitoso. Redirigiendo...'
       setTimeout(() => {
-        // Verificar si hay una ruta de redirección guardada
-        const route = useRoute()
         const redirectPath = route.query.redirect || '/dashboard'
         router.push(redirectPath)
       }, 500)
     } else {
-      errorMessage.value = result.error || '[ERR_AUTH] ERROR_AL_INICIAR'
+      errorMessage.value = result.error || 'Error al iniciar sesión'
     }
   } catch (error) {
     console.error('Error de login:', error)
@@ -289,50 +249,39 @@ const handleLogin = async () => {
 
 <style scoped>
 .form-input-circuit {
-  @apply w-full px-4 py-2.5 bg-[#F8FAFC] border-2 border-[#D1D5DB] rounded-xl focus:ring-0 focus:border-[#10B981] focus:bg-white transition-all text-sm font-bold text-[#334155] placeholder:text-gray-300 shadow-inner outline-none;
+  @apply w-full bg-[#F8FAFC] border border-[#D1D5DB] rounded-xl focus:ring-0 focus:border-[#10B981] focus:bg-white transition-all font-bold text-[#334155] placeholder:text-gray-300 outline-none;
 }
 
-.form-input-circuit.lowercase {
-  text-transform: lowercase;
+.form-input-circuit:focus-visible {
+  @apply ring-2 ring-[#10B981]/20;
 }
 
 .form-input-circuit.lowercase::placeholder {
   text-transform: none;
 }
 
-.label-circuit {
-  @apply text-[11px] font-black text-gray-400 uppercase tracking-widest flex items-center gap-1;
-}
-.slugLower{
-  @apply lowercase
+.form-input-circuit:disabled {
+  @apply bg-gray-100 text-gray-500 cursor-not-allowed;
 }
 
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+.label-circuit {
+  @apply text-[10px] font-black text-gray-500 uppercase tracking-widest flex items-center gap-1.5;
 }
+
+.slide-fade-enter-active, .slide-fade-leave-active {
+  transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.slide-fade-enter-from, .slide-fade-leave-to {
+  transform: translateY(-10px);
+  opacity: 0;
+}
+
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 .animate-spin { animation: spin 1s linear infinite; }
 
-.animate-pulse {
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+.animate-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
 
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
-}
-
-@keyframes slideUp {
-  from {
-    transform: translateY(20px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-.animate-slide-up {
-  animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
+@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.animate-slide-up { animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
 </style>

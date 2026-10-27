@@ -24,7 +24,7 @@ export default defineEventHandler(async (event) => {
     // Obtener información del repuesto
     const { data: repuesto, error: repuestoError } = await supabase
       .from('stock_repuestos')
-      .select('cantidad_disponible, precio_venta, precio_montaje, nombre_repuesto')
+      .select('cantidad_disponible, precio_tecnico, precio_montaje, nombre_repuesto')
       .eq('id', repuesto_id)
       .eq('tienda_id', tienda_id)
       .single()
@@ -48,7 +48,13 @@ export default defineEventHandler(async (event) => {
     const stock_nuevo = stock_anterior - cantidad
 
     // Calcular total
-    const precio_unitario = repuesto.precio_venta || 0
+    const precio_unitario = repuesto.precio_tecnico || 0
+    if (precio_unitario <= 0) {
+      throw createError({
+        statusCode: 400,
+        statusMessage: 'El repuesto no tiene un precio configurado para otros talleres'
+      })
+    }
     const precio_montaje_unitario = incluye_montaje ? (repuesto.precio_montaje || 0) : 0
     const total = (precio_unitario + precio_montaje_unitario) * cantidad
 

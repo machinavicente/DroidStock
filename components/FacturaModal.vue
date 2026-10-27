@@ -1,98 +1,221 @@
 <template>
   <Teleport to="body">
-    <div
-      v-if="abierto"
-      class="factura-modal-overlay fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-3 sm:p-6"
-      role="dialog"
-      aria-modal="true"
-      :aria-label="props.tipo === 'venta' ? 'Factura de venta' : 'Factura de reparación'"
-      @click.self="cerrar"
-    >
-      <div class="max-h-[95vh] w-full max-w-3xl overflow-y-auto rounded-2xl bg-[#F3F4F6] shadow-2xl">
-        <div class="sticky top-0 z-10 flex items-center justify-between border-b border-gray-200 bg-white px-5 py-4 print:hidden">
-          <div>
-            <p class="text-[10px] font-black uppercase tracking-widest text-gray-400">
-              {{ props.tipo === 'venta' ? 'Detalle de venta' : 'Detalle de reparación' }}
-            </p>
-            <p class="font-black text-[#065F46]">{{ numeroFactura }}</p>
+    <Transition name="modal">
+      <div
+        v-if="abierto"
+        class="factura-modal-overlay fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-3 backdrop-blur-sm sm:p-6"
+        role="dialog"
+        aria-modal="true"
+        :aria-label="props.tipo === 'venta' ? 'Ticket de venta' : 'Ticket de reparación'"
+        @click.self="cerrar"
+      >
+        <div class="flex max-h-[95vh] w-full max-w-md flex-col overflow-hidden rounded-2xl bg-[#EEF1F4] shadow-2xl print:max-w-none print:rounded-none print:bg-white print:shadow-none">
+          <!-- TOOLBAR (solo pantalla) -->
+          <div class="flex shrink-0 items-center justify-between gap-2 border-b border-gray-200 bg-white px-3 py-2.5 sm:px-4 print:hidden">
+            <div class="min-w-0">
+              <p class="text-[10px] font-black uppercase tracking-[0.15em] text-gray-400">
+                {{ props.tipo === 'venta' ? 'Ticket de venta' : 'Ticket de reparación' }}
+              </p>
+              <p class="truncate font-mono text-xs font-black text-[#065F46]">
+                {{ numeroFactura || '—' }}
+              </p>
+            </div>
+            <div class="flex shrink-0 items-center gap-1.5">
+              <button
+                @click="imprimir"
+                :disabled="!datos"
+                class="flex items-center gap-1.5 rounded-full bg-[#065F46] px-3.5 py-1.5 text-[11px] font-black uppercase tracking-wider text-white shadow-md shadow-emerald-900/20 transition hover:bg-[#054d38] disabled:opacity-40"
+              >
+                <i class="ri-printer-line text-sm"></i> Imprimir
+              </button>
+              <button
+                @click="cerrar"
+                aria-label="Cerrar ticket"
+                class="rounded-full p-1.5 text-lg text-gray-500 transition hover:bg-gray-100 hover:text-red-600"
+              >
+                <i class="ri-close-line"></i>
+              </button>
+            </div>
           </div>
-          <div class="flex items-center gap-2">
-            <button @click="imprimir" class="rounded-lg bg-[#065F46] px-4 py-2 text-xs font-black uppercase tracking-wider text-white hover:bg-[#047857]">
-              <i class="ri-printer-line mr-1"></i> Imprimir
-            </button>
-            <button @click="cerrar" aria-label="Cerrar factura" class="rounded-lg p-2 text-xl text-gray-500 hover:bg-gray-100 hover:text-red-600">
-              <i class="ri-close-line"></i>
-            </button>
+
+          <!-- ÁREA SCROLLEABLE CON EL TICKET -->
+          <div class="min-h-0 flex-1 overflow-y-auto bg-[#EEF1F4] p-4 print:overflow-visible print:bg-white print:p-0">
+            <!-- Estados -->
+            <div v-if="cargando" class="flex flex-col items-center gap-3 py-16 text-sm text-gray-500">
+              <div class="h-8 w-8 animate-spin rounded-full border-4 border-[#10B981] border-t-transparent"></div>
+              Cargando ticket...
+            </div>
+
+            <div v-else-if="error" class="rounded-xl bg-red-50 p-8 text-center text-sm text-red-600">
+              {{ error }}
+            </div>
+
+            <!-- TICKET -->
+            <article
+              v-else-if="datos"
+              id="factura-modal"
+              class="ticket-paper mx-auto w-full bg-white px-3 py-4 font-mono text-[11px] leading-snug text-black shadow-lg print:shadow-none"
+              :class="props.ancho === '80' ? 'max-w-[340px]' : 'max-w-[260px]'"
+            >
+              <!-- ENCABEZADO -->
+              <header class="text-center">
+                <p class="text-[13px] font-black uppercase leading-tight tracking-wide">
+                  {{ datos.tienda?.nombre_tienda || 'MI TIENDA' }}
+                </p>
+                <p v-if="datos.tienda?.direccion" class="mt-0.5 text-[10px] leading-tight">
+                  {{ datos.tienda.direccion }}
+                </p>
+                <p v-if="datos.tienda?.telefono" class="text-[10px] leading-tight">
+                  Tel: {{ datos.tienda.telefono }}
+                </p>
+                <p class="mt-1.5 text-[10px] font-bold uppercase tracking-wider">
+                  {{ props.tipo === 'venta' ? 'Ticket de venta' : 'Ticket de reparación' }}
+                </p>
+              </header>
+
+              <!-- SEPARADOR -->
+              <p class="my-2 select-none overflow-hidden whitespace-nowrap text-center tracking-[0.15em] text-black/70">
+                ====================================
+              </p>
+
+              <!-- DATOS DEL TICKET -->
+              <section class="space-y-0.5 text-[10px]">
+                <div class="flex justify-between gap-2">
+                  <span class="uppercase tracking-wider">Ticket:</span>
+                  <span class="text-right font-bold">{{ numeroFactura }}</span>
+                </div>
+                <div class="flex justify-between gap-2">
+                  <span class="uppercase tracking-wider">Fecha:</span>
+                  <span class="text-right">{{ fechaFactura }}</span>
+                </div>
+                <div class="flex justify-between gap-2">
+                  <span class="uppercase tracking-wider">Hora:</span>
+                  <span class="text-right">{{ horaFactura }}</span>
+                </div>
+                <div class="flex justify-between gap-2">
+                  <span class="uppercase tracking-wider">Cliente:</span>
+                  <span class="truncate text-right">{{ datos.clientes?.nombre_completo || 'Cliente General' }}</span>
+                </div>
+                <div v-if="datos.clientes?.dni_cedula" class="flex justify-between gap-2">
+                  <span class="uppercase tracking-wider">Doc:</span>
+                  <span class="text-right">{{ datos.clientes.dni_cedula }}</span>
+                </div>
+                <div v-if="datos.metodo_pago" class="flex justify-between gap-2">
+                  <span class="uppercase tracking-wider">Pago:</span>
+                  <span class="text-right capitalize">{{ datos.metodo_pago }}</span>
+                </div>
+              </section>
+
+              <!-- EQUIPO (solo reparación) -->
+              <template v-if="props.tipo !== 'venta' && datos.reparaciones">
+                <p class="my-2 select-none overflow-hidden whitespace-nowrap text-center tracking-[0.15em] text-black/70">
+                  ------------------------------------
+                </p>
+                <section class="space-y-0.5 text-[10px]">
+                  <p class="text-center text-[9px] font-black uppercase tracking-widest">Equipo</p>
+                  <div class="flex justify-between gap-2">
+                    <span class="uppercase tracking-wider">Marca/Mod:</span>
+                    <span class="truncate text-right font-bold">{{ datos.reparaciones.equipo_marca_modelo || '—' }}</span>
+                  </div>
+                  <div v-if="datos.reparaciones.equipo_tipo" class="flex justify-between gap-2">
+                    <span class="uppercase tracking-wider">Tipo:</span>
+                    <span class="text-right">{{ datos.reparaciones.equipo_tipo }}</span>
+                  </div>
+                  <div v-if="datos.reparaciones.numero_serie" class="flex justify-between gap-2">
+                    <span class="uppercase tracking-wider">Serie:</span>
+                    <span class="truncate text-right">{{ datos.reparaciones.numero_serie }}</span>
+                  </div>
+                </section>
+              </template>
+
+              <!-- SEPARADOR -->
+              <p class="my-2 select-none overflow-hidden whitespace-nowrap text-center tracking-[0.15em] text-black/70">
+                ------------------------------------
+              </p>
+
+              <!-- ENCABEZADO DE CONCEPTOS -->
+              <div class="flex items-baseline justify-between text-[9px] font-black uppercase tracking-wider">
+                <span>Descripción</span>
+                <span>Importe</span>
+              </div>
+
+              <!-- CONCEPTOS -->
+              <ul class="mt-1 space-y-1.5">
+                <li
+                  v-for="detalle in detalles"
+                  :key="detalle.id"
+                  class="border-b border-dashed border-black/20 pb-1"
+                >
+                  <p class="break-words leading-tight">{{ detalle.descripcion }}</p>
+                  <div class="flex justify-between text-[10px]">
+                    <span class="text-black/60">
+                      {{ detalle.cantidad }} × {{ formatearTotal(detalle.precio_unitario) }}
+                    </span>
+                    <span class="font-bold">{{ formatearTotal(detalle.subtotal) }}</span>
+                  </div>
+                </li>
+                <li v-if="!detalles.length" class="py-2 text-center text-[10px] text-black/50">
+                  Sin conceptos
+                </li>
+              </ul>
+
+              <!-- SEPARADOR -->
+              <p class="my-2 select-none overflow-hidden whitespace-nowrap text-center tracking-[0.15em] text-black/70">
+                ====================================
+              </p>
+
+              <!-- TOTALES -->
+              <section class="space-y-0.5 text-[11px]">
+                <div class="flex justify-between">
+                  <span class="uppercase tracking-wider">Subtotal</span>
+                  <span>{{ formatearTotal(datos.subtotal) }}</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="uppercase tracking-wider">Impuesto</span>
+                  <span>{{ formatearTotal(datos.impuesto) }}</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="uppercase tracking-wider">Descuento</span>
+                  <span>-{{ formatearTotal(datos.descuento) }}</span>
+                </div>
+                <div class="mt-1 flex justify-between border-t-2 border-black pt-1 text-[13px] font-black">
+                  <span class="uppercase tracking-wider">Total</span>
+                  <span>{{ datos.moneda || 'USD' }} {{ formatearTotal(datos.total) }}</span>
+                </div>
+              </section>
+
+              <!-- SEPARADOR -->
+              <p class="my-2 select-none overflow-hidden whitespace-nowrap text-center tracking-[0.15em] text-black/70">
+                ------------------------------------
+              </p>
+
+              <!-- PIE -->
+              <footer class="space-y-0.5 text-center text-[10px] leading-tight">
+                <p class="font-bold uppercase tracking-wider">¡Gracias por su compra!</p>
+                <p>Conserve este ticket</p>
+                <p class="mt-1 text-[9px]">{{ datos.tienda?.nombre_tienda }} · {{ numeroFactura }}</p>
+                <p class="text-[9px]">{{ fechaFactura }} {{ horaFactura }}</p>
+              </footer>
+
+              <!-- Avance de papel -->
+              <div class="h-4 print:h-4"></div>
+            </article>
           </div>
         </div>
-
-        <div v-if="cargando" class="p-16 text-center text-sm text-gray-500">Cargando factura...</div>
-        <div v-else-if="error" class="p-16 text-center text-sm text-red-600">{{ error }}</div>
-        <article v-else-if="datos" class="m-3 bg-white p-5 sm:m-6 sm:p-9" id="factura-modal">
-          <header class="flex flex-col justify-between gap-5 border-b-2 border-[#10B981] pb-5 sm:flex-row">
-            <div>
-              <h1 class="text-2xl font-black tracking-tight text-[#065F46]">{{ datos.tienda?.nombre_tienda }}</h1>
-              <p class="mt-1 text-sm text-gray-500">{{ props.tipo === 'venta' ? 'Factura de venta' : 'Factura de reparación' }}</p>
-            </div>
-            <div class="sm:text-right">
-              <p class="text-xs font-bold uppercase tracking-widest text-gray-400">Número</p>
-              <p class="text-xl font-black text-[#065F46]">{{ numeroFactura }}</p>
-              <p class="text-sm text-gray-500">{{ fechaFactura }}</p>
-            </div>
-          </header>
-
-          <section class="grid gap-4 border-b border-gray-200 py-5 sm:grid-cols-2">
-            <div>
-              <p class="text-xs font-bold uppercase tracking-widest text-gray-400">Cliente</p>
-              <p class="font-bold text-gray-800">{{ datos.clientes?.nombre_completo || 'Cliente General' }}</p>
-              <p class="text-sm text-gray-500">{{ datos.clientes?.dni_cedula || 'Sin documento' }}</p>
-              <p class="text-sm text-gray-500">{{ datos.clientes?.telefono || '' }}</p>
-            </div>
-            <div class="sm:text-right">
-              <p class="text-xs font-bold uppercase tracking-widest text-gray-400">
-                {{ props.tipo === 'venta' ? 'Método de pago' : 'Equipo reparado' }}
-              </p>
-              <p v-if="props.tipo === 'venta'" class="font-bold capitalize text-gray-800">{{ datos.metodo_pago || 'No especificado' }}</p>
-              <p v-else class="font-bold text-gray-800">{{ datos.reparaciones?.equipo_marca_modelo }}</p>
-              <p v-if="props.tipo === 'venta'" class="text-sm text-gray-500">Moneda: {{ datos.moneda }}</p>
-              <p v-else class="text-sm text-gray-500">{{ datos.reparaciones?.equipo_tipo }} {{ datos.reparaciones?.numero_serie ? `- ${datos.reparaciones.numero_serie}` : '' }}</p>
-            </div>
-          </section>
-
-          <table class="my-5 w-full text-left text-sm">
-            <thead class="border-b-2 border-gray-200 text-xs uppercase tracking-wider text-gray-500">
-              <tr><th class="py-3">Descripción</th><th class="py-3 text-center">Cantidad</th><th class="py-3 text-right">Precio</th><th class="py-3 text-right">Subtotal</th></tr>
-            </thead>
-            <tbody>
-              <tr v-for="detalle in detalles" :key="detalle.id" class="border-b border-gray-100">
-                <td class="py-3 font-medium text-gray-800">{{ detalle.descripcion }}</td>
-                <td class="py-3 text-center">{{ detalle.cantidad }}</td>
-                <td class="py-3 text-right">${{ formatearTotal(detalle.precio_unitario) }}</td>
-                <td class="py-3 text-right font-bold">${{ formatearTotal(detalle.subtotal) }}</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <div class="ml-auto max-w-xs space-y-2 border-t border-gray-200 pt-4 text-sm">
-            <div class="flex justify-between"><span>Subtotal</span><span>${{ formatearTotal(datos.subtotal) }}</span></div>
-            <div class="flex justify-between"><span>Impuesto</span><span>${{ formatearTotal(datos.impuesto) }}</span></div>
-            <div class="flex justify-between"><span>Descuento</span><span>-${{ formatearTotal(datos.descuento) }}</span></div>
-            <div class="flex justify-between border-t-2 border-[#065F46] pt-3 text-lg font-black text-[#065F46]"><span>Total</span><span>${{ formatearTotal(datos.total) }}</span></div>
-          </div>
-         
-        </article>
       </div>
-    </div>
+    </Transition>
   </Teleport>
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onBeforeUnmount } from 'vue'
 
 const props = defineProps({
   abierto: { type: Boolean, default: false },
   facturaId: { type: [String, Number], default: null },
-  tipo: { type: String, default: 'venta' }
+  tipo: { type: String, default: 'venta' },
+  /** '58' o '80' mm */
+  ancho: { type: String, default: '58' }
 })
 
 const emit = defineEmits(['cerrar', 'update:abierto'])
@@ -108,20 +231,30 @@ const numeroFactura = computed(() => {
 
 const fechaFactura = computed(() => {
   if (!datos.value?.created_at) return ''
-  return new Date(datos.value.created_at).toLocaleDateString('es-ES')
+  return new Date(datos.value.created_at).toLocaleDateString('es-ES', {
+    day: '2-digit', month: '2-digit', year: 'numeric'
+  })
+})
+
+const horaFactura = computed(() => {
+  if (!datos.value?.created_at) return ''
+  return new Date(datos.value.created_at).toLocaleTimeString('es-ES', {
+    hour: '2-digit', minute: '2-digit'
+  })
 })
 
 const detalles = computed(() => {
   if (!datos.value) return []
-  return props.tipo === 'venta' ? (datos.value.factura_detalles || []) : (datos.value.factura_reparacion_detalles || [])
+  return props.tipo === 'venta'
+    ? (datos.value.factura_detalles || [])
+    : (datos.value.factura_reparacion_detalles || [])
 })
 
-const formatearTotal = (total) => {
-  return Number(total || 0).toLocaleString('es-ES', {
+const formatearTotal = (total) =>
+  Number(total || 0).toLocaleString('es-ES', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2
   })
-}
 
 const imprimir = () => {
   document.body.classList.add('imprimiendo-factura')
@@ -138,63 +271,131 @@ const cerrar = () => {
 
 const cargarFactura = async () => {
   if (!props.facturaId) return
-  
+
   cargando.value = true
   error.value = ''
   datos.value = null
 
   try {
-    const endpoint = props.tipo === 'venta' ? `/api/facturas/${props.facturaId}` : `/api/facturas-reparaciones/${props.facturaId}`
+    const endpoint = props.tipo === 'venta'
+      ? `/api/facturas/${props.facturaId}`
+      : `/api/facturas-reparaciones/${props.facturaId}`
     datos.value = await $fetch(endpoint)
   } catch (err) {
-    error.value = err.data?.message || `No se pudo cargar la factura${props.tipo === 'venta' ? '' : ' de reparación'}`
+    error.value = err.data?.message || `No se pudo cargar el ticket${props.tipo === 'venta' ? '' : ' de reparación'}`
   } finally {
     cargando.value = false
   }
 }
 
+const onKeydown = (e) => {
+  if (e.key === 'Escape' && props.abierto) cerrar()
+}
+
 watch(() => props.abierto, (nuevoValor) => {
   if (nuevoValor && props.facturaId) {
     cargarFactura()
+    document.body.style.overflow = 'hidden'
+    window.addEventListener('keydown', onKeydown)
   } else if (!nuevoValor) {
     datos.value = null
     error.value = ''
     cargando.value = false
+    document.body.style.overflow = ''
+    window.removeEventListener('keydown', onKeydown)
   }
 }, { immediate: true })
 
 watch(() => props.facturaId, (nuevoId) => {
-  if (nuevoId && props.abierto) {
-    cargarFactura()
-  }
+  if (nuevoId && props.abierto) cargarFactura()
+})
+
+onBeforeUnmount(() => {
+  document.body.style.overflow = ''
+  window.removeEventListener('keydown', onKeydown)
 })
 </script>
 
 <style scoped>
+/* Animación de entrada */
+.modal-enter-active,
+.modal-leave-active {
+  transition: opacity 0.18s ease;
+}
+.modal-enter-from,
+.modal-leave-to {
+  opacity: 0;
+}
+.modal-enter-active > div,
+.modal-leave-active > div {
+  transition: transform 0.18s ease;
+}
+.modal-enter-from > div,
+.modal-leave-to > div {
+  transform: scale(0.97);
+}
+
+/* ====== IMPRESIÓN TÉRMICA ====== */
 @media print {
+  /* Ocultar todo excepto el overlay */
   :global(body.imprimiendo-factura > *:not(.factura-modal-overlay)) {
     display: none !important;
   }
 
+  /* Reset del overlay */
   :global(body.imprimiendo-factura .factura-modal-overlay) {
     position: static !important;
     display: block !important;
     padding: 0 !important;
+    margin: 0 !important;
     background: white !important;
+    backdrop-filter: none !important;
+    overflow: visible !important;
   }
 
   :global(body.imprimiendo-factura .factura-modal-overlay > div) {
-    max-height: none !important;
+    display: block !important;
+    width: auto !important;
     max-width: none !important;
+    max-height: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
     overflow: visible !important;
-    border-radius: 0 !important;
+    background: white !important;
     box-shadow: none !important;
+  }
+
+  /* El área scrolleable debe expandirse */
+  :global(body.imprimiendo-factura .factura-modal-overlay .overflow-y-auto) {
+    overflow: visible !important;
+    max-height: none !important;
+    padding: 0 !important;
     background: white !important;
   }
 
-  :global(body.imprimiendo-factura .factura-modal-overlay article) {
+  /* El ticket ocupa todo el ancho del papel */
+  :global(body.imprimiendo-factura .ticket-paper) {
+    max-width: none !important;
+    width: 100% !important;
     margin: 0 !important;
+    padding: 2mm 2mm 6mm 2mm !important;
     box-shadow: none !important;
+    font-size: 10pt !important;
+    line-height: 1.25 !important;
+    color: #000 !important;
+  }
+
+  /* Evitar cortes */
+  :global(body.imprimiendo-factura .ticket-paper *) {
+    break-inside: avoid;
+  }
+}
+
+/* Forzar tamaño de página según ancho elegido */
+@media print {
+  @page {
+    size: v-bind("props.ancho === '80' ? '80mm auto' : '58mm auto'");
+    margin: 0;
   }
 }
 </style>

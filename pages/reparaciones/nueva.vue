@@ -1,207 +1,317 @@
 <template>
-  <div class="max-w-4xl mx-auto p-4 sm:p-8">
-    <!-- Header Estilo Terminal / Hardware -->
-    <div class="mb-8">
-      <NuxtLink to="/reparaciones" class="group text-gray-400 hover:text-[#065F46] flex items-center gap-2 text-[10px] font-black uppercase tracking-widest mb-4 transition-colors">
-        <i class="ri-arrow-left-line bg-white p-2 rounded-full shadow-sm group-hover:shadow-md transition-all"></i>
-        VOLVER_AL_SECTOR_REPARACIONES
-      </NuxtLink>
-      <div class="flex items-center gap-3">
-        <div class="h-10 w-1.5 bg-[#10B981] rounded-full"></div>
-        <div>
-          <h1 class="text-3xl font-black text-[#065F46] tracking-tighter uppercase">Nueva Orden de Servicio</h1>
-          <p class="text-[10px] font-mono text-gray-400 uppercase tracking-widest">Protocolo: RECEPT_EQUIP_001</p>
+  <div class="w-full">
+
+    <!-- ============ HEADER COMPACTO ============ -->
+    <div class="mb-4 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-3 min-w-0">
+        <NuxtLink
+          to="/reparaciones"
+          class="shrink-0 text-gray-400 hover:text-[#065F46] transition-colors"
+          aria-label="Volver a reparaciones"
+        >
+          <i class="ri-arrow-left-line bg-white p-2 rounded-full shadow-sm hover:shadow-md transition-all"></i>
+        </NuxtLink>
+        <div class="min-w-0">
+          <h1 class="text-lg sm:text-xl font-black text-[#065F46] tracking-tight uppercase leading-none truncate">
+            Nueva Orden de Servicio
+          </h1>
+          <p class="text-[9px] font-mono text-gray-400 uppercase tracking-widest mt-1">
+            Protocolo: RECEPT_EQUIP_001
+          </p>
         </div>
       </div>
+
+      <NuxtLink
+        to="/reparaciones"
+        class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 text-[9px] font-black uppercase tracking-widest text-gray-400 hover:text-red-500 border border-gray-200 hover:border-red-200 rounded-lg transition-all"
+      >
+        <i class="ri-close-line"></i>
+        Abortar
+      </NuxtLink>
     </div>
 
-    <form @submit.prevent="guardarReparacion" class="space-y-6">
-      
-      <!-- BUSCADOR DE CLIENTES (Módulo de Escaneo) -->
-      <div class="bg-white rounded-2xl shadow-sm border border-[#D1D5DB] overflow-hidden">
-        <div class="px-5 py-3 bg-[#F8FAFC] border-b border-[#D1D5DB] flex justify-between items-center">
-          <div class="flex items-center gap-2">
-            <i class="ri-search-eye-line text-[#10B981] text-lg"></i>
-            <h2 class="text-[10px] font-black text-[#065F46] uppercase tracking-widest">Escaneo_de_Clientes_Existentes</h2>
-          </div>
-        </div>
-        <div class="p-6">
-          <div class="relative">
-            <input
-              v-model="busquedaCliente"
-              type="text"
-              placeholder="DNI, NOMBRE O TELÉFONO..."
-              class="form-input-circuit pl-12"
-              @input="buscarClientesEnTiempoReal"
-            />
+    <!-- ============ FORM ============ -->
+    <form @submit.prevent="guardarReparacion" class="space-y-3">
 
-            <div v-if="buscando" class="absolute right-4 top-1/2 -translate-y-1/2">
-              <div class="animate-spin h-5 w-5 border-2 border-[#10B981] border-t-transparent rounded-full"></div>
-            </div>
-          </div>
-          
-          <!-- Resultados con diseño técnico -->
-          <div v-if="clientesEncontrados.length > 0" class="mt-4 space-y-2 max-h-64 overflow-y-auto custom-scrollbar">
-            <div
-              v-for="cliente in clientesEncontrados"
-              :key="cliente.id"
-              @click="seleccionarCliente(cliente)"
-              class="p-4 border-2 border-gray-50 rounded-xl hover:border-[#10B981] hover:bg-[#F0FDF4] cursor-pointer transition-all group"
-            >
-              <div class="flex items-center justify-between">
-                <div>
-                  <div class="font-black text-[#065F46] text-sm uppercase tracking-tighter">{{ cliente.nombre_completo }}</div>
-                  <div class="flex items-center gap-4 mt-1">
-                    <span class="text-[10px] font-mono text-gray-400">ID: {{ cliente.dni_cedula }}</span>
-                    <span v-if="cliente.total_reparaciones" class="text-[10px] bg-[#065F46] text-white px-2 py-0.5 rounded italic">
-                      HISTORIAL: {{ cliente.total_reparaciones }} OP.
-                    </span>
+      <!-- FILA 1: Buscador + Propietario | Hardware -->
+      <div class="grid grid-cols-1 lg:grid-cols-5 gap-3">
+
+        <!-- Columna izquierda (3/5) -->
+        <div class="lg:col-span-3 space-y-3">
+
+          <!-- 01 — Buscador -->
+          <section class="bg-white rounded-xl border border-[#D1D5DB] shadow-sm overflow-hidden">
+            <header class="px-3 py-2 bg-[#F8FAFC] border-b border-[#D1D5DB] flex items-center justify-between">
+              <div class="flex items-center gap-1.5">
+                <span class="text-[8px] font-mono font-black text-[#10B981] bg-white border border-[#10B981]/30 rounded px-1 py-0.5">01</span>
+                <i class="ri-search-eye-line text-[#10B981] text-sm"></i>
+                <h2 class="text-[9px] font-black text-[#065F46] uppercase tracking-widest">Buscar cliente</h2>
+              </div>
+              <span class="text-[8px] font-mono text-gray-400 uppercase">Opcional</span>
+            </header>
+
+            <div class="p-3">
+              <div class="relative">
+                <i class="ri-search-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm pointer-events-none"></i>
+                <input
+                  v-model="busquedaCliente"
+                  type="search"
+                  autocomplete="off"
+                  placeholder="DNI, NOMBRE O TELÉFONO..."
+                  class="form-input-circuit pr-9 py-2 text-xs"
+                  style="padding-left: 2rem;"
+                  @input="buscarClientesEnTiempoReal"
+                  aria-label="Buscar cliente"
+                />
+                <div v-if="buscando" class="absolute right-2 top-1/2 -translate-y-1/2">
+                  <div class="animate-spin h-3.5 w-3.5 border-2 border-[#10B981] border-t-transparent rounded-full"></div>
+                </div>
+                <button
+                  v-else-if="busquedaCliente"
+                  type="button"
+                  @click="busquedaCliente = ''; clientesEncontrados = []; busquedaRealizada = false"
+                  class="absolute right-1 top-1/2 -translate-y-1/2 p-1 rounded text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors"
+                  aria-label="Limpiar"
+                >
+                  <i class="ri-close-line text-sm"></i>
+                </button>
+              </div>
+
+              <div v-if="clientesEncontrados.length > 0" class="mt-2 space-y-1.5 max-h-44 overflow-y-auto custom-scrollbar pr-1">
+                <button
+                  v-for="cliente in clientesEncontrados"
+                  :key="cliente.id"
+                  type="button"
+                  @click="seleccionarCliente(cliente)"
+                  class="w-full text-left p-2 border border-gray-100 rounded-lg hover:border-[#10B981] hover:bg-[#F0FDF4] transition-all group"
+                >
+                  <div class="flex items-center justify-between gap-2">
+                    <div class="min-w-0">
+                      <p class="font-black text-[#065F46] text-xs uppercase truncate">{{ cliente.nombre_completo }}</p>
+                      <div class="flex flex-wrap items-center gap-1.5 mt-0.5">
+                        <span class="text-[9px] font-mono text-gray-400">ID: {{ cliente.dni_cedula || '—' }}</span>
+                        <span v-if="cliente.total_reparaciones" class="text-[8px] bg-[#065F46] text-white px-1.5 py-0.5 rounded">
+                          {{ cliente.total_reparaciones }} OP.
+                        </span>
+                      </div>
+                    </div>
+                    <i class="ri-add-circle-fill text-lg text-[#10B981] opacity-0 group-hover:opacity-100 transition-opacity shrink-0"></i>
                   </div>
+                </button>
+              </div>
+
+              <div
+                v-else-if="busquedaRealizada && busquedaCliente && !buscando"
+                class="mt-2 p-2 bg-orange-50 border border-orange-100 rounded-lg text-center"
+              >
+                <p class="text-[9px] font-black text-orange-700 uppercase tracking-widest">Sin coincidencias</p>
+              </div>
+
+              <p v-else-if="!busquedaCliente" class="mt-2 flex items-center gap-1.5 text-[9px] font-mono text-gray-400 uppercase">
+                <i class="ri-information-line text-[#10B981]"></i>
+                Mínimo 2 caracteres
+              </p>
+            </div>
+          </section>
+
+          <!-- 02 — Propietario -->
+          <section class="bg-white rounded-xl border border-[#D1D5DB] shadow-sm overflow-hidden">
+            <header class="px-3 py-2 bg-[#F8FAFC] border-b border-[#D1D5DB] flex items-center justify-between">
+              <div class="flex items-center gap-1.5">
+                <span class="text-[8px] font-mono font-black text-[#10B981] bg-white border border-[#10B981]/30 rounded px-1 py-0.5">02</span>
+                <i class="ri-user-settings-line text-[#10B981] text-sm"></i>
+                <h2 class="text-[9px] font-black text-[#065F46] uppercase tracking-widest">Propietario</h2>
+              </div>
+              <div v-if="clienteSeleccionadoId" class="flex items-center gap-1">
+                <span class="text-[8px] bg-[#10B981] text-white px-1.5 py-0.5 rounded-full font-black uppercase">Vinculado</span>
+                <button type="button" @click="desvincularCliente" class="text-[8px] font-black text-red-500 hover:text-red-700 uppercase">
+                  Liberar
+                </button>
+              </div>
+            </header>
+
+            <div class="p-3 space-y-3">
+              <div class="space-y-0.5">
+                <label class="label-circuit">Nombre completo <span class="text-red-500">*</span></label>
+                <input
+                  v-model="form.cliente_nombre"
+                  type="text"
+                  required
+                  autocomplete="name"
+                  class="form-input-circuit"
+                  placeholder="Ej: Juan Pérez"
+                  @input="form.cliente_nombre = form.cliente_nombre.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '')"
+                />
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div class="space-y-0.5">
+                  <label class="label-circuit">Teléfono <span class="text-red-500">*</span></label>
+                  <input
+                    v-model="form.cliente_telefono"
+                    required
+                    type="tel"
+                    inputmode="tel"
+                    autocomplete="tel"
+                    class="form-input-circuit"
+                    placeholder="0414-1234567"
+                    @input="form.cliente_telefono = form.cliente_telefono.replace(/[^0-9\-]/g, '')"
+                  />
                 </div>
-                <div class="flex items-center gap-2 text-[#10B981] font-black text-[10px] uppercase opacity-0 group-hover:opacity-100 transition-opacity">
-                  <span>Seleccionar</span>
-                  <i class="ri-add-circle-fill text-2xl"></i>
+                <div class="space-y-0.5">
+                  <label class="label-circuit">DNI (opcional)</label>
+                  <input
+                    v-model="form.cliente_dni"
+                    type="text"
+                    class="form-input-circuit"
+                    placeholder="V-12345678"
+                    @input="form.cliente_dni = form.cliente_dni.replace(/[^0-9Vv\-]/g, '')"
+                  />
                 </div>
               </div>
-            </div>
-          </div>
 
-          <div v-else-if="busquedaRealizada && clientesEncontrados.length === 0 && busquedaCliente" class="mt-4 p-4 bg-orange-50 border-2 border-orange-100 rounded-xl text-center">
-            <p class="text-[10px] font-black text-orange-700 uppercase tracking-widest">Sin coincidencias - Inicie registro manual</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Grid de Módulos: Propietario y Hardware -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        
-        <!-- FICHA DEL PROPIETARIO -->
-        <div class="bg-white rounded-2xl shadow-sm border border-[#D1D5DB] overflow-hidden">
-          <div class="px-5 py-3 bg-[#F8FAFC] border-b border-[#D1D5DB] flex items-center justify-between">
-            <div class="flex items-center gap-2">
-              <i class="ri-user-settings-line text-[#10B981]"></i>
-              <h2 class="text-[10px] font-black text-[#065F46] uppercase tracking-widest">Ficha_del_Propietario</h2>
-            </div>
-            <span v-if="clienteSeleccionadoId" class="text-[9px] bg-[#10B981] text-white px-2 py-0.5 rounded-full font-black uppercase">Vinculado</span>
-          </div>
-          <div class="p-6 space-y-4">
-            <div class="space-y-1">
-              <label class="label-circuit">Nombre Completo <span class="text-red-500">*</span></label>
-              <input v-model="form.cliente_nombre" type="text" required class="form-input-circuit" placeholder="EJ: JUAN PEREZ" @input="form.cliente_nombre = form.cliente_nombre.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '')" />
-            </div>
-            <div class="grid grid-cols-2 gap-4">
-              <div class="space-y-1">
-                <label class="label-circuit">Teléfono <span class="text-red-500">*</span></label>
-                <input v-model="form.cliente_telefono" required type="tel" class="form-input-circuit" placeholder="0414-1234567" @input="form.cliente_telefono = form.cliente_telefono.replace(/[^0-9\-]/g, '')" />
-              </div>
-              <div class="space-y-1">
-                <label class="label-circuit">DNI (opcional)</label>
-                <input v-model="form.cliente_dni" type="text" class="form-input-circuit" placeholder="V-12345678" @input="form.cliente_dni = form.cliente_dni.replace(/[^0-9Vv\-]/g, '')" />
+              <div class="space-y-0.5">
+                <label class="label-circuit">Dirección (opcional)</label>
+                <textarea
+                  v-model="form.cliente_direccion"
+                  rows="2"
+                  class="form-input-circuit resize-none"
+                  placeholder="Av. Principal #123..."
+                ></textarea>
               </div>
             </div>
-            <div class="space-y-1">
-              <label class="label-circuit">Dirección (opcional)</label>
-              <textarea v-model="form.cliente_direccion" rows="2" class="form-input-circuit resize-none" placeholder="Av. Principal #123, Edificio A, Piso 2"></textarea>
-            </div>
-          </div>
+          </section>
         </div>
 
-        <!-- ESPECIFICACIONES HARDWARE -->
-        <div class="bg-white rounded-2xl shadow-sm border border-[#D1D5DB] overflow-hidden">
-          <div class="px-5 py-3 bg-[#F8FAFC] border-b border-[#D1D5DB]">
-            <div class="flex items-center gap-2">
-              <i class="ri-cpu-line text-[#10B981]"></i>
-              <h2 class="text-[10px] font-black text-[#065F46] uppercase tracking-widest">Especificaciones_Hardware</h2>
-            </div>
-          </div>
-          <div class="p-6 space-y-4">
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div class="space-y-1">
-                <label class="label-circuit">Tipo de Equipo <span class="text-red-500">*</span></label>
+        <!-- Columna derecha (2/5) — Hardware -->
+        <div class="lg:col-span-2">
+          <section class="bg-white rounded-xl border border-[#D1D5DB] shadow-sm overflow-hidden h-full flex flex-col">
+            <header class="px-3 py-2 bg-[#F8FAFC] border-b border-[#D1D5DB] flex items-center gap-1.5">
+              <span class="text-[8px] font-mono font-black text-[#10B981] bg-white border border-[#10B981]/30 rounded px-1 py-0.5">03</span>
+              <i class="ri-cpu-line text-[#10B981] text-sm"></i>
+              <h2 class="text-[9px] font-black text-[#065F46] uppercase tracking-widest">Hardware</h2>
+            </header>
+
+            <div class="p-3 space-y-3 flex-1">
+              <div class="space-y-0.5">
+                <label class="label-circuit">Tipo de equipo <span class="text-red-500">*</span></label>
                 <select v-model="form.equipo_tipo" required class="form-input-circuit">
-                  <option value="">SELECCIONAR</option>
-                  <option value="Celular">SMARTPHONE</option>
-                  <option value="Tablet">TABLET</option>
-                  <option value="Laptop">LAPTOP</option>
-                  <option value="PC">DESKTOP PC</option>
-                  <option value="Consola">CONSOLA</option>
+                  <option value="">Seleccionar</option>
+                  <option value="Celular">Smartphone</option>
+                  <option value="Tablet">Tablet</option>
+                  <option value="Laptop">Laptop</option>
+                  <option value="PC">Desktop PC</option>
+                  <option value="Consola">Consola</option>
                 </select>
               </div>
-              <div class="space-y-1">
+
+              <div class="space-y-0.5">
                 <label class="label-circuit">Marca / Modelo <span class="text-red-500">*</span></label>
-                <input v-model="form.equipo_marca_modelo" type="text" required class="form-input-circuit" placeholder="Samsung Galaxy S23" />
+                <input
+                  v-model="form.equipo_marca_modelo"
+                  type="text"
+                  required
+                  class="form-input-circuit"
+                  placeholder="Samsung Galaxy S23"
+                />
               </div>
-            </div>
-            <div class="grid grid-cols-2 gap-4">
-              <div class="space-y-1">
+
+              <div class="space-y-0.5">
                 <label class="label-circuit">Serial (opcional)</label>
-                <input v-model="form.numero_serie" type="text" class="form-input-circuit font-mono" placeholder="351234567890123" />
+                <input
+                  v-model="form.numero_serie"
+                  type="text"
+                  class="form-input-circuit font-mono"
+                  placeholder="351234567890123"
+                />
               </div>
-              <div class="space-y-1">
-                <label class="label-circuit">Técnico Responsable <span class="text-red-500">*</span></label>
+
+              <div class="space-y-0.5">
+                <label class="label-circuit">Técnico <span class="text-red-500">*</span></label>
                 <select v-model="form.tecnico_id" required class="form-input-circuit">
-                  <option :value="null">SELECCIONAR</option>
-                  <option v-for="tecnico in tecnicos" :key="tecnico.id" :value="tecnico.id">{{ tecnico.nombre }}</option>
+                  <option :value="null">Seleccionar</option>
+                  <option v-for="tecnico in tecnicos" :key="tecnico.id" :value="tecnico.id">
+                    {{ tecnico.nombre }}
+                  </option>
                 </select>
               </div>
+
+              <div class="space-y-0.5">
+                <label class="label-circuit">Estado (opcional)</label>
+                <textarea
+                  v-model="form.caracteristicas_estado"
+                  rows="2"
+                  class="form-input-circuit resize-none"
+                  placeholder="Pantalla rota, carcasa rayada..."
+                ></textarea>
+              </div>
             </div>
-            <div class="space-y-1">
-              <label class="label-circuit">Estado (opcional)</label>
-              <textarea v-model="form.caracteristicas_estado" rows="2" class="form-input-circuit resize-none" placeholder="Pantalla rota, carcasa rayada, no enciende"></textarea>
-            </div>
-          </div>
+          </section>
         </div>
       </div>
 
-      <!-- REPORTE DE AVERÍA (Módulo Crítico) -->
-      <div class="bg-[#065F46] rounded-2xl p-6 shadow-xl border-b-8 border-[#044a37]">
-        <div class="flex items-center gap-3 mb-4">
-          <div class="p-2 bg-[#10B981] rounded-lg shadow-inner">
-            <i class="ri-error-warning-line text-white text-xl"></i>
+      <!-- BANDA: Reporte de avería -->
+      <section class="bg-[#065F46] rounded-xl p-3 sm:p-4 shadow-lg border-b-4 border-[#044a37]">
+        <div class="flex items-center justify-between mb-2">
+          <div class="flex items-center gap-2">
+            <div class="p-1.5 bg-[#10B981] rounded-lg">
+              <i class="ri-error-warning-line text-white text-sm"></i>
+            </div>
+            <div>
+              <h2 class="text-[10px] font-black text-white uppercase tracking-[0.2em]">
+                Reporte de avería <span class="text-red-300">*</span>
+              </h2>
+              <p class="text-[8px] font-mono text-white/40 uppercase tracking-widest">Módulo crítico</p>
+            </div>
           </div>
-          <h2 class="text-xs font-black text-white uppercase tracking-[0.2em]">Reporte de Avería <span class="text-red-300">*</span></h2>
+          <span class="text-[9px] font-mono text-white/40">{{ form.falla_reportada.length }}/500</span>
         </div>
         <textarea
           v-model="form.falla_reportada"
-          rows="3"
+          rows="2"
           required
-          class="w-full bg-white/10 border-2 border-white/10 rounded-xl p-4 text-white placeholder:text-white/30 focus:bg-white/20 focus:border-[#10B981] transition-all outline-none font-medium"
+          maxlength="500"
+          class="w-full bg-white/10 border-2 border-white/10 rounded-lg p-3 text-xs text-white placeholder:text-white/30 focus:bg-white/20 focus:border-[#10B981] transition-all outline-none font-medium resize-none"
           placeholder="El teléfono no carga la batería, la pantalla está negra..."
         ></textarea>
-      </div>
+      </section>
 
-      <!-- Botones de Acción -->
-      <div class="flex flex-col sm:flex-row justify-end gap-4 pt-6">
+      <!-- FOOTER: Acciones -->
+      <div class="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-2 pt-1 pb-4">
+        <NuxtLink
+          to="/reparaciones"
+          class="px-4 py-2 bg-white text-gray-400 border border-gray-200 rounded-lg hover:text-red-500 hover:border-red-200 transition-all text-[9px] font-black uppercase tracking-widest text-center"
+        >
+          Abortar registro
+        </NuxtLink>
+
         <button
           type="submit"
           :disabled="guardando || !formularioValido"
-          class="px-10 py-3 bg-[#10B981] text-white rounded-xl hover:bg-[#059669] transition-all disabled:opacity-50 disabled:cursor-not-allowed text-xs font-black uppercase tracking-[0.2em] shadow-lg shadow-[#10B981]/20 flex items-center justify-center gap-3"
+          class="px-6 py-2.5 bg-[#10B981] text-white rounded-lg hover:bg-[#059669] transition-all disabled:opacity-50 disabled:cursor-not-allowed text-[10px] font-black uppercase tracking-[0.2em] shadow-md shadow-[#10B981]/20 flex items-center justify-center gap-2"
         >
-          <i v-if="guardando" class="ri-loader-4-line animate-spin text-lg"></i>
-          <i v-else class="ri-shield-check-line text-lg"></i>
-          {{ guardando ? 'PROCESANDO...' : 'CONFIRMAR_REGISTRO' }}
+          <i v-if="guardando" class="ri-loader-4-line animate-spin text-base"></i>
+          <i v-else class="ri-shield-check-line text-base"></i>
+          {{ guardando ? 'Procesando...' : 'Confirmar registro' }}
         </button>
-                <NuxtLink
-          to="/reparaciones"
-          class="px-8 py-3 bg-white text-gray-400 border-2 border-gray-100 rounded-xl hover:text-red-500 hover:border-red-100 transition-all text-xs font-black uppercase tracking-widest text-center"
-        >
-          Abortar_Registro
-        </NuxtLink>
       </div>
     </form>
 
-    <!-- Notificaciones Toast (Refinado) -->
+    <!-- Toast -->
     <Transition name="slide-fade">
-      <div v-if="toast.visible" class="fixed bottom-8 right-8 z-50">
+      <div v-if="toast.visible" class="fixed top-3 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-1.5rem)] max-w-sm">
         <div :class="[
-          'px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-4 border-l-8 backdrop-blur-md',
-          toast.tipo === 'success' ? 'bg-[#065F46]/90 text-white border-[#10B981]' : 'bg-red-600/90 text-white border-red-800'
+          'px-3 py-2 rounded-lg shadow-xl flex items-center gap-2 border-l-4 backdrop-blur-md',
+          toast.tipo === 'success' ? 'bg-[#065F46]/95 text-white border-[#10B981]' : 'bg-red-600/95 text-white border-red-800'
         ]">
-          <i :class="toast.tipo === 'success' ? 'ri-checkbox-circle-line text-2xl text-[#10B981]' : 'ri-error-warning-line text-2xl text-red-300'"></i>
-          <div>
-            <p class="text-[9px] font-black uppercase tracking-[0.2em] opacity-60 italic">DroidStock_System</p>
-            <p class="text-sm font-bold tracking-tight">{{ toast.mensaje }}</p>
+          <i :class="toast.tipo === 'success' ? 'ri-checkbox-circle-fill text-base text-[#10B981]' : 'ri-error-warning-fill text-base text-red-200'"></i>
+          <div class="flex-1 min-w-0">
+            <p class="text-[8px] font-black uppercase tracking-[0.2em] opacity-60 italic">DroidStock</p>
+            <p class="text-xs font-bold tracking-tight break-words">{{ toast.mensaje }}</p>
           </div>
+          <button @click="toast.visible = false" class="text-white/70 hover:text-white p-0.5" aria-label="Cerrar">
+            <i class="ri-close-line text-base"></i>
+          </button>
         </div>
       </div>
     </Transition>
@@ -250,26 +360,26 @@ const form = reactive({
 
 const buscarClientesEnTiempoReal = async () => {
   if (timeoutBuscador) clearTimeout(timeoutBuscador)
-  
+
   if (!busquedaCliente.value || busquedaCliente.value.length < 2) {
     clientesEncontrados.value = []
     busquedaRealizada.value = false
     return
   }
-  
+
   timeoutBuscador = setTimeout(async () => {
     buscando.value = true
     busquedaRealizada.value = true
     try {
       const clientes = await $fetch('/api/clientes')
       const termino = busquedaCliente.value.toLowerCase().trim()
-      
+
       clientesEncontrados.value = clientes.filter(c =>
         c.nombre_completo.toLowerCase().includes(termino) ||
         c.dni_cedula.toLowerCase().includes(termino) ||
         (c.telefono && c.telefono.includes(termino))
       )
-      
+
       for (const cliente of clientesEncontrados.value) {
         const reparaciones = await $fetch(`/api/reparaciones?cliente_id=${cliente.id}`)
         cliente.total_reparaciones = reparaciones?.length || 0
@@ -292,14 +402,19 @@ const seleccionarCliente = (cliente) => {
   clientesEncontrados.value = []
   busquedaCliente.value = ''
   busquedaRealizada.value = false
-  mostrarToast(`Vínculo establecido: ${cliente.nombre_completo}`)
+  mostrarToast(`Vinculado: ${cliente.nombre_completo}`)
+}
+
+const desvincularCliente = () => {
+  clienteSeleccionadoId.value = null
+  mostrarToast('Cliente desvinculado', 'success')
 }
 
 const cargarTecnicos = async () => {
   try {
     tecnicos.value = await $fetch('/api/tecnicos')
   } catch (error) {
-    mostrarToast('No se pudo sincronizar la lista de técnicos', 'error')
+    mostrarToast('No se pudo cargar la lista de técnicos', 'error')
   }
 }
 
@@ -317,11 +432,11 @@ const guardarReparacion = async () => {
     mostrarToast('Faltan parámetros obligatorios', 'error')
     return
   }
-  
+
   guardando.value = true
   try {
     let clienteId = clienteSeleccionadoId.value
-    
+
     if (clienteId) {
       await $fetch(`/api/clientes/${clienteId}`, {
         method: 'PUT',
@@ -344,7 +459,7 @@ const guardarReparacion = async () => {
       })
       clienteId = nuevoCliente.data.id
     }
-    
+
     await $fetch('/api/reparaciones', {
       method: 'POST',
       body: {
@@ -357,18 +472,17 @@ const guardarReparacion = async () => {
         falla_reportada: form.falla_reportada
       }
     })
-    
+
     mostrarToast('REGISTRO COMPLETADO EXITOSAMENTE')
     setTimeout(() => navigateTo('/reparaciones'), 1500)
   } catch (error) {
     console.error('Error completo:', error)
     let mensajeError = 'ERROR CRÍTICO AL GUARDAR'
-    
+
     if (error.response) {
-      // Error de respuesta del servidor
       const status = error.response.status
       const data = error.response.data
-      
+
       if (status === 400) {
         mensajeError = `Datos inválidos: ${data?.message || 'Verifique los campos obligatorios'}`
       } else if (status === 404) {
@@ -379,13 +493,11 @@ const guardarReparacion = async () => {
         mensajeError = `Error ${status}: ${data?.message || error.message}`
       }
     } else if (error.request) {
-      // Error de red
       mensajeError = 'Error de conexión - Verifique su red o el servidor'
     } else {
-      // Error de JavaScript
       mensajeError = `Error: ${error.message}`
     }
-    
+
     mostrarToast(mensajeError, 'error')
   } finally {
     guardando.value = false
@@ -397,15 +509,19 @@ onMounted(cargarTecnicos)
 
 <style scoped>
 .form-input-circuit {
-  @apply w-full px-4 py-2.5 bg-gray-50 border-2 border-gray-100 rounded-xl focus:ring-0 focus:border-[#10B981] focus:bg-white transition-all text-sm font-bold text-[#334155] placeholder:text-gray-300 shadow-inner outline-none;
+  @apply w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:ring-0 focus:border-[#10B981] focus:bg-white transition-all text-xs font-bold text-[#334155] placeholder:text-gray-300 outline-none;
+}
+
+.form-input-circuit:focus-visible {
+  @apply ring-2 ring-[#10B981]/20;
 }
 
 .label-circuit {
-  @apply text-[9px] font-black text-gray-400 uppercase tracking-widest ml-1;
+  @apply text-[8px] font-black text-gray-400 uppercase tracking-widest ml-0.5;
 }
 
 .custom-scrollbar::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
 }
 .custom-scrollbar::-webkit-scrollbar-track {
   @apply bg-gray-100 rounded-full;
@@ -415,10 +531,10 @@ onMounted(cargarTecnicos)
 }
 
 .slide-fade-enter-active, .slide-fade-leave-active {
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 .slide-fade-enter-from, .slide-fade-leave-to {
-  transform: translateY(30px) scale(0.9);
+  transform: translateY(-15px) scale(0.95);
   opacity: 0;
 }
 

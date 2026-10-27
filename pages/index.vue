@@ -10,7 +10,7 @@
           <div class="flex items-center gap-2">
             <div class="relative">
               <div
-                class="w-8 h-8 bg-gradient-to-br from-[#065F46] to-[#10B981] rounded-lg flex items-center justify-center shadow-md">
+                class="w-8 h-8 bg-[#065F46] rounded-lg flex items-center justify-center shadow-md">
                 <i class="ri-smartphone-line text-white text-sm"></i>
               </div>
               <div class="absolute -top-0.5 -right-0.5 w-2 h-2 bg-[#10B981] rounded-full animate-pulse"></div>
@@ -22,13 +22,13 @@
           <div class="hidden md:flex items-center gap-6">
             <div class="flex items-center gap-2 bg-[#ECFDF5] px-3 py-1.5 rounded-full">
               <i class="ri-group-line text-[#10B981] text-sm"></i>
-              <span class="text-xs font-bold text-[#065F46]">+150 talleres</span>
+              <span class="text-xs font-bold text-[#065F46]">+50 talleres</span>
               <span class="text-[10px] text-gray-500">confían en nosotros</span>
             </div>
             <div class="flex items-center gap-2 bg-amber-50 px-3 py-1.5 rounded-full">
               <i class="ri-flashlight-line text-amber-500 text-sm"></i>
               <span class="text-xs font-bold text-amber-700">Oferta limitada</span>
-              <span class="text-[10px] text-amber-600">· +150 nuevos </span>
+              <span class="text-[10px] text-amber-600">· +50 nuevos </span>
             </div>
           </div>
 
@@ -59,13 +59,13 @@
           <div class="flex flex-col gap-3">
             <div class="flex items-center gap-2 bg-[#ECFDF5] px-3 py-1.5 rounded-full">
               <i class="ri-group-line text-[#10B981] text-sm"></i>
-              <span class="text-xs font-bold text-[#065F46]">+150 talleres</span>
+              <span class="text-xs font-bold text-[#065F46]">+50 talleres</span>
               <span class="text-[10px] text-gray-500">confían en nosotros</span>
             </div>
             <div class="flex items-center gap-2 bg-amber-50 px-3 py-1.5 rounded-full">
               <i class="ri-flashlight-line text-amber-500 text-sm"></i>
               <span class="text-xs font-bold text-amber-700">Oferta limitada</span>
-              <span class="text-[10px] text-amber-600">· +150 nuevos </span>
+              <span class="text-[10px] text-amber-600">· +50 nuevos </span>
             </div>
           </div>
 
@@ -118,7 +118,7 @@
 
             <!-- SUBTÍTULO CON BENEFICIO CLARO -->
             <p class="text-base md:text-lg text-gray-600 mt-6 mb-8 leading-relaxed">
-              DroidStock es el sistema que usan <strong class="text-[#065F46]">+150 talleres</strong> para eliminar el
+              DroidStock es el sistema que usan <strong class="text-[#065F46]">+50 talleres</strong> para eliminar el
               caos,
               controlar inventarios y <strong class="text-[#10B981]">aumentar sus ganancias un 35%</strong> en los
               primeros 3 meses.
@@ -127,14 +127,11 @@
             <!-- CTA PRINCIPAL CON MICROCOPY Y ELIMINACIÓN DE FRICCIÓN -->
             <div class="flex flex-col sm:flex-row gap-4">
               <NuxtLink to="/registro"
-                class="group relative overflow-hidden px-8 py-2 bg-gradient-to-r from-[#065F46] to-[#10B981] text-white font-black rounded-xl transition-all shadow-lg hover:shadow-xl text-base uppercase tracking-wider flex items-center justify-center gap-2">
+                class="group px-8 py-2 bg-[#065F46] hover:bg-[#054a37] text-white font-black rounded-xl transition-all shadow-lg hover:shadow-xl text-base uppercase tracking-wider flex items-center justify-center gap-2">
                 <span class="relative z-10 flex items-center gap-2">
                   PROBAR GRATIS
                   <i class="ri-arrow-right-line text-lg group-hover:translate-x-1 transition-transform"></i>
                 </span>
-                <div
-                  class="absolute inset-0 bg-gradient-to-r from-[#10B981] to-[#065F46] opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                </div>
               </NuxtLink>
 
               <!-- Microcopy eliminador de fricción -->
@@ -169,10 +166,10 @@
                   CR</div>
                 <div
                   class="w-8 h-8 rounded-full bg-[#10B981] border-2 border-white flex items-center justify-center text-[10px] font-bold text-white">
-                  +150</div>
+                  +50</div>
               </div>
               <div>
-                <p class="text-xs font-bold text-[#065F46]">Únete a +150 talleres</p>
+                <p class="text-xs font-bold text-[#065F46]">Únete a +50 talleres</p>
                 <p class="text-[10px] text-gray-400">que se registraron</p>
               </div>
             </div>
@@ -180,7 +177,7 @@
 
           <!-- COLUMNA DERECHA: DEMO PREVIEW (SIN CAMBIOS, YA ESTÁ BIEN) -->
           <div class="block">
-            <div class="bg-gradient-to-br from-[#065F46] to-[#10B981] rounded-2xl p-8  shadow-2xl">
+            <div class="bg-[#065F46] rounded-2xl p-8 shadow-2xl">
               <div class="bg-white rounded-xl overflow-hidden border border-[#D1D5DB]">
                 <div class="px-4 py-3 bg-[#F8FAFC] border-b border-[#D1D5DB] flex items-center justify-between">
                   <div class="flex items-center gap-2">
@@ -388,7 +385,7 @@
               usan</span>
           </div>
           <h2 class="text-3xl font-black text-[#065F46] uppercase tracking-tighter">
-            +150 talleres no pueden estar equivocados
+            +50 talleres no pueden estar equivocados
           </h2>
         </div>
 
@@ -471,7 +468,7 @@
     <!-- ============================================ -->
     <!-- CTA FINAL CON ESCASEZ Y URGENCIA            -->
     <!-- ============================================ -->
-    <section class="py-16 bg-gradient-to-r from-[#065F46] to-[#10B981] relative overflow-hidden">
+    <section class="py-16 bg-[#065F46] relative overflow-hidden">
       <!-- Elemento de escasez visual (barra de progreso) -->
       <div class="absolute top-0 left-0 right-0 h-1 bg-white/20">
         <div class="h-full w-3/4 bg-white animate-pulse rounded-r-full"></div>
@@ -492,7 +489,7 @@
         </h2>
 
         <p class="text-white/80 text-base mb-6 max-w-2xl mx-auto">
-          <strong class="text-white">+150 talleres</strong> se unieron. No te quedes atrás.
+          <strong class="text-white">+50 talleres</strong> se unieron. No te quedes atrás.
         </p>
 
         <!-- CTA con urgencia -->
@@ -533,7 +530,7 @@
           <!-- Columna 1: Brand -->
           <div class="space-y-4">
             <div class="flex items-center gap-3">
-              <div class="w-10 h-10 bg-gradient-to-br from-[#065F46] to-[#10B981] rounded-lg flex items-center justify-center shadow-lg">
+              <div class="w-10 h-10 bg-[#065F46] rounded-lg flex items-center justify-center shadow-lg">
                 <i class="ri-smartphone-line text-white text-lg"></i>
               </div>
               <span class="text-xl font-black text-[#065F46] uppercase tracking-tighter">

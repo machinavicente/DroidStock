@@ -1,208 +1,226 @@
 <template>
-  <!-- Fondo Gris Técnico #F3F4F6 -->
-  <div class="min-h-screen bg-[#F3F4F6] p-4 sm:p-8">
-    <div class="max-w-7xl mx-auto">
-      
-      <!-- Header Estilo Industrial -->
-      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-8">
-        <div class="flex-1">
+  <div class="min-h-screen bg-[#F3F4F6]">
+    <div class="w-full ">
+
+      <!-- ============ HEADER ============ -->
+      <div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div class="min-w-0">
           <div class="flex items-center gap-2 mb-1">
-            <span class="h-2 w-2 bg-[#10B981] rounded-full animate-pulse"></span>
-            <span class="text-[10px] font-mono text-gray-500 uppercase tracking-widest">Sales_Monitor_v1.0</span>
+            <span class="h-2 w-2 rounded-full bg-[#10B981] animate-pulse"></span>
+            <span class="text-[9px] font-mono uppercase tracking-widest text-gray-400">Sales_Monitor_v1.0</span>
           </div>
-          <h1 class="text-2xl sm:text-3xl font-black text-[#065F46] tracking-tight uppercase">Ventas de Repuestos</h1>
-          <p class="text-gray-500 text-sm">Registro de ventas a clientes y técnicos externos</p>
+          <h1 class="text-2xl sm:text-3xl font-black uppercase tracking-tight text-[#065F46] leading-none">
+            Ventas de Repuestos
+          </h1>
+          <p class="mt-1 text-xs sm:text-sm text-gray-500">Registro de ventas a clientes y técnicos externos</p>
         </div>
-        <div class="flex flex-col sm:flex-row gap-2 sm:gap-3 lg:w-auto">
-          <button 
+
+        <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+          <button
             @click="exportarPDF"
             :disabled="exportando || ventasFiltradas.length === 0"
-            class="w-full sm:w-auto px-4 sm:px-6 py-2.5 sm:py-3 bg-[#DC2626] text-white font-bold rounded-lg hover:bg-[#B91C1C] transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-[#DC2626]/20 border-b-4 border-[#991B1B] active:border-b-0 active:translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
+            class="flex items-center justify-center gap-2 rounded-lg border border-red-200 bg-white px-4 py-2.5 text-[10px] font-black uppercase tracking-widest text-red-600 transition-all hover:bg-red-50 disabled:opacity-50"
           >
-            <i v-if="exportando" class="ri-loader-4-line animate-spin text-lg"></i>
-            <i v-else class="ri-file-pdf-line text-lg"></i>
-            <span class="hidden sm:inline">{{ exportando ? 'GENERANDO...' : 'EXPORTAR REPORTE' }}</span>
-            <span class="sm:hidden">{{ exportando ? 'GEN...' : 'EXPORTAR' }}</span>
+            <i v-if="exportando" class="ri-loader-4-line animate-spin text-base"></i>
+            <i v-else class="ri-file-pdf-line text-base"></i>
+            {{ exportando ? 'Generando...' : 'Exportar PDF' }}
           </button>
           <NuxtLink
             to="/ventas/nueva"
-            class="w-full sm:w-auto px-4 sm:px-6 py-2.5 sm:py-3 bg-[#065F46] text-white font-bold rounded-lg hover:bg-[#054a37] transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-[#065F46]/20 border-b-4 border-[#033a2b] active:border-b-0 active:translate-y-1 text-sm sm:text-base"
+            class="flex items-center justify-center gap-2 rounded-lg border-b-4 border-[#033A2B] bg-[#065F46] px-4 py-2.5 text-[10px] font-black uppercase tracking-widest text-white shadow-md transition-all hover:bg-[#054A37] active:translate-y-1 active:border-b-0"
           >
-            <i class="ri-add-circle-fill text-lg"></i>
-            <span class="hidden sm:inline">NUEVA VENTA</span>
-            <span class="sm:hidden">NUEVO</span>
+            <i class="ri-add-circle-fill text-base"></i>
+            Nueva venta
           </NuxtLink>
         </div>
       </div>
 
-      <!-- Filtros - Control Panel Style -->
-      <div class="bg-white rounded-xl shadow-md border border-[#D1D5DB] p-4 sm:p-6 mb-8">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 lg:gap-6">
+      <!-- ============ FILTROS ============ -->
+      <div class="mb-4 rounded-xl border border-[#D1D5DB] bg-white p-3 sm:p-4 shadow-sm">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">
           <div class="lg:col-span-2">
-            <label class="block text-[10px] font-black text-[#334155] mb-2 uppercase tracking-widest">Búsqueda Técnica</label>
-            <div class="relative group">
-              <i class="ri-search-2-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#10B981]"></i>
+            <label class="block text-[9px] font-black uppercase tracking-widest text-gray-400 mb-1">Búsqueda técnica</label>
+            <div class="relative">
+              <i class="ri-search-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm pointer-events-none"></i>
               <input
                 v-model="filtros.busqueda"
                 type="text"
                 placeholder="Cliente, repuesto o DNI..."
-                class="w-full pl-10 pr-4 py-2.5 bg-[#F8FAFC] border border-[#D1D5DB] rounded-lg focus:ring-2 focus:ring-[#10B981] focus:border-[#10B981] text-sm transition-all"
+                class="w-full rounded-lg border border-[#D1D5DB] bg-[#F8FAFC] py-2 pl-9 pr-3 text-xs font-bold text-[#334155] placeholder:text-gray-400 transition-all focus:border-[#10B981] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#10B981]/20"
               />
             </div>
           </div>
 
           <div>
-            <label class="block text-[10px] font-black text-[#334155] mb-2 uppercase tracking-widest">Período</label>
-            <select 
-              v-model="filtros.periodo" 
+            <label class="block text-[9px] font-black uppercase tracking-widest text-gray-400 mb-1">Período</label>
+            <select
+              v-model="filtros.periodo"
               @change="aplicarPeriodo"
-              class="w-full px-3 py-2.5 bg-[#F8FAFC] border border-[#D1D5DB] rounded-lg focus:ring-2 focus:ring-[#10B981] text-sm font-medium"
+              class="w-full rounded-lg border border-[#D1D5DB] bg-[#F8FAFC] py-2 px-3 text-xs font-bold text-[#334155] transition-all focus:border-[#10B981] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#10B981]/20"
             >
-              <option value="">TODOS</option>
-              <option value="hoy">HOY</option>
-              <option value="ultima_semana">ÚLTIMA SEMANA</option>
-              <option value="ultimo_mes">ÚLTIMO MES</option>
-              <option value="ultimo_ano">ÚLTIMO AÑO</option>
+              <option value="">Todos</option>
+              <option value="hoy">Hoy</option>
+              <option value="ultima_semana">Última semana</option>
+              <option value="ultimo_mes">Último mes</option>
+              <option value="ultimo_ano">Último año</option>
             </select>
           </div>
 
-          <div class="flex flex-col justify-end">
-            <button 
-              @click="limpiarFiltros" 
-              class="w-full px-4 sm:px-6 py-2.5 text-[#334155] font-bold bg-white border border-[#D1D5DB] rounded-lg hover:bg-gray-50 transition-all text-xs flex items-center justify-center gap-2"
+          <div class="flex items-end">
+            <button
+              @click="limpiarFiltros"
+              class="w-full rounded-lg border border-[#D1D5DB] bg-white px-3 py-2 text-[10px] font-black uppercase tracking-widest text-gray-500 transition-all hover:bg-gray-50 flex items-center justify-center gap-1.5"
             >
-              <i class="ri-refresh-line"></i>
-              <span class="hidden sm:inline">Limpiar Filtros</span>
-              <span class="sm:hidden">Limpiar</span>
+              <i class="ri-refresh-line text-sm"></i>
+              Limpiar
             </button>
           </div>
         </div>
       </div>
 
-      <!-- Indicadores de Placa Base (Stats) -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6 mb-8">
-        <div class="bg-white p-6 rounded-xl border border-[#D1D5DB] shadow-sm relative overflow-hidden group hover:shadow-md transition-all duration-300">
-          <div class="flex items-center justify-between relative z-10">
-            <div class="flex-1">
-              <p class="text-[10px] font-black text-gray-400 uppercase tracking-tighter mb-1">TOTAL VENTAS</p>
-              <p class="text-3xl lg:text-4xl font-black text-[#334155] leading-tight">{{ totalVentasMostradas }}</p>
+      <!-- ============ STATS ============ -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+        <div class="relative overflow-hidden rounded-xl border border-[#D1D5DB] bg-white p-4 shadow-sm">
+          <div class="flex items-center justify-between gap-3">
+            <div class="min-w-0">
+              <p class="text-[9px] font-black uppercase tracking-widest text-gray-400">Total ventas</p>
+              <p class="mt-0.5 text-2xl font-black text-[#334155] leading-none">{{ totalVentasMostradas }}</p>
             </div>
-            <div class="w-14 h-14 lg:w-16 lg:h-16 rounded-xl flex items-center justify-center bg-green-50 border border-green-100 ml-4">
-              <i class="ri-shopping-cart-line text-2xl lg:text-3xl text-[#10B981]"></i>
+            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-emerald-50 border border-emerald-100">
+              <i class="ri-shopping-cart-line text-lg text-[#10B981]"></i>
             </div>
           </div>
-          <div class="absolute bottom-0 left-0 h-1 w-full bg-green-500 opacity-20"></div>
+          <div class="absolute bottom-0 left-0 h-1 w-full bg-emerald-500 opacity-20"></div>
         </div>
 
-        <div class="bg-white p-6 rounded-xl border border-[#D1D5DB] shadow-sm relative overflow-hidden group hover:shadow-md transition-all duration-300">
-          <div class="flex items-center justify-between relative z-10">
-            <div class="flex-1">
-              <p class="text-[10px] font-black text-gray-400 uppercase tracking-tighter mb-1">UNIDADES VENDIDAS</p>
-              <p class="text-3xl lg:text-4xl font-black text-[#334155] leading-tight">{{ totalUnidadesMostradas }}</p>
+        <div class="relative overflow-hidden rounded-xl border border-[#D1D5DB] bg-white p-4 shadow-sm">
+          <div class="flex items-center justify-between gap-3">
+            <div class="min-w-0">
+              <p class="text-[9px] font-black uppercase tracking-widest text-gray-400">Unidades vendidas</p>
+              <p class="mt-0.5 text-2xl font-black text-[#334155] leading-none">{{ totalUnidadesMostradas }}</p>
             </div>
-            <div class="w-14 h-14 lg:w-16 lg:h-16 rounded-xl flex items-center justify-center bg-blue-50 border border-blue-100 ml-4">
-              <i class="ri-stack-line text-2xl lg:text-3xl text-blue-500"></i>
+            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-50 border border-blue-100">
+              <i class="ri-stack-line text-lg text-blue-500"></i>
             </div>
           </div>
           <div class="absolute bottom-0 left-0 h-1 w-full bg-blue-500 opacity-20"></div>
         </div>
 
-        <div class="bg-white p-6 rounded-xl border border-[#D1D5DB] shadow-sm relative overflow-hidden group hover:shadow-md transition-all duration-300">
-          <div class="flex items-center justify-between relative z-10">
-            <div class="flex-1">
-              <p class="text-[10px] font-black text-gray-400 uppercase tracking-tighter mb-1">INGRESOS TOTALES</p>
-              <p class="text-3xl lg:text-4xl font-black text-[#F59E0B] leading-tight">${{ totalIngresosMostrados }}</p>
+        <div class="relative overflow-hidden rounded-xl border border-[#D1D5DB] bg-white p-4 shadow-sm">
+          <div class="flex items-center justify-between gap-3">
+            <div class="min-w-0">
+              <p class="text-[9px] font-black uppercase tracking-widest text-gray-400">Ingresos totales</p>
+              <p class="mt-0.5 text-2xl font-black text-[#F59E0B] leading-none">${{ totalIngresosMostrados }}</p>
             </div>
-            <div class="w-14 h-14 lg:w-16 lg:h-16 rounded-xl flex items-center justify-center bg-amber-50 border border-amber-100 ml-4">
-              <i class="ri-money-dollar-circle-line text-2xl lg:text-3xl text-amber-500"></i>
+            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-amber-50 border border-amber-100">
+              <i class="ri-money-dollar-circle-line text-lg text-amber-500"></i>
             </div>
           </div>
           <div class="absolute bottom-0 left-0 h-1 w-full bg-amber-500 opacity-20"></div>
         </div>
       </div>
 
-      <!-- Tabla Principal: Estética PCB -->
-      <div class="bg-white rounded-xl shadow-lg border border-[#D1D5DB] overflow-hidden">
-        <!-- Pagination Bar Superior -->
-        <div class="px-6 py-4 bg-[#F8FAFC] border-b border-[#D1D5DB]">
-          <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-            <div class="flex items-center gap-2">
-              <span class="text-xs font-mono text-gray-500">DATA_STREAM:</span>
-              <span class="text-[#065F46] font-bold text-sm">{{ inicioMostrando }}-{{ finMostrando }}</span>
-              <span class="text-xs font-mono text-gray-500">/</span>
-              <span class="text-xs font-mono text-gray-500">{{ ventasFiltradas.length }}</span>
+      <!-- ============ TABLA ============ -->
+      <div class="overflow-hidden rounded-xl border border-[#D1D5DB] bg-white shadow-sm">
+
+        <!-- Barra paginación -->
+        <div class="border-b border-[#D1D5DB] bg-[#F8FAFC] px-4 py-2.5">
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+            <div class="flex items-center gap-2 text-[10px] font-mono text-gray-500 uppercase">
+              <span class="text-gray-400">Data_stream:</span>
+              <span class="font-black text-[#065F46]">{{ inicioMostrando }}-{{ finMostrando }}</span>
+              <span class="text-gray-300">/</span>
+              <span>{{ ventasFiltradas.length }}</span>
             </div>
-            <div class="flex items-center gap-2">
-              <button @click="paginaAnterior" :disabled="paginaActual === 1" class="pagination-btn p-2">
-                <i class="ri-arrow-left-s-line text-base"></i>
+            <div class="flex items-center gap-1.5">
+              <button
+                @click="paginaAnterior"
+                :disabled="paginaActual === 1"
+                class="rounded-lg border border-[#D1D5DB] bg-white p-1.5 text-gray-500 transition-all hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed"
+              >
+                <i class="ri-arrow-left-s-line text-sm"></i>
               </button>
-              <div class="px-3 py-1 rounded-lg bg-gray-100 min-w-[60px] text-center">
-                <span class="text-sm font-mono font-bold" style="color: #065F46;">{{ paginaActual }}</span>
+              <div class="rounded-lg bg-gray-100 px-2.5 py-1 min-w-[48px] text-center">
+                <span class="text-[10px] font-mono font-black text-[#065F46]">{{ paginaActual }}</span>
               </div>
-              <button @click="paginaSiguiente" :disabled="paginaActual === totalPaginas" class="pagination-btn p-2">
-                <i class="ri-arrow-right-s-line text-base"></i>
+              <button
+                @click="paginaSiguiente"
+                :disabled="paginaActual === totalPaginas"
+                class="rounded-lg border border-[#D1D5DB] bg-white p-1.5 text-gray-500 transition-all hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed"
+              >
+                <i class="ri-arrow-right-s-line text-sm"></i>
               </button>
             </div>
           </div>
         </div>
 
-        <!-- Desktop Table -->
+        <!-- Desktop table -->
         <div class="hidden lg:block overflow-x-auto">
           <table class="w-full text-left border-collapse min-w-[800px]">
             <thead>
               <tr class="bg-[#065F46]">
-                <th class="th-tech px-6 py-4 text-[10px] w-24">FECHA</th>
-                <th class="th-tech px-6 py-4 text-[10px] min-w-[200px]">CLIENTE</th>
-                <th class="th-tech px-6 py-4 text-[10px] min-w-[180px]">REPUESTO</th>
-                <th class="th-tech px-6 py-4 text-[10px] text-center w-20">CANT.</th>
-                <th class="th-tech px-6 py-4 text-[10px] text-right w-32">TOTAL</th>
-                <th class="th-tech px-6 py-4 text-[10px] text-center w-28">TICKET</th>
+                <th class="px-4 py-2.5 text-[9px] font-black text-white uppercase tracking-widest w-20">Fecha</th>
+                <th class="px-4 py-2.5 text-[9px] font-black text-white uppercase tracking-widest min-w-[180px]">Cliente</th>
+                <th class="px-4 py-2.5 text-[9px] font-black text-white uppercase tracking-widest min-w-[160px]">Repuesto</th>
+                <th class="px-4 py-2.5 text-[9px] font-black text-white uppercase tracking-widest text-center w-16">Cant.</th>
+                <th class="px-4 py-2.5 text-[9px] font-black text-white uppercase tracking-widest text-right w-28">Total</th>
+                <th class="px-4 py-2.5 text-[9px] font-black text-white uppercase tracking-widest text-center w-24">Ticket</th>
               </tr>
             </thead>
-            <tbody class="divide-y divide-[#D1D5DB]">
+            <tbody class="divide-y divide-[#E5E7EB]">
               <tr v-if="cargando">
-                <td colspan="6" class="py-16 text-center">
-                  <div class="flex flex-col items-center gap-4">
-                    <div class="w-12 h-12 border-4 border-[#10B981] border-t-transparent rounded-full animate-spin"></div>
-                    <span class="text-xs font-mono text-gray-400 uppercase tracking-widest">Loading_Database...</span>
+                <td colspan="6" class="py-12 text-center">
+                  <div class="flex flex-col items-center gap-2">
+                    <div class="w-8 h-8 border-4 border-[#10B981] border-t-transparent rounded-full animate-spin"></div>
+                    <span class="text-[9px] font-mono text-gray-400 uppercase tracking-widest">Loading_Database...</span>
                   </div>
                 </td>
               </tr>
               <tr v-else-if="ventasPaginadas.length === 0">
-                <td colspan="6" class="py-16 text-center">
-                  <i class="ri-shopping-cart-line text-5xl text-gray-200 mb-4 block"></i>
-                  <p class="text-gray-400 font-medium">No se encontraron registros en este sector.</p>
+                <td colspan="6" class="py-12 text-center">
+                  <i class="ri-shopping-cart-line text-4xl text-gray-200 mb-2 block"></i>
+                  <p class="text-xs text-gray-400 font-bold uppercase tracking-widest">Sin registros en este sector</p>
                 </td>
               </tr>
-              <tr v-for="venta in ventasPaginadas" :key="venta.id" 
-                  @click="venta.facturas?.id && abrirFactura(venta)"
-                  class="cursor-pointer hover:bg-[#F0FDF4]/50 transition-colors group">
-                <td class="px-6 py-4 font-mono text-[11px] text-gray-500 align-middle">
+              <tr
+                v-for="venta in ventasPaginadas"
+                :key="venta.id"
+                @click="venta.facturas?.id && abrirFactura(venta)"
+                class="cursor-pointer hover:bg-[#F0FDF4]/60 transition-colors group"
+              >
+                <td class="px-4 py-2.5 font-mono text-[10px] text-gray-500">
                   {{ formatearFecha(venta.created_at) }}
                 </td>
-                <td class="px-6 py-4 align-middle">
-                  <div class="font-bold text-[#334155] text-sm">{{ venta.clientes?.nombre_completo || 'Cliente General' }}</div>
-                  <div class="text-[10px] font-mono text-gray-500">{{ venta.clientes?.telefono || 'TEL_NULL' }}</div>
+                <td class="px-4 py-2.5 min-w-0">
+                  <p class="font-black text-[#334155] text-xs uppercase tracking-tight truncate">
+                    {{ venta.clientes?.nombre_completo || 'Cliente General' }}
+                  </p>
+                  <p class="text-[9px] font-mono text-gray-400 truncate">
+                    {{ venta.clientes?.telefono || 'TEL_NULL' }}
+                  </p>
                 </td>
-                <td class="px-6 py-4 align-middle">
-                  <span class="text-sm font-bold text-[#065F46]">{{ venta.stock_repuestos?.nombre_repuesto || 'N/A' }}</span>
+                <td class="px-4 py-2.5">
+                  <p class="text-xs font-black text-[#065F46] truncate">
+                    {{ venta.stock_repuestos?.nombre_repuesto || 'N/A' }}
+                  </p>
                 </td>
-                <td class="px-6 py-4 text-center align-middle">
-                  <span class="inline-flex items-center justify-center px-2 py-1 text-[10px] font-black rounded-full bg-gray-100 text-[#065F46]">
-                    {{ venta.cantidad }} uds
+                <td class="px-4 py-2.5 text-center">
+                  <span class="inline-flex items-center justify-center rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-black text-[#065F46]">
+                    {{ venta.cantidad }}
                   </span>
                 </td>
-                <td class="px-6 py-4 text-right align-middle">
-                  <span class="text-base font-black text-[#10B981]">${{ formatearTotal(venta.total) }}</span>
+                <td class="px-4 py-2.5 text-right">
+                  <span class="text-sm font-black text-[#10B981]">${{ formatearTotal(venta.total) }}</span>
                 </td>
-                <td class="px-6 py-4 text-center align-middle">
+                <td class="px-4 py-2.5 text-center">
                   <button
                     v-if="venta.facturas?.id"
                     @click.stop="abrirFactura(venta)"
-                    class="mx-auto flex w-fit items-center gap-1 text-[10px] font-black uppercase text-[#065F46] hover:text-[#10B981]"
+                    class="mx-auto flex w-fit items-center gap-1 rounded-lg border border-[#10B981]/30 bg-[#F0FDF4] px-2 py-1 text-[9px] font-black uppercase tracking-wider text-[#065F46] hover:bg-[#DCFCE7] transition-colors"
                     title="Ver factura"
                   >
-                    <i class="ri-file-text-line"></i> Factura
+                    <i class="ri-file-text-line text-sm"></i>
+                    Ver
                   </button>
                 </td>
               </tr>
@@ -210,84 +228,94 @@
           </table>
         </div>
 
-        <!-- Mobile Cards -->
-        <div class="lg:hidden space-y-4 p-4">
-          <div v-if="cargando" class="py-16 text-center">
-            <div class="flex flex-col items-center gap-4">
-              <div class="w-12 h-12 border-4 border-[#10B981] border-t-transparent rounded-full animate-spin"></div>
-              <span class="text-xs font-mono text-gray-400 uppercase tracking-widest">Loading_Database...</span>
+        <!-- Mobile cards -->
+        <div class="lg:hidden space-y-2 p-3">
+          <div v-if="cargando" class="py-12 text-center">
+            <div class="flex flex-col items-center gap-2">
+              <div class="w-8 h-8 border-4 border-[#10B981] border-t-transparent rounded-full animate-spin"></div>
+              <span class="text-[9px] font-mono text-gray-400 uppercase tracking-widest">Loading_Database...</span>
             </div>
           </div>
-          <div v-else-if="ventasPaginadas.length === 0" class="py-16 text-center">
-            <i class="ri-shopping-cart-line text-5xl text-gray-200 mb-4 block"></i>
-            <p class="text-gray-400 font-medium">No se encontraron registros en este sector.</p>
+          <div v-else-if="ventasPaginadas.length === 0" class="py-12 text-center">
+            <i class="ri-shopping-cart-line text-4xl text-gray-200 mb-2 block"></i>
+            <p class="text-xs text-gray-400 font-bold uppercase tracking-widest">Sin registros</p>
           </div>
-          <div v-for="venta in ventasPaginadas" :key="venta.id" @click="venta.facturas?.id && abrirFactura(venta)" class="bg-white rounded-xl shadow-md border border-[#D1D5DB] overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer">
-            <!-- Header: Fecha y Total -->
-            <div class="bg-gradient-to-r from-[#065F46] to-[#047857] px-4 py-3 flex justify-between items-center">
-              <span class="text-white text-xs font-mono">{{ formatearFecha(venta.created_at) }}</span>
-              <div class="flex items-center gap-3">
-                <span class="text-white font-bold text-lg">${{ formatearTotal(venta.total) }}</span>
-                <button v-if="venta.facturas?.id" @click.stop="abrirFactura(venta)" class="text-white" title="Ver factura">
-                  <i class="ri-file-text-line text-lg"></i>
+
+          <div
+            v-for="venta in ventasPaginadas"
+            :key="venta.id"
+            @click="venta.facturas?.id && abrirFactura(venta)"
+            class="overflow-hidden rounded-xl border border-[#D1D5DB] bg-white shadow-sm hover:shadow-md transition-all cursor-pointer"
+          >
+            <!-- Header verde -->
+            <div class="bg-[#065F46] px-3 py-2 flex justify-between items-center gap-2">
+              <span class="text-white text-[10px] font-mono">{{ formatearFecha(venta.created_at) }}</span>
+              <div class="flex items-center gap-2">
+                <span class="text-white font-black text-sm">${{ formatearTotal(venta.total) }}</span>
+                <button
+                  v-if="venta.facturas?.id"
+                  @click.stop="abrirFactura(venta)"
+                  class="text-white/80 hover:text-white"
+                  title="Ver factura"
+                >
+                  <i class="ri-file-text-line text-sm"></i>
                 </button>
               </div>
             </div>
-            
-            <!-- Customer Info -->
-            <div class="px-4 py-3 border-b border-gray-100">
-              <h3 class="font-bold text-[#334155] text-base mb-1">{{ venta.clientes?.nombre_completo || 'Cliente General' }}</h3>
-              <a 
-                v-if="venta.clientes?.telefono" 
-                :href="`tel:${venta.clientes.telefono}`" 
-                class="text-sm text-gray-500 hover:text-[#10B981] transition-colors flex items-center gap-1"
+
+            <!-- Body -->
+            <div class="px-3 py-2.5 space-y-1.5">
+              <p class="font-black text-[#334155] text-xs uppercase tracking-tight truncate">
+                {{ venta.clientes?.nombre_completo || 'Cliente General' }}
+              </p>
+              <a
+                v-if="venta.clientes?.telefono"
+                :href="`tel:${venta.clientes.telefono}`"
+                class="text-[10px] text-gray-500 hover:text-[#10B981] transition-colors flex items-center gap-1 font-mono"
               >
-                <i class="ri-phone-line text-sm"></i>
+                <i class="ri-phone-line text-xs"></i>
                 {{ venta.clientes.telefono }}
               </a>
-              <span v-else class="text-sm text-gray-400">TEL_NULL</span>
-            </div>
-            
-            <!-- Product Details -->
-            <div class="px-4 py-3">
-              <div class="flex items-start justify-between mb-2">
-                <div class="flex-1">
-                  <h4 class="font-bold text-[#065F46] text-sm mb-1">{{ venta.stock_repuestos?.nombre_repuesto || 'N/A' }}</h4>
-                  <div class="flex items-center gap-4 text-xs text-gray-600">
-                    <span class="flex items-center gap-1">
-                      <i class="ri-stack-line text-gray-400"></i>
-                      Cantidad: <strong>{{ venta.cantidad }} uds</strong>
-                    </span>
-                  </div>
-                </div>
+              <div class="flex items-center justify-between gap-2 border-t border-gray-100 pt-1.5">
+                <p class="text-[11px] font-black text-[#065F46] truncate">
+                  {{ venta.stock_repuestos?.nombre_repuesto || 'N/A' }}
+                </p>
+                <span class="shrink-0 rounded-full bg-gray-100 px-2 py-0.5 text-[9px] font-black text-[#065F46]">
+                  {{ venta.cantidad }} u.
+                </span>
               </div>
             </div>
           </div>
-</div>
-    </div>
-  </div>
-
-  <!-- Modal de factura usando componente reutilizable -->
-  <FacturaModal
-    v-model:abierto="modalFacturaAbierto"
-    :factura-id="facturaSeleccionadaId"
-    tipo="venta"
-    @cerrar="cerrarFactura"
-  />
-
-  <!-- Toast Notificación -->
-    <div v-if="toast.visible" class="fixed bottom-6 right-6 z-50 animate-slide-up">
-      <div :class="[
-        'px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3 min-w-[300px] border-l-4',
-        toast.tipo === 'success' ? 'bg-[#065F46] border-[#10B981] text-white' : 'bg-red-900 border-red-500 text-white'
-      ]">
-        <i :class="toast.tipo === 'success' ? 'ri-shield-check-fill text-[#10B981]' : 'ri-error-warning-fill text-white'" class="text-2xl"></i>
-        <div class="flex-1">
-          <p class="text-[9px] uppercase font-bold opacity-60">System_Msg</p>
-          <p class="text-xs font-medium">{{ toast.mensaje }}</p>
         </div>
       </div>
     </div>
+
+    <!-- Modal factura -->
+    <FacturaModal
+      v-model:abierto="modalFacturaAbierto"
+      :factura-id="facturaSeleccionadaId"
+      tipo="venta"
+      @cerrar="cerrarFactura"
+    />
+
+    <!-- Toast -->
+    <Transition name="slide-fade">
+      <div v-if="toast.visible" class="fixed top-3 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-1.5rem)] max-w-sm">
+        <div :class="[
+          'px-3 py-2 rounded-lg shadow-xl flex items-center gap-2 border-l-4 backdrop-blur-md',
+          toast.tipo === 'success' ? 'bg-[#065F46]/95 text-white border-[#10B981]' : 'bg-red-600/95 text-white border-red-800'
+        ]">
+          <i :class="toast.tipo === 'success' ? 'ri-checkbox-circle-fill text-base text-[#10B981]' : 'ri-error-warning-fill text-base text-red-200'"></i>
+          <div class="flex-1 min-w-0">
+            <p class="text-[8px] font-black uppercase tracking-[0.2em] opacity-60 italic">DroidStock</p>
+            <p class="text-xs font-bold tracking-tight break-words">{{ toast.mensaje }}</p>
+          </div>
+          <button @click="toast.visible = false" class="text-white/70 hover:text-white p-0.5" aria-label="Cerrar">
+            <i class="ri-close-line text-base"></i>
+          </button>
+        </div>
+      </div>
+    </Transition>
   </div>
 </template>
 
@@ -300,7 +328,6 @@ definePageMeta({
   layout: 'dashboard'
 })
 
-// Acceso al composable de ventas
 const { ventas, cargando, obtenerVentas } = useVentas()
 
 const route = useRoute()
@@ -327,14 +354,11 @@ const cerrarFactura = () => {
   facturaSeleccionadaId.value = null
 }
 
-
-
 const mostrarNotificacion = (mensaje, tipo = 'success') => {
   toast.value = { visible: true, mensaje, tipo }
   setTimeout(() => toast.value.visible = false, 3000)
 }
 
-// Filtros
 const filtros = reactive({
   busqueda: '',
   periodo: '',
@@ -342,11 +366,9 @@ const filtros = reactive({
   fecha_fin: ''
 })
 
-// ========== PAGINACIÓN ==========
 const ITEMS_POR_PAGINA = 7
 const paginaActual = ref(1)
 
-// Ventas filtradas (sin paginación aplicada aún)
 const ventasFiltradas = computed(() => {
   let resultado = [...ventas.value]
 
@@ -369,19 +391,16 @@ const ventasFiltradas = computed(() => {
   return resultado
 })
 
-// Total de páginas basado en los filtros
-const totalPaginas = computed(() => {
-  return Math.max(1, Math.ceil(ventasFiltradas.value.length / ITEMS_POR_PAGINA))
-})
+const totalPaginas = computed(() =>
+  Math.max(1, Math.ceil(ventasFiltradas.value.length / ITEMS_POR_PAGINA))
+)
 
-// Ventas que se ven en la tabla actual
 const ventasPaginadas = computed(() => {
   const inicio = (paginaActual.value - 1) * ITEMS_POR_PAGINA
   const fin = inicio + ITEMS_POR_PAGINA
   return ventasFiltradas.value.slice(inicio, fin)
 })
 
-// Indicadores de rango
 const inicioMostrando = computed(() => {
   if (ventasFiltradas.value.length === 0) return 0
   return (paginaActual.value - 1) * ITEMS_POR_PAGINA + 1
@@ -392,8 +411,6 @@ const finMostrando = computed(() => {
   return Math.min(fin, ventasFiltradas.value.length)
 })
 
-
-// Navegación
 const paginaAnterior = () => {
   if (paginaActual.value > 1) paginaActual.value--
 }
@@ -402,20 +419,15 @@ const paginaSiguiente = () => {
   if (paginaActual.value < totalPaginas.value) paginaActual.value++
 }
 
-
-// Reiniciar página si cambian los filtros
 watch([() => filtros.busqueda, () => filtros.fecha_inicio, () => filtros.fecha_fin], () => {
   paginaActual.value = 1
 })
 
-// ========== ESTADÍSTICAS ==========
-const totalVentasMostradas = computed(() => {
-  return ventasFiltradas.value.length
-})
+const totalVentasMostradas = computed(() => ventasFiltradas.value.length)
 
-const totalUnidadesMostradas = computed(() => {
-  return ventasFiltradas.value.reduce((sum, v) => sum + (v.cantidad || 0), 0)
-})
+const totalUnidadesMostradas = computed(() =>
+  ventasFiltradas.value.reduce((sum, v) => sum + (v.cantidad || 0), 0)
+)
 
 const totalIngresosMostrados = computed(() => {
   const total = ventasFiltradas.value.reduce((sum, v) => sum + (v.total || 0), 0)
@@ -425,7 +437,6 @@ const totalIngresosMostrados = computed(() => {
   })
 })
 
-// ========== UTILIDADES ==========
 const formatearFecha = (fecha) => {
   if (!fecha) return '--/--/----'
   return new Date(fecha).toLocaleDateString('es-ES', {
@@ -445,30 +456,33 @@ const formatearTotal = (total) => {
 const aplicarPeriodo = () => {
   const hoy = new Date()
   hoy.setHours(0, 0, 0, 0)
-  
+
   switch (filtros.periodo) {
     case 'hoy':
       filtros.fecha_inicio = hoy.toISOString().split('T')[0]
       filtros.fecha_fin = hoy.toISOString().split('T')[0]
       break
-    case 'ultima_semana':
+    case 'ultima_semana': {
       const inicioSemana = new Date(hoy)
       inicioSemana.setDate(hoy.getDate() - 7)
       filtros.fecha_inicio = inicioSemana.toISOString().split('T')[0]
       filtros.fecha_fin = hoy.toISOString().split('T')[0]
       break
-    case 'ultimo_mes':
+    }
+    case 'ultimo_mes': {
       const inicioMes = new Date(hoy)
       inicioMes.setMonth(hoy.getMonth() - 1)
       filtros.fecha_inicio = inicioMes.toISOString().split('T')[0]
       filtros.fecha_fin = hoy.toISOString().split('T')[0]
       break
-    case 'ultimo_ano':
+    }
+    case 'ultimo_ano': {
       const inicioAno = new Date(hoy)
       inicioAno.setFullYear(hoy.getFullYear() - 1)
       filtros.fecha_inicio = inicioAno.toISOString().split('T')[0]
       filtros.fecha_fin = hoy.toISOString().split('T')[0]
       break
+    }
     default:
       filtros.fecha_inicio = ''
       filtros.fecha_fin = ''
@@ -485,7 +499,6 @@ const limpiarFiltros = () => {
 
 onMounted(async () => {
   await obtenerVentas()
-  // Obtener datos de la tienda
   try {
     const session = await $fetch('/api/auth/session')
     tienda.value = session?.session?.tienda || null
@@ -493,25 +506,21 @@ onMounted(async () => {
     tienda.value = null
   }
 
-  // Si viene factura_id en query params, abrir modal
   if (route.query.factura_id) {
     facturaSeleccionadaId.value = route.query.factura_id
     modalFacturaAbierto.value = true
-    // Limpiar query param para que no se abra de nuevo al recargar
     router.replace({ query: { ...route.query, factura_id: undefined } })
   }
 })
 
-// ESTADÍSTICAS PARA REPORTE
 const totalVentas = computed(() => ventasFiltradas.value.length)
-const totalIngresos = computed(() => {
-  return ventasFiltradas.value.reduce((sum, v) => sum + (v.total || 0), 0)
-})
-const productosVendidos = computed(() => {
-  return ventasFiltradas.value.reduce((sum, v) => sum + (v.cantidad || 0), 0)
-})
+const totalIngresos = computed(() =>
+  ventasFiltradas.value.reduce((sum, v) => sum + (v.total || 0), 0)
+)
+const productosVendidos = computed(() =>
+  ventasFiltradas.value.reduce((sum, v) => sum + (v.cantidad || 0), 0)
+)
 
-// EXPORTACIÓN PDF CON DISEÑO DROIDSTOCK
 const exportarPDF = async () => {
   if (exportando.value) return
   exportando.value = true
@@ -530,85 +539,62 @@ const exportarPDF = async () => {
           <div style="flex: 1; text-align: right;">
             <h2 style="color: #065F46; font-size: 18px; margin: 0; font-weight: 700; text-transform: uppercase;">Reporte de Ventas</h2>
             <p style="color: #374151; font-size: 14px; margin: 4px 0; font-weight: 600;">Correspondiente al taller: ${tienda.value?.nombre_tienda || 'Taller'}</p>
-              <span style="color: #6b7280; font-size: 10px; padding: 4px 8px; border-radius: 4px; font-family: monospace;">FECHA: ${new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
-            </div>
+            <span style="color: #6b7280; font-size: 10px; padding: 4px 8px; border-radius: 4px; font-family: monospace;">FECHA: ${new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
           </div>
         </div>
-        
+
         <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px;">
           <div style="background: #DBEAFE; border: 1px solid #93C5FD; border-radius: 10px; padding: 15px;">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-              <div>
-                <p style="color: #065F46; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">Total Ventas: </p>
-                <p style="color: #374151; font-size: 20px; font-weight: 900; margin: 5px 0;">${totalVentas.value}</p>
-              </div>
-              <div style="width: 40px; height: 40px; color: black; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
-                <i class="ri-shopping-cart-fill" style="font-size: 30px;"></i>
-              </div>
-            </div>
+            <p style="color: #065F46; font-size: 10px; font-weight: 700; text-transform: uppercase; margin: 0;">Total Ventas:</p>
+            <p style="color: #374151; font-size: 20px; font-weight: 900; margin: 5px 0;">${totalVentas.value}</p>
           </div>
           <div style="background: #D1FAE5; border: 1px solid #A7F3D0; border-radius: 10px; padding: 15px;">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-              <div>
-                <p style="color: #065F46; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">Ingresos: </p>
-                <p style="color: #374151; font-size: 20px; font-weight: 900; margin: 5px 0;">$${formatearTotal(totalIngresos.value)}</p>
-              </div>
-              <div style="width: 40px; height: 40px; color: black; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
-                <i class="ri-money-dollar-circle-fill" style="font-size: 30px;"></i>
-              </div>
-            </div>
+            <p style="color: #065F46; font-size: 10px; font-weight: 700; text-transform: uppercase; margin: 0;">Ingresos:</p>
+            <p style="color: #374151; font-size: 20px; font-weight: 900; margin: 5px 0;">$${formatearTotal(totalIngresos.value)}</p>
           </div>
           <div style="background: #FEF3C7; border: 1px solid #FDE68A; border-radius: 10px; padding: 15px;">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-              <div>
-                <p style="color: #065F46; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">Unidades Vendidas: </p>
-                <p style="color: #374151; font-size: 20px; font-weight: 900; margin: 5px 0;">${productosVendidos.value}</p>
-              </div>
-              <div style="width: 40px; height: 40px; color: black; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
-                <i class="ri-stack-fill" style="font-size: 30px;"></i>
-              </div>
-            </div>
+            <p style="color: #065F46; font-size: 10px; font-weight: 700; text-transform: uppercase; margin: 0;">Unidades Vendidas:</p>
+            <p style="color: #374151; font-size: 20px; font-weight: 900; margin: 5px 0;">${productosVendidos.value}</p>
           </div>
         </div>
-        
-        <div style="overflow-x: auto;">
-          <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
-            <thead>
-              <tr style="background: #F3F4F6; border-bottom: 2px solid #D1D5DB;">
-                <th style="padding: 12px; text-align: left;">Fecha</th>
-                <th style="padding: 12px; text-align: left;">Cliente</th>
-                <th style="padding: 12px; text-align: left;">Repuesto</th>
-                <th style="padding: 12px; text-align: left;">Cantidad</th>
-                <th style="padding: 12px; text-align: right;">Precio Venta</th>
-                <th style="padding: 12px; text-align: right;">Total</th>
+
+        <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+          <thead>
+            <tr style="background: #F3F4F6; border-bottom: 2px solid #D1D5DB;">
+              <th style="padding: 12px; text-align: left;">Fecha</th>
+              <th style="padding: 12px; text-align: left;">Cliente</th>
+              <th style="padding: 12px; text-align: left;">Repuesto</th>
+              <th style="padding: 12px; text-align: center;">Cantidad</th>
+              <th style="padding: 12px; text-align: right;">Precio unit.</th>
+              <th style="padding: 12px; text-align: right;">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${ventasFiltradas.value.map(item => `
+              <tr style="border-bottom: 1px solid #E5E7EB;">
+                <td style="padding: 10px 12px; color: #065F46; font-weight: 500;">${formatearFecha(item.created_at)}</td>
+                <td style="padding: 10px 12px; color: #065F46; font-weight: 500;">${item.clientes?.nombre_completo || 'N/A'}</td>
+                <td style="padding: 10px 12px; color: #065F46; font-weight: 500;">${item.stock_repuestos?.nombre_repuesto || 'N/A'}</td>
+                <td style="padding: 10px 12px; text-align: center;">${item.cantidad}</td>
+                <td style="padding: 10px 12px; text-align: right; color: #374151;">$${formatearTotal(Number(item.total || 0) / Number(item.cantidad || 1))}</td>
+                <td style="padding: 10px 12px; text-align: right; color: #065F46; font-weight: bold;">$${formatearTotal(item.total)}</td>
               </tr>
-            </thead>
-            <tbody>
-              ${ventasFiltradas.value.map(item => `
-                <tr style="border-bottom: 1px solid #E5E7EB;">
-                  <td style="padding: 10px 12px; color: #065F46; font-weight: 500;">${formatearFecha(item.created_at)}</td>
-                  <td style="padding: 10px 12px; color: #065F46; font-weight: 500;">${item.clientes?.nombre_completo || 'N/A'}</td>
-                  <td style="padding: 10px 12px; color: #065F46; font-weight: 500;">${item.stock_repuestos?.nombre_repuesto || 'N/A'}</td>
-                  <td style="padding: 10px 12px; text-align: center;">${item.cantidad}</td>
-                  <td style="padding: 10px 12px; text-align: right; color: #374151;">$${formatearTotal(item.stock_repuestos?.precio_venta || 0)}</td>
-                  <td style="padding: 10px 12px; text-align: right; color: #065F46; font-weight: bold;">$${formatearTotal(item.total)}</td>
-                </tr>
-              `).join('')}
-            </tbody>
-            <tfoot>
-              <tr style="background: #F9FAFB; border-top: 2px solid #D1D5DB;">
-                <td style="padding: 12px; font-weight: bold; color: #065F46;" colspan="5">TOTAL:</td>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
+            `).join('')}
+          </tbody>
+          <tfoot>
+            <tr style="background: #F9FAFB; border-top: 2px solid #D1D5DB;">
+              <td style="padding: 12px; font-weight: bold; color: #065F46;" colspan="5">TOTAL:</td>
+              <td style="padding: 12px; text-align: right; color: #065F46; font-weight: bold;">$${formatearTotal(totalIngresos.value)}</td>
+            </tr>
+          </tfoot>
+        </table>
       </div>
     `
-    
+
     const element = document.createElement('div')
     element.innerHTML = contenido
     document.body.appendChild(element)
-    
+
     await html2pdf().set({
       margin: 0.3,
       filename: `DroidStock_Ventas_${Date.now()}.pdf`,
@@ -616,7 +602,7 @@ const exportarPDF = async () => {
       html2canvas: { scale: 2 },
       jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
     }).from(element).save()
-    
+
     element.remove()
     mostrarNotificacion('Reporte generado exitosamente')
   } catch (e) {
@@ -628,105 +614,17 @@ const exportarPDF = async () => {
 </script>
 
 <style scoped>
-.th-tech {
-  @apply px-6 py-4 text-[10px] font-black text-white uppercase tracking-widest border-x border-white/5;
+.slide-fade-enter-active, .slide-fade-leave-active {
+  transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.slide-fade-enter-from, .slide-fade-leave-to {
+  transform: translateY(-15px) scale(0.95);
+  opacity: 0;
 }
 
-.pagination-btn {
-  @apply p-2 rounded-lg border border-[#D1D5DB] bg-white hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-[#334155];
-}
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+.animate-spin { animation: spin 1s linear infinite; }
 
-.page-num {
-  @apply w-8 h-8 rounded-lg text-xs font-mono font-bold transition-all border border-transparent;
-}
-
-.page-num.active {
-  @apply bg-[#065F46] text-white shadow-md;
-}
-
-.page-num:not(.active) {
-  @apply text-[#334155] hover:bg-[#F0FDF4] hover:text-[#065F46];
-}
-
-/* Desktop-specific improvements */
-@media (min-width: 1024px) {
-  .lg\:gap-6 {
-    gap: 1.5rem;
-  }
-  
-  .lg\:w-auto {
-    width: auto;
-  }
-  
-  .lg\:col-span-2 {
-    grid-column: span 2 / span 2;
-  }
-  
-  .lg\:text-4xl {
-    font-size: 2.25rem;
-    line-height: 2.5rem;
-  }
-  
-  .lg\:w-16 {
-    width: 4rem;
-  }
-  
-  .lg\:h-16 {
-    height: 4rem;
-  }
-  
-  .lg\:text-3xl {
-    font-size: 1.875rem;
-    line-height: 2.25rem;
-  }
-}
-
-/* Enhanced hover states */
-.group:hover .group-hover\:shadow-md {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-}
-
-/* Better alignment for table cells */
-.align-middle {
-  vertical-align: middle;
-}
-
-/* Consistent spacing */
-.min-w-\[800px\] {
-  min-width: 800px;
-}
-
-/* Improved focus states */
-input:focus, select:focus, button:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px #10B981;
-  border-color: #10B981;
-}
-
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-.animate-spin {
-  animation: spin 1s linear infinite;
-}
-
-@keyframes slideUp {
-  from { transform: translateY(20px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
-
-.animate-slide-up {
-  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.animate-pulse {
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
-}
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+.animate-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
 </style>
