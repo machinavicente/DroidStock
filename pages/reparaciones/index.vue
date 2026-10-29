@@ -139,7 +139,7 @@
                 <th class="px-4 py-2.5 text-[9px] font-black text-white uppercase tracking-widest w-28">Cliente</th>
                 <th class="px-4 py-2.5 text-[9px] font-black text-white uppercase tracking-widest min-w-[160px]">Equipo</th>
                 <th class="px-4 py-2.5 text-[9px] font-black text-white uppercase tracking-widest min-w-[180px]">Falla</th>
-                <th class="px-4 py-2.5 text-[9px] font-black text-white uppercase tracking-widest text-center w-28">Estado</th>
+                <th class="px-4 py-2.5 text-[9px] font-black text-white uppercase tracking-widest text-center w-48">Estado / Acción</th>
                 <th class="px-4 py-2.5 text-[9px] font-black text-white uppercase tracking-widest w-32">Técnico</th>
                 <th class="px-4 py-2.5 text-[9px] font-black text-white uppercase tracking-widest w-24">Entrada</th>
                 <th class="px-4 py-2.5 text-[9px] font-black text-white uppercase tracking-widest text-center w-24">Ticket</th>
@@ -181,19 +181,38 @@
                 <td class="px-4 py-2.5">
                   <p class="text-[11px] text-gray-600 max-w-[180px] truncate">{{ reparacion.falla_reportada }}</p>
                 </td>
+
+                <!-- ===== ESTADO: badge actual + botón cuadrado de acción en línea ===== -->
                 <td class="px-4 py-2.5">
-                  <select
-                    @click.stop
-                    :value="reparacion.estado_servicio"
-                    @change="cambiarEstado(reparacion.id, $event.target.value)"
-                    :class="[estadoClass(reparacion.estado_servicio), 'status-select text-[9px] px-2 py-1']"
-                  >
-                    <option value="Recibido" :disabled="reparacion.estado_servicio !== 'Recibido'">Recibido</option>
-                    <option value="En reparacion" :disabled="!validarTransicion(reparacion.estado_servicio, 'En reparacion')">En reparación</option>
-                    <option value="Finalizado" :disabled="!validarTransicion(reparacion.estado_servicio, 'Finalizado')">Finalizado</option>
-                    <option value="Entregada" :disabled="!validarTransicion(reparacion.estado_servicio, 'Entregada')">Entregada</option>
-                  </select>
+                  <div class="flex items-center justify-center gap-2">
+                    <!-- Estado actual: badge pequeño, solo lectura -->
+                    <span :class="[estadoClass(reparacion.estado_servicio), 'inline-flex items-center gap-1 rounded-md px-2 py-1 text-[8px] font-black uppercase tracking-wider whitespace-nowrap']">
+                      <i :class="[getIcon(reparacion.estado_servicio), 'text-[10px]']"></i>
+                      {{ reparacion.estado_servicio }}
+                    </span>
+
+                    <!-- Acción: botón cuadrado, explícito -->
+                    <button
+                      @click.stop="accionSiguiente(reparacion)"
+                      :disabled="procesandoId === reparacion.id || reparacion.estado_servicio === 'Entregada'"
+                      :title="`Avanzar a: ${siguienteEstado[reparacion.estado_servicio] || '—'}`"
+                      :class="[
+                        estadoAccionClass(reparacion.estado_servicio),
+                        'group relative flex h-7 w-7 shrink-0 items-center justify-center rounded-md border-b-2 shadow-sm transition-all',
+                        'hover:brightness-95 active:translate-y-0.5 active:border-b-0 disabled:cursor-not-allowed disabled:opacity-40'
+                      ]"
+                    >
+                      <i v-if="procesandoId === reparacion.id" class="ri-loader-4-line animate-spin text-xs"></i>
+                      <i v-else :class="[iconoSiguiente(reparacion.estado_servicio), 'text-xs']"></i>
+
+                      <!-- Tooltip con el texto de la acción (aparece al hover) -->
+                      <span class="pointer-events-none absolute -top-7 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap rounded-md bg-gray-900 px-2 py-1 text-[9px] font-bold text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
+                        {{ textoBotonSiguiente(reparacion.estado_servicio) }}
+                      </span>
+                    </button>
+                  </div>
                 </td>
+
                 <td class="px-4 py-2.5">
                   <div class="flex items-center gap-1.5 min-w-0">
                     <div class="w-5 h-5 shrink-0 rounded-full bg-[#10B981]/10 flex items-center justify-center">
@@ -207,26 +226,13 @@
                 </td>
                 <td class="px-4 py-2.5 text-center">
                   <button
-                    v-if="reparacion.estado_servicio === 'En reparacion'"
-                    @click.stop="abrirModalRepuestos(reparacion)"
-                    class="mx-auto flex items-center gap-1 rounded-lg bg-[#10B981] px-2 py-1 text-[9px] font-black uppercase tracking-wider text-white shadow-sm hover:bg-[#059669] transition-colors"
-                  >
-                    <i class="ri-cpu-line text-xs"></i>
-                    Repuestos
-                  </button>
-                  <span
-                    v-else-if="reparacion.estado_servicio === 'Finalizado'"
-                    class="text-[9px] font-black text-[#10B981] inline-flex items-center gap-1"
-                  >
-                    <i class="ri-shield-check-fill text-xs"></i> Listo
-                  </span>
-                  <button
                     v-if="reparacion.facturas_reparaciones?.id"
                     @click.stop="abrirFacturaReparacion(reparacion.facturas_reparaciones.id)"
-                    class="mx-auto mt-1 flex w-fit items-center gap-1 rounded-lg border border-[#10B981]/30 bg-[#F0FDF4] px-2 py-0.5 text-[9px] font-black uppercase tracking-wider text-[#065F46] hover:bg-[#DCFCE7] transition-colors"
+                    class="mx-auto flex w-fit items-center gap-1 rounded-lg border border-[#10B981]/30 bg-[#F0FDF4] px-2 py-0.5 text-[9px] font-black uppercase tracking-wider text-[#065F46] hover:bg-[#DCFCE7] transition-colors"
                   >
                     <i class="ri-file-text-line text-xs"></i> Ver
                   </button>
+                  <span v-else class="text-[9px] font-mono text-gray-300">—</span>
                 </td>
               </tr>
             </tbody>
@@ -292,48 +298,26 @@
                 <span class="font-bold truncate">{{ reparacion.tecnicos?.nombre || 'UNASSIGNED' }}</span>
               </div>
 
-              <!-- Estado -->
-              <select
-                @click.stop
-                :value="reparacion.estado_servicio"
-                @change="cambiarEstado(reparacion.id, $event.target.value)"
-                :class="[estadoClass(reparacion.estado_servicio), 'w-full status-select text-[10px] px-2.5 py-2 font-bold']"
-              >
-                <option value="Recibido" :disabled="reparacion.estado_servicio !== 'Recibido'">Recibido</option>
-                <option value="En reparacion" :disabled="!validarTransicion(reparacion.estado_servicio, 'En reparacion')">En reparación</option>
-                <option value="Finalizado" :disabled="!validarTransicion(reparacion.estado_servicio, 'Finalizado')">Finalizado</option>
-                <option value="Entregada" :disabled="!validarTransicion(reparacion.estado_servicio, 'Entregada')">Entregada</option>
-              </select>
+              <!-- ===== ESTADO mobile: badge + botón cuadrado de acción ===== -->
+              <div class="flex items-center justify-between gap-2">
+                <span :class="[estadoClass(reparacion.estado_servicio), 'inline-flex items-center gap-1 rounded-md px-2 py-1 text-[9px] font-black uppercase tracking-wider']">
+                  <i :class="[getIcon(reparacion.estado_servicio), 'text-[11px]']"></i>
+                  {{ reparacion.estado_servicio }}
+                </span>
 
-              <!-- Acciones -->
-              <div class="border-t border-gray-100 pt-2 space-y-1.5">
                 <button
-                  v-if="reparacion.estado_servicio === 'En reparacion'"
-                  @click.stop="abrirModalRepuestos(reparacion)"
-                  class="w-full flex items-center justify-center gap-1.5 rounded-lg border-b-2 border-[#047857] bg-[#10B981] px-3 py-2 text-[10px] font-black uppercase tracking-widest text-white shadow-sm hover:bg-[#059669] active:translate-y-0.5 active:border-b-0"
+                  @click.stop="accionSiguiente(reparacion)"
+                  :disabled="procesandoId === reparacion.id || reparacion.estado_servicio === 'Entregada'"
+                  :class="[estadoAccionClass(reparacion.estado_servicio), 'flex h-9 items-center gap-1.5 rounded-lg border-b-2 px-3 text-[10px] font-black uppercase tracking-wide shadow-sm transition-all active:translate-y-0.5 active:border-b-0 disabled:opacity-40']"
                 >
-                  <i class="ri-cpu-line text-sm"></i>
-                  Registrar repuestos
-                  <span v-if="!reparacion.tiene_repuestos" class="ml-auto rounded-full bg-yellow-400 px-1.5 py-0.5 text-[8px] font-black text-yellow-900">
-                    PENDIENTE
-                  </span>
+                  <i v-if="procesandoId === reparacion.id" class="ri-loader-4-line animate-spin"></i>
+                  <i v-else :class="iconoSiguiente(reparacion.estado_servicio)"></i>
+                  <span>{{ textoBotonSiguiente(reparacion.estado_servicio) }}</span>
                 </button>
+              </div>
 
-                <div
-                  v-else-if="reparacion.estado_servicio === 'Finalizado'"
-                  class="w-full flex items-center justify-center gap-1.5 rounded-lg border border-[#10B981]/30 bg-[#10B981]/10 px-3 py-2"
-                >
-                  <i class="ri-shield-check-fill text-[#10B981] text-sm"></i>
-                  <span class="text-[10px] font-black uppercase tracking-widest text-[#10B981]">Listo para entregar</span>
-                </div>
-
-                <div
-                  v-else
-                  class="w-full flex items-center justify-center rounded-lg border border-gray-200 bg-gray-50 px-3 py-2"
-                >
-                  <span class="text-[10px] font-bold uppercase tracking-widest text-gray-500">{{ reparacion.estado_servicio }}</span>
-                </div>
-
+              <!-- Factura -->
+              <div class="border-t border-gray-100 pt-2">
                 <button
                   v-if="reparacion.facturas_reparaciones?.id"
                   @click.stop="abrirFacturaReparacion(reparacion.facturas_reparaciones.id)"
@@ -378,6 +362,7 @@
               <div class="relative">
                 <i class="ri-search-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
                 <input
+                  ref="inputBuscadorRef"
                   :value="busquedaRepuesto"
                   @input="cambiarBusquedaRepuesto($event.target.value)"
                   @focus="mostrarSugerencias = true"
@@ -473,6 +458,7 @@
               Finalizar reparación
             </button>
           </div>
+
         </div>
       </div>
     </div>
@@ -507,7 +493,12 @@
           </div>
 
           <div>
-            <label class="mb-1 block text-[9px] font-black uppercase tracking-widest text-gray-400">Método de pago</label>
+            <label class="mb-1 block text-[9px] font-black uppercase tracking-widest text-gray-400">
+              Método de pago
+              <span v-if="metodoPagoRecordado" class="ml-1 text-[8px] text-[#10B981] normal-case tracking-normal">
+                (recordado: {{ metodoPagoRecordado }})
+              </span>
+            </label>
             <select
               v-model="metodoPagoReparacion"
               class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-xs font-bold focus:border-[#10B981] focus:outline-none focus:ring-2 focus:ring-[#10B981]/20"
@@ -570,7 +561,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted, watch } from 'vue'
+import { ref, reactive, computed, onMounted, watch, nextTick } from 'vue'
 import FacturaModal from '~/components/FacturaModal.vue'
 
 definePageMeta({
@@ -597,6 +588,11 @@ const tienda = ref(null)
 const modalFacturaReparacionAbierto = ref(false)
 const facturaReparacionSeleccionadaId = ref(null)
 
+// ===== Automatizaciones =====
+const procesandoId = ref(null)
+const inputBuscadorRef = ref(null)
+const metodoPagoRecordado = ref('')
+
 const filtros = reactive({
   busqueda: '',
   estado: ''
@@ -610,6 +606,46 @@ const notificacion = ref({
 
 const ITEMS_POR_PAGINA = 7
 const paginaActual = ref(1)
+
+// ===== Mapa de siguiente estado lógico =====
+const siguienteEstado = {
+  'Recibido': 'En reparacion',
+  'En reparacion': 'Finalizado',
+  'Finalizado': 'Entregada',
+  'Entregada': null
+}
+
+const textoBotonSiguiente = (estado) => ({
+  'Recibido': 'Iniciar reparación',
+  'En reparacion': 'Finalizar',
+  'Finalizado': 'Cobrar y entregar',
+  'Entregada': 'Entregada'
+}[estado] || '—')
+
+const iconoSiguiente = (estado) => ({
+  'Recibido': 'ri-play-circle-line',
+  'En reparacion': 'ri-check-double-line',
+  'Finalizado': 'ri-money-dollar-circle-line',
+  'Entregada': 'ri-shield-check-fill'
+}[estado] || 'ri-loader-line')
+
+// ===== Acción contextual: hace el siguiente paso en 1 clic =====
+const accionSiguiente = async (reparacion) => {
+  const siguiente = siguienteEstado[reparacion.estado_servicio]
+  if (!siguiente || procesandoId.value) return
+
+  // Entrega directa si ya hay método de pago recordado
+  if (siguiente === 'Entregada') {
+    const metodoGuardado = localStorage.getItem('metodoPagoDefault')
+    if (metodoGuardado) {
+      reparacionEntrega.value = reparacion
+      metodoPagoReparacion.value = metodoGuardado
+      return confirmarEntrega()
+    }
+  }
+
+  return cambiarEstado(reparacion.id, siguiente)
+}
 
 const reparacionesFiltradas = computed(() => {
   let resultado = reparaciones.value
@@ -675,6 +711,17 @@ const estadoClass = (estado) => {
   return clases[estado] || 'bg-gray-50 text-gray-500'
 }
 
+// Colores semánticos según la ACCIÓN que ejecuta, no el estado actual
+const estadoAccionClass = (estado) => {
+  const acciones = {
+    'Recibido':      'bg-blue-600 text-white border-blue-800 hover:bg-blue-700',
+    'En reparacion': 'bg-amber-500 text-white border-amber-700 hover:bg-amber-600',
+    'Finalizado':    'bg-emerald-600 text-white border-emerald-800 hover:bg-emerald-700',
+    'Entregada':     'bg-gray-100 text-gray-400 border-gray-300'
+  }
+  return acciones[estado] || 'bg-gray-100 text-gray-400 border-gray-300'
+}
+
 const totalReparacion = (reparacion) => {
   return (reparacion?.reparacion_repuestos || []).reduce((total, item) => {
     return total + Number(item.precio_unitario || 0) * Number(item.cantidad || 0)
@@ -696,6 +743,7 @@ const cerrarFacturaReparacion = () => {
   facturaReparacionSeleccionadaId.value = null
 }
 
+// ===== Modal repuestos: auto-carga + foco automático =====
 const abrirModalRepuestos = async (reparacion) => {
   reparacionSeleccionada.value = reparacion
   repuestosTemp.value = []
@@ -704,11 +752,26 @@ const abrirModalRepuestos = async (reparacion) => {
   mostrarSugerencias.value = false
   cantidadRepuesto.value = 0
   presupuestoReparacion.value = Number(reparacion.presupuesto || 0)
+
+  // Auto-precargar repuestos ya registrados
+  const yaRegistrados = reparacion.reparacion_repuestos || []
+  if (yaRegistrados.length > 0) {
+    repuestosTemp.value = yaRegistrados.map(item => ({
+      id: item.repuesto_id,
+      nombre: item.stock_repuestos?.nombre_repuesto || `Repuesto ${item.repuesto_id}`,
+      cantidad: Number(item.cantidad)
+    }))
+  }
+
   try {
     const todos = await $fetch('/api/repuestos')
     repuestosDisponibles.value = todos.filter(r => r.cantidad_disponible > 0)
     modalRepuestosVisible.value = true
-  } catch (e) { mostrarNotificacion('Error de conexión', 'error') }
+    await nextTick()
+    inputBuscadorRef.value?.focus()
+  } catch (e) {
+    mostrarNotificacion('Error de conexión', 'error')
+  }
 }
 
 const cambiarBusquedaRepuesto = (valor) => {
@@ -770,12 +833,14 @@ const agregarRepuestoALista = () => {
 
   limpiarRepuestoSeleccionado()
   cantidadRepuesto.value = 0
+  nextTick(() => inputBuscadorRef.value?.focus())
 }
 
 const eliminarRepuestoDeLista = (idx) => repuestosTemp.value.splice(idx, 1)
 
 const finalizarConRepuestos = async () => {
   try {
+    procesandoId.value = reparacionSeleccionada.value.id
     for (const item of repuestosTemp.value) {
       await $fetch(`/api/reparaciones/${reparacionSeleccionada.value.id}/repuestos`, {
         method: 'POST',
@@ -794,12 +859,17 @@ const finalizarConRepuestos = async () => {
     cargarReparaciones()
   } catch (e) {
     mostrarNotificacion(e.data?.message || e.message || 'Error al finalizar', 'error')
+  } finally {
+    procesandoId.value = null
   }
 }
 
+// ===== Modal entrega: recuerda último método =====
 const abrirModalEntrega = (reparacion) => {
   reparacionEntrega.value = reparacion
-  metodoPagoReparacion.value = ''
+  // Recordar el último método usado
+  metodoPagoReparacion.value = localStorage.getItem('metodoPagoDefault') || ''
+  metodoPagoRecordado.value = metodoPagoReparacion.value
   modalEntregaVisible.value = true
 }
 
@@ -813,6 +883,7 @@ const cerrarModalEntrega = () => {
 const confirmarEntrega = async () => {
   if (!reparacionEntrega.value || !metodoPagoReparacion.value) return
   guardandoEntrega.value = true
+  procesandoId.value = reparacionEntrega.value.id
 
   try {
     const respuesta = await $fetch(`/api/reparaciones/${reparacionEntrega.value.id}/estado`, {
@@ -822,6 +893,10 @@ const confirmarEntrega = async () => {
         metodo_pago: metodoPagoReparacion.value
       }
     })
+    // Guardar método para próximas entregas
+    localStorage.setItem('metodoPagoDefault', metodoPagoReparacion.value)
+    metodoPagoRecordado.value = metodoPagoReparacion.value
+
     modalEntregaVisible.value = false
     if (respuesta.data?.factura_id) {
       facturaReparacionSeleccionadaId.value = respuesta.data.factura_id
@@ -835,6 +910,7 @@ const confirmarEntrega = async () => {
     mostrarNotificacion(`Error ${error.status || ''}: ${mensaje}`.trim(), 'error')
   } finally {
     guardandoEntrega.value = false
+    procesandoId.value = null
     reparacionEntrega.value = null
   }
 }
@@ -869,6 +945,7 @@ const cambiarEstado = async (id, nuevoEstado) => {
     return abrirModalEntrega(reparacion)
   }
 
+  procesandoId.value = id
   try {
     const cardElement = document.querySelector(`[data-reparacion-id="${id}"]`)
     if (cardElement) {
@@ -882,6 +959,8 @@ const cambiarEstado = async (id, nuevoEstado) => {
   } catch (e) {
     mostrarNotificacion(e.data?.message || e.message || 'Error al actualizar', 'error')
     cargarReparaciones()
+  } finally {
+    procesandoId.value = null
   }
 }
 
@@ -1033,15 +1112,15 @@ const getEstadoColor = (estado) => {
   return colores[estado] || '#6B7280'
 }
 
-onMounted(cargarReparaciones)
+onMounted(() => {
+  cargarReparaciones()
+  metodoPagoRecordado.value = localStorage.getItem('metodoPagoDefault') || ''
+})
+
 watch([() => filtros.busqueda, () => filtros.estado], () => paginaActual.value = 1)
 </script>
 
 <style scoped>
-.status-select {
-  @apply font-black uppercase rounded-full border-none focus:ring-2 focus:ring-[#10B981] cursor-pointer shadow-sm transition-all;
-}
-
 .slide-fade-enter-active, .slide-fade-leave-active {
   transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
@@ -1066,16 +1145,5 @@ watch([() => filtros.busqueda, () => filtros.estado], () => paginaActual.value =
   0% { transform: scale(1); border-color: #D1D5DB; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); }
   50% { transform: scale(1.02); border-color: #10B981; box-shadow: 0 0 25px rgba(16, 185, 129, 0.4); }
   100% { transform: scale(1); border-color: #D1D5DB; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); }
-}
-
-@media (max-width: 767px) {
-  .status-select {
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236B7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
-    background-position: right 0.5rem center;
-    background-repeat: no-repeat;
-    background-size: 1.1em 1.1em;
-    padding-right: 2rem;
-  }
 }
 </style>
