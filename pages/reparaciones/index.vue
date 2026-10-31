@@ -495,9 +495,6 @@
           <div>
             <label class="mb-1 block text-[9px] font-black uppercase tracking-widest text-gray-400">
               Método de pago
-              <span v-if="metodoPagoRecordado" class="ml-1 text-[8px] text-[#10B981] normal-case tracking-normal">
-                (recordado: {{ metodoPagoRecordado }})
-              </span>
             </label>
             <select
               v-model="metodoPagoReparacion"
@@ -507,8 +504,6 @@
               <option value="efectivo">Efectivo</option>
               <option value="transferencia">Transferencia</option>
               <option value="tarjeta">Tarjeta</option>
-              <option value="pago_movil">Pago móvil</option>
-              <option value="otro">Otro</option>
             </select>
           </div>
 
@@ -591,7 +586,6 @@ const facturaReparacionSeleccionadaId = ref(null)
 // ===== Automatizaciones =====
 const procesandoId = ref(null)
 const inputBuscadorRef = ref(null)
-const metodoPagoRecordado = ref('')
 
 const filtros = reactive({
   busqueda: '',
@@ -633,16 +627,6 @@ const iconoSiguiente = (estado) => ({
 const accionSiguiente = async (reparacion) => {
   const siguiente = siguienteEstado[reparacion.estado_servicio]
   if (!siguiente || procesandoId.value) return
-
-  // Entrega directa si ya hay método de pago recordado
-  if (siguiente === 'Entregada') {
-    const metodoGuardado = localStorage.getItem('metodoPagoDefault')
-    if (metodoGuardado) {
-      reparacionEntrega.value = reparacion
-      metodoPagoReparacion.value = metodoGuardado
-      return confirmarEntrega()
-    }
-  }
 
   return cambiarEstado(reparacion.id, siguiente)
 }
@@ -864,12 +848,10 @@ const finalizarConRepuestos = async () => {
   }
 }
 
-// ===== Modal entrega: recuerda último método =====
+// ===== Modal entrega =====
 const abrirModalEntrega = (reparacion) => {
   reparacionEntrega.value = reparacion
-  // Recordar el último método usado
-  metodoPagoReparacion.value = localStorage.getItem('metodoPagoDefault') || ''
-  metodoPagoRecordado.value = metodoPagoReparacion.value
+  metodoPagoReparacion.value = ''
   modalEntregaVisible.value = true
 }
 
@@ -893,17 +875,31 @@ const confirmarEntrega = async () => {
         metodo_pago: metodoPagoReparacion.value
       }
     })
-    // Guardar método para próximas entregas
-    localStorage.setItem('metodoPagoDefault', metodoPagoReparacion.value)
-    metodoPagoRecordado.value = metodoPagoReparacion.value
+    const reparacionActualizada = reparaciones.value.find(r => r.id === reparacionEntrega.value.id)
+    if (reparacionActualizada) {
+      reparacionActualizada.estado_servicio = 'Entregada'
+      if (respuesta.data?.factura_id) {
+        reparacionActualizada.facturas_reparaciones = {
+          ...(reparacionActualizada.facturas_reparaciones || {}),
+          id: respuesta.data.factura_id
+        }
+      }
+    }
+
+    let listaActualizada = true
+    try {
+      await cargarReparaciones()
+    } catch {
+      listaActualizada = false
+      mostrarNotificacion('Entrega registrada, pero no se pudo actualizar la lista. Recárgala para ver el estado.', 'error')
+    }
 
     modalEntregaVisible.value = false
     if (respuesta.data?.factura_id) {
       facturaReparacionSeleccionadaId.value = respuesta.data.factura_id
       modalFacturaReparacionAbierto.value = true
-    } else {
+    } else if (listaActualizada) {
       mostrarNotificacion('Reparación facturada y entregada', 'success')
-      await cargarReparaciones()
     }
   } catch (error) {
     const mensaje = error.data?.message || error.statusMessage || error.message || 'No se pudo generar la factura'
@@ -1114,7 +1110,6 @@ const getEstadoColor = (estado) => {
 
 onMounted(() => {
   cargarReparaciones()
-  metodoPagoRecordado.value = localStorage.getItem('metodoPagoDefault') || ''
 })
 
 watch([() => filtros.busqueda, () => filtros.estado], () => paginaActual.value = 1)

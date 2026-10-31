@@ -9,13 +9,20 @@ export default defineEventHandler(async (event) => {
 
     const id = getRouterParam(event, 'id')
     const body = await readBody(event)
-    const { nombre_repuesto, cantidad_disponible, precio_costo, precio_venta, precio_montaje, precio_tecnico } = body
+    const { categoria, nombre_repuesto, cantidad_disponible, precio_costo, precio_venta, precio_montaje, precio_tecnico } = body
     
     
     if (!nombre_repuesto || nombre_repuesto.trim() === '') {
       throw createError({
         statusCode: 400,
         message: 'El nombre del repuesto es requerido'
+      })
+    }
+
+    if (categoria !== undefined && !['repuesto', 'accesorio', 'equipo'].includes(categoria)) {
+      throw createError({
+        statusCode: 400,
+        message: 'La categoría debe ser repuesto, accesorio o equipo'
       })
     }
 
@@ -48,6 +55,7 @@ export default defineEventHandler(async (event) => {
       precio_venta: precio_venta !== null && precio_venta !== '' ? Number(precio_venta) : null,
       precio_montaje: precio_montaje !== null && precio_montaje !== '' ? Number(precio_montaje) : null
     }
+    if (categoria !== undefined) updateData.categoria = categoria
     
     // Manejar precio_tecnico (opcional)
     if (precio_tecnico !== undefined && precio_tecnico !== null && precio_tecnico !== '') {

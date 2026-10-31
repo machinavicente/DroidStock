@@ -10,6 +10,7 @@ export default defineEventHandler(async (event) => {
   const [
     reparacionesActivas,
     reparacionesActivasCount,
+    reparacionesEnReparacionCount,
     repuestos,
     repuestosCount,
     tecnicosCount,
@@ -28,6 +29,11 @@ export default defineEventHandler(async (event) => {
       .select('id', { count: 'exact', head: true })
       .eq('tienda_id', tiendaId)
       .in('estado_servicio', estadosActivos),
+    supabase
+      .from('reparaciones')
+      .select('id', { count: 'exact', head: true })
+      .eq('tienda_id', tiendaId)
+      .eq('estado_servicio', 'En reparacion'),
     supabase
       .from('stock_repuestos')
       .select('id, nombre_repuesto, cantidad_disponible')
@@ -58,6 +64,7 @@ export default defineEventHandler(async (event) => {
   const resultados = [
     ['reparaciones', reparacionesActivas],
     ['conteo de reparaciones', reparacionesActivasCount],
+    ['conteo de reparaciones en curso', reparacionesEnReparacionCount],
     ['repuestos', repuestos],
     ['conteo de repuestos', repuestosCount],
     ['técnicos', tecnicosCount],
@@ -75,6 +82,7 @@ export default defineEventHandler(async (event) => {
   return {
     snapshot: {
       backlogActivo: reparacionesActivasCount.count || 0,
+      enReparacionActuales: reparacionesEnReparacionCount.count || 0,
       totalRepuestos: repuestosCount.count || 0,
       totalTecnicos: tecnicosCount.count || 0
     },

@@ -31,6 +31,7 @@ export const useRepuestos = () => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
+          categoria: repuesto.categoria,
           nombre_repuesto: repuesto.nombre_repuesto,
           cantidad_disponible: Number(repuesto.cantidad_disponible) || 0,
           precio_costo: repuesto.precio_costo ? Number(repuesto.precio_costo) : null,
@@ -63,6 +64,7 @@ export const useRepuestos = () => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
+          categoria: repuesto.categoria,
           nombre_repuesto: repuesto.nombre_repuesto,
           cantidad_disponible: Number(repuesto.cantidad_disponible),
           precio_costo: repuesto.precio_costo ? Number(repuesto.precio_costo) : null,

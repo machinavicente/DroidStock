@@ -154,8 +154,8 @@
               <i class="ri-tools-line text-amber-600 text-sm"></i>
             </div>
           </div>
-          <p class="text-2xl font-bold text-amber-600">{{ totalesRango.enReparacion }}</p>
-          <p class="text-[10px] text-slate-500 mt-1">Pasaron a taller</p>
+          <p class="text-2xl font-bold text-amber-600">{{ snapshot.enReparacionActuales }}</p>
+          <p class="text-[10px] text-slate-500 mt-1">Actualmente en taller</p>
         </div>
 
         <div class="min-w-0 rounded-xl border border-slate-200 bg-white p-3 transition-shadow hover:shadow-md sm:p-4">
@@ -194,282 +194,6 @@
         <div class="min-w-0 rounded-xl border border-slate-200 bg-white p-3 sm:p-4">
           <p class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Ingresos totales del período</p>
           <p class="text-xl font-bold text-emerald-700 mt-1">{{ formatearMoneda(totalesRango.ingresosTotales) }}</p>
-        </div>
-      </div>
-
-      <!-- ====================================================== -->
-      <!-- GRÁFICO 1: HITOS DEL PERÍODO (barras agrupadas)        -->
-      <!-- ====================================================== -->
-      <div class="min-w-0 rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
-        <div class="mb-5 flex flex-wrap items-start justify-between gap-3">
-          <div>
-            <h3 class="text-sm font-bold text-slate-900">Hitos ocurridos en el período</h3>
-            <p class="text-xs text-slate-500 mt-0.5">
-              Eventos por {{ agrupacionFlujo }}. Una reparación puede aparecer en más de un hito.
-            </p>
-          </div>
-          <div class="flex flex-wrap items-center gap-3 text-[11px]">
-            <span class="flex items-center gap-1.5">
-              <span class="inline-block h-2.5 w-2.5 rounded-sm" style="background: linear-gradient(180deg, #94A3B8 0%, #64748B 100%);"></span>
-              <span class="text-slate-600 font-medium">Recibidas</span>
-            </span>
-            <span class="flex items-center gap-1.5">
-              <span class="inline-block h-2.5 w-2.5 rounded-sm" style="background: linear-gradient(180deg, #34D399 0%, #10B981 100%);"></span>
-              <span class="text-slate-600 font-medium">Finalizadas</span>
-            </span>
-            <span class="flex items-center gap-1.5">
-              <span class="inline-block h-2.5 w-2.5 rounded-sm" style="background: linear-gradient(180deg, #475569 0%, #334155 100%);"></span>
-              <span class="text-slate-600 font-medium">Entregadas</span>
-            </span>
-          </div>
-        </div>
-
-        <div v-if="flujoBarras.length" class="relative">
-          <svg
-            viewBox="0 0 720 320"
-            preserveAspectRatio="none"
-            role="img"
-            aria-label="Gráfica de barras agrupadas del flujo de reparaciones"
-            class="block h-80 w-full overflow-visible"
-          >
-            <defs>
-              <linearGradient id="gradRecibidas" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#94A3B8" />
-                <stop offset="100%" stop-color="#64748B" />
-              </linearGradient>
-              <linearGradient id="gradFinalizadas" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#34D399" />
-                <stop offset="100%" stop-color="#10B981" />
-              </linearGradient>
-              <linearGradient id="gradEntregadas" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#475569" />
-                <stop offset="100%" stop-color="#334155" />
-              </linearGradient>
-            </defs>
-
-            <!-- Grid horizontal punteado -->
-            <g v-for="tick in escalaFlujo.ticks" :key="'tick-' + tick.valor">
-              <line
-                x1="48"
-                :y1="tick.y"
-                x2="712"
-                :y2="tick.y"
-                stroke="#E2E8F0"
-                stroke-width="1"
-                stroke-dasharray="3 3"
-              />
-              <text
-                x="38"
-                :y="tick.y + 4"
-                text-anchor="end"
-                fill="#94A3B8"
-                font-size="11"
-                font-weight="500"
-              >
-                {{ tick.valor }}
-              </text>
-            </g>
-
-            <!-- Línea base -->
-            <line x1="48" y1="272" x2="712" y2="272" stroke="#CBD5E1" stroke-width="1" />
-
-            <!-- Barras -->
-            <g v-for="grupo in flujoBarras" :key="grupo.clave">
-              <g v-for="barra in grupo.barras" :key="barra.nombre">
-                <!-- Sombra -->
-                <rect
-                  :x="barra.x + 1"
-                  :y="barra.y + 1"
-                  :width="barra.ancho"
-                  :height="barra.alto"
-                  fill="#0F172A"
-                  opacity="0.06"
-                  rx="4"
-                  ry="4"
-                />
-                <!-- Barra principal -->
-                <rect
-                  :x="barra.x"
-                  :y="barra.y"
-                  :width="barra.ancho"
-                  :height="barra.alto"
-                  :fill="barra.fill"
-                  rx="4"
-                  ry="4"
-                  class="bar-anim"
-                >
-                  <title>{{ grupo.label }} · {{ barra.nombre }}: {{ barra.valor }}</title>
-                </rect>
-                <!-- Valor sobre la barra (solo si hay espacio) -->
-                <text
-                  v-if="barra.alto > 20 && barra.valor > 0"
-                  :x="barra.x + barra.ancho / 2"
-                  :y="barra.y - 5"
-                  text-anchor="middle"
-                  fill="#334155"
-                  font-size="10"
-                  font-weight="700"
-                >
-                  {{ barra.valor }}
-                </text>
-              </g>
-              <text
-                v-if="grupo.mostrarEtiqueta"
-                :x="grupo.centro"
-                y="298"
-                text-anchor="middle"
-                fill="#64748B"
-                font-size="11"
-                font-weight="500"
-              >
-                {{ grupo.labelCorto }}
-              </text>
-            </g>
-          </svg>
-        </div>
-        <div v-else class="w-full text-center py-12">
-          <i class="ri-bar-chart-line text-3xl text-slate-300"></i>
-          <p class="text-xs text-slate-400 uppercase mt-2 font-medium">Sin eventos en el período</p>
-        </div>
-      </div>
-
-      <!-- ====================================================== -->
-      <!-- GRÁFICO 2: ESTADO ACTUAL DE REPARACIONES DEL PERÍODO   -->
-      <!-- ====================================================== -->
-      <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
-        <div class="mb-5 flex flex-wrap items-start justify-between gap-3">
-          <div>
-            <h3 class="text-sm font-bold text-slate-900">Estado actual de las reparaciones del período</h3>
-            <p class="mt-0.5 text-xs text-slate-500">
-              Reparaciones ingresadas entre {{ rangoLegible }}, agrupadas por su estado actual. Cada una cuenta una sola vez.
-            </p>
-          </div>
-          <span class="rounded-md bg-emerald-50 px-3 py-1.5 text-xs font-bold text-emerald-700 ring-1 ring-emerald-200">
-            {{ totalReparacionesRango }} reparaciones
-          </span>
-        </div>
-
-        <div v-if="totalReparacionesRango" class="relative">
-          <svg
-            viewBox="0 0 720 320"
-            preserveAspectRatio="none"
-            role="img"
-            aria-label="Gráfica de barras verticales del estado actual de las reparaciones ingresadas en el período seleccionado"
-            class="block h-80 w-full overflow-visible"
-          >
-            <defs>
-              <linearGradient id="gradEstadoRecibido" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#CBD5E1" />
-                <stop offset="100%" stop-color="#94A3B8" />
-              </linearGradient>
-              <linearGradient id="gradEstadoEnReparacion" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#FBBF24" />
-                <stop offset="100%" stop-color="#D97706" />
-              </linearGradient>
-              <linearGradient id="gradEstadoFinalizado" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#34D399" />
-                <stop offset="100%" stop-color="#10B981" />
-              </linearGradient>
-              <linearGradient id="gradEstadoEntregada" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#475569" />
-                <stop offset="100%" stop-color="#334155" />
-              </linearGradient>
-              <linearGradient id="gradEstadoOtros" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#E2E8F0" />
-                <stop offset="100%" stop-color="#CBD5E1" />
-              </linearGradient>
-            </defs>
-
-            <!-- Grid horizontal punteado -->
-            <g v-for="tick in escalaEstadosActuales.ticks" :key="'etick-' + tick.valor">
-              <line
-                x1="48"
-                :y1="tick.y"
-                x2="712"
-                :y2="tick.y"
-                stroke="#E2E8F0"
-                stroke-width="1"
-                stroke-dasharray="3 3"
-              />
-              <text
-                x="38"
-                :y="tick.y + 4"
-                text-anchor="end"
-                fill="#94A3B8"
-                font-size="11"
-                font-weight="500"
-              >
-                {{ tick.valor }}
-              </text>
-            </g>
-
-            <!-- Línea base -->
-            <line x1="48" y1="270" x2="712" y2="270" stroke="#CBD5E1" stroke-width="1" />
-
-            <!-- Barras -->
-            <g v-for="barra in barrasEstadosActuales" :key="barra.clave">
-              <!-- Sombra (solo si hay valor) -->
-              <rect
-                v-if="barra.valor > 0"
-                :x="barra.x + 1.5"
-                :y="barra.y + 1.5"
-                :width="barra.ancho"
-                :height="barra.alto"
-                fill="#0F172A"
-                opacity="0.07"
-                rx="4"
-                ry="4"
-              />
-              <!-- Barra principal -->
-              <rect
-                :x="barra.x"
-                :y="barra.y"
-                :width="barra.ancho"
-                :height="barra.alto"
-                :fill="`url(#${barra.gradId})`"
-                rx="4"
-                ry="4"
-                class="bar-anim"
-              >
-                <title>{{ barra.label }}: {{ barra.valor }} reparaciones</title>
-              </rect>
-              <!-- Valor sobre la barra (SOLO si hay valor) -->
-              <text
-                v-if="barra.valor > 0"
-                :x="barra.centro"
-                :y="Math.max(14, barra.y - 8)"
-                text-anchor="middle"
-                fill="#1E293B"
-                font-size="13"
-                font-weight="700"
-              >
-                {{ barra.valor }}
-              </text>
-              <!-- Punto en la base si el valor es 0 (opcional para que no quede tan vacío) -->
-              <circle
-                v-else
-                :cx="barra.centro"
-                y="270"
-                r="2"
-                fill="#CBD5E1"
-              />
-              <!-- Etiqueta del eje X -->
-              <text
-                :x="barra.centro"
-                y="292"
-                text-anchor="middle"
-                fill="#475569"
-                font-size="11"
-                font-weight="600"
-              >
-                {{ barra.labelCorto }}
-              </text>
-            </g>
-          </svg>
-        </div>
-        <div v-else class="w-full py-12 text-center">
-          <i class="ri-bar-chart-line text-3xl text-slate-300"></i>
-          <p class="mt-2 text-xs uppercase text-slate-400 font-medium">Sin reparaciones ingresadas en el período</p>
         </div>
       </div>
 
@@ -823,7 +547,6 @@ const actualizarFechaHora = () => {
 }
 
 // ============ Datos A — FLUJO DEL PERÍODO ============
-const flujoDiario = ref([])
 const totalesRango = ref({
   recibidas: 0,
   enReparacion: 0,
@@ -840,6 +563,7 @@ const repuestosUtilizadosRango = ref([])
 // ============ Datos B — SNAPSHOT ACTUAL ============
 const snapshot = ref({
   backlogActivo: 0,
+  enReparacionActuales: 0,
   totalRepuestos: 0,
   totalTecnicos: 0
 })
@@ -865,200 +589,6 @@ const formatearFecha = (fecha) => {
 }
 
 // ============ Cálculos derivados del PERÍODO ============
-const agrupacionFlujo = computed(() => {
-  const inicio = new Date(`${filtroFechas.value.desde}T00:00:00`)
-  const fin = new Date(`${filtroFechas.value.hasta}T00:00:00`)
-  const dias = Math.floor((fin - inicio) / 86400000) + 1
-  if (dias <= 31) return 'día'
-  return dias <= 180 ? 'semana' : 'mes'
-})
-
-const flujoGrafica = computed(() => {
-  const filas = flujoDiario.value
-  if (agrupacionFlujo.value === 'día') return filas.map(dia => ({ ...dia, clave: dia.dia }))
-
-  const porPeriodo = new Map()
-  const inicioRango = new Date(`${filtroFechas.value.desde}T00:00:00`)
-
-  filas.forEach((dia) => {
-    const fecha = new Date(`${dia.dia}T00:00:00`)
-    const indiceSemana = Math.floor((fecha - inicioRango) / (7 * 86400000))
-    const clave = agrupacionFlujo.value === 'semana'
-      ? `semana-${indiceSemana}`
-      : `mes-${fecha.getFullYear()}-${fecha.getMonth()}`
-    const periodo = porPeriodo.get(clave) || {
-      clave,
-      fechaInicio: new Date(fecha),
-      fechaFin: new Date(fecha),
-      recibidas: 0,
-      finalizadas: 0,
-      entregadas: 0
-    }
-
-    periodo.fechaFin = new Date(fecha)
-    periodo.recibidas += Number(dia.recibidas) || 0
-    periodo.finalizadas += Number(dia.finalizadas) || 0
-    periodo.entregadas += Number(dia.entregadas) || 0
-    porPeriodo.set(clave, periodo)
-  })
-
-  return [...porPeriodo.values()].map((periodo) => {
-    const formatearDia = (fecha) => fecha.toLocaleDateString('es-ES', { day: '2-digit', month: 'short' })
-    const label = agrupacionFlujo.value === 'semana'
-      ? `${formatearDia(periodo.fechaInicio)} – ${formatearDia(periodo.fechaFin)}`
-      : periodo.fechaInicio.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' })
-
-    return {
-      ...periodo,
-      label,
-      labelCorto: agrupacionFlujo.value === 'semana'
-        ? periodo.fechaInicio.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' })
-        : periodo.fechaInicio.toLocaleDateString('es-ES', { month: 'short' })
-    }
-  })
-})
-
-const maxFlujoDiario = computed(() => Math.max(
-  ...flujoGrafica.value.flatMap(d => [d.recibidas, d.finalizadas, d.entregadas]),
-  1
-))
-
-const escalaFlujo = computed(() => {
-  const pasoAproximado = Math.max(1, maxFlujoDiario.value / 5)
-  const magnitud = 10 ** Math.floor(Math.log10(pasoAproximado))
-  const normalizado = pasoAproximado / magnitud
-  const paso = (normalizado <= 1 ? 1 : normalizado <= 2 ? 2 : normalizado <= 5 ? 5 : 10) * magnitud
-  const cantidadPasos = Math.max(1, Math.ceil(maxFlujoDiario.value / paso))
-  const maximo = cantidadPasos * paso
-  const baseY = 252
-  const alto = 232
-
-  return {
-    maximo,
-    ticks: Array.from({ length: cantidadPasos + 1 }, (_, index) => {
-      const valor = index * paso
-      return {
-        valor: Math.round(valor),
-        y: baseY - (valor / maximo) * alto
-      }
-    })
-  }
-})
-
-const flujoBarras = computed(() => {
-  const total = flujoGrafica.value.length
-  if (!total) return []
-
-  const inicioX = 48
-  const anchoGrafica = 664
-  const anchoGrupo = anchoGrafica / total
-  const espacio = Math.min(2.5, anchoGrupo * 0.06)
-  const anchoBarra = Math.max(2, Math.min(16, (anchoGrupo * 0.85 - espacio * 2) / 3))
-  const anchoConjunto = anchoBarra * 3 + espacio * 2
-  const altoGrafica = 232
-  const baseY = 252
-  const intervaloEtiqueta = Math.max(1, Math.ceil(total / 12))
-
-  return flujoGrafica.value.map((dia, index) => {
-    const centro = inicioX + anchoGrupo * (index + 0.5)
-    const inicioGrupo = centro - anchoConjunto / 2
-    const valores = [
-      { nombre: 'Recibidas', valor: dia.recibidas, fill: 'url(#gradRecibidas)', color: '#64748B' },
-      { nombre: 'Finalizadas', valor: dia.finalizadas, fill: 'url(#gradFinalizadas)', color: '#10B981' },
-      { nombre: 'Entregadas', valor: dia.entregadas, fill: 'url(#gradEntregadas)', color: '#334155' }
-    ]
-
-    return {
-      clave: dia.clave,
-      label: dia.label,
-      labelCorto: dia.labelCorto,
-      centro,
-      mostrarEtiqueta: index % intervaloEtiqueta === 0 || index === total - 1,
-      barras: valores.map((serie, serieIndex) => {
-        const alto = (serie.valor / escalaFlujo.value.maximo) * altoGrafica
-        return {
-          ...serie,
-          ancho: anchoBarra,
-          alto,
-          x: inicioGrupo + serieIndex * (anchoBarra + espacio),
-          y: baseY - alto
-        }
-      })
-    }
-  })
-})
-
-const totalReparacionesRango = computed(() => reparacionesDelRango.value.length)
-
-const conteosEstadosRango = computed(() => {
-  const conteos = { Recibido: 0, 'En reparacion': 0, Finalizado: 0, Entregada: 0, Otros: 0 }
-  const aliasEstado = {
-    'En reparación': 'En reparacion',
-    Finalizada: 'Finalizado',
-    Entregado: 'Entregada'
-  }
-
-  reparacionesDelRango.value.forEach((reparacion) => {
-    const estado = aliasEstado[reparacion.estado_servicio] || reparacion.estado_servicio
-    conteos[Object.hasOwn(conteos, estado) && estado !== 'Otros' ? estado : 'Otros'] += 1
-  })
-
-  return conteos
-})
-
-const escalaEstadosActuales = computed(() => {
-  const maximoDato = Math.max(...Object.values(conteosEstadosRango.value), 1)
-  const pasoAproximado = Math.max(1, maximoDato / 5)
-  const magnitud = 10 ** Math.floor(Math.log10(pasoAproximado))
-  const normalizado = pasoAproximado / magnitud
-  const paso = (normalizado <= 1 ? 1 : normalizado <= 2 ? 2 : normalizado <= 5 ? 5 : 10) * magnitud
-  const cantidadPasos = Math.max(1, Math.ceil(maximoDato / paso))
-  const maximo = cantidadPasos * paso
-  const baseY = 250
-  const alto = 220
-
-  return {
-    maximo,
-    ticks: Array.from({ length: cantidadPasos + 1 }, (_, index) => {
-      const valor = index * paso
-      return { valor: Math.round(valor), y: baseY - (valor / maximo) * alto }
-    })
-  }
-})
-
-const barrasEstadosActuales = computed(() => {
-  const estados = [
-    { clave: 'recibido', label: 'Recibidas', labelCorto: 'Recibidas', valor: conteosEstadosRango.value.Recibido, gradId: 'gradEstadoRecibido' },
-    { clave: 'en-reparacion', label: 'En reparación', labelCorto: 'En reparación', valor: conteosEstadosRango.value['En reparacion'], gradId: 'gradEstadoEnReparacion' },
-    { clave: 'finalizado', label: 'Finalizadas', labelCorto: 'Finalizadas', valor: conteosEstadosRango.value.Finalizado, gradId: 'gradEstadoFinalizado' },
-    { clave: 'entregada', label: 'Entregadas', labelCorto: 'Entregadas', valor: conteosEstadosRango.value.Entregada, gradId: 'gradEstadoEntregada' },
-    { clave: 'otros', label: 'Otros estados', labelCorto: 'Otros', valor: conteosEstadosRango.value.Otros, gradId: 'gradEstadoOtros' }
-  ]
-
-  const inicioX = 48
-  const anchoGrafica = 664
-  const anchoGrupo = anchoGrafica / estados.length
-
-  // Barra más delgada y elegante (máx. 32px)
-  const anchoBarra = Math.max(16, Math.min(32, anchoGrupo * 0.28))
-
-  const altoGrafica = 220
-  const baseY = 250
-
-  return estados.map((estado, index) => {
-    const alto = (estado.valor / escalaEstadosActuales.value.maximo) * altoGrafica
-    const centro = inicioX + anchoGrupo * (index + 0.5)
-    return {
-      ...estado,
-      centro,
-      ancho: anchoBarra,
-      alto,
-      x: centro - anchoBarra / 2,
-      y: baseY - alto
-    }
-  })
-})
-
 const topProductos = computed(() => {
   const map = new Map()
   ventasDelRango.value.forEach(v => {
@@ -1156,18 +686,10 @@ const cargarFlujoRango = async () => {
       }
     })
     if (idSolicitud !== solicitudFlujo) return
-    if (!Array.isArray(data.flujo) || !data.totales) {
+    if (!data.totales) {
       throw new Error('La respuesta del flujo del dashboard tiene un formato inválido')
     }
 
-    flujoDiario.value = (data.flujo || []).map(d => {
-      const fecha = new Date(d.dia + 'T00:00:00')
-      return {
-        ...d,
-        label: fecha.toLocaleDateString('es-ES', { day: '2-digit', month: 'short' }),
-        labelCorto: fecha.toLocaleDateString('es-ES', { day: '2-digit', month: 'numeric' })
-      }
-    })
     totalesRango.value = data.totales || totalesRango.value
     reparacionesDelRango.value = data.reparacionesDelRango || []
     ventasDelRango.value = data.ventasDelRango || []
@@ -1175,7 +697,6 @@ const cargarFlujoRango = async () => {
   } catch (error) {
     if (idSolicitud !== solicitudFlujo) return
     console.error('Error al cargar el flujo del dashboard:', error)
-    flujoDiario.value = []
     reparacionesDelRango.value = []
     ventasDelRango.value = []
     repuestosUtilizadosRango.value = []
@@ -1190,6 +711,7 @@ const cargarSnapshot = async () => {
     if (!data.snapshot) throw new Error('La respuesta del resumen del dashboard tiene un formato inválido')
     snapshot.value = {
       backlogActivo: data.snapshot?.backlogActivo ?? 0,
+      enReparacionActuales: data.snapshot?.enReparacionActuales ?? 0,
       totalRepuestos: data.snapshot?.totalRepuestos ?? 0,
       totalTecnicos: data.snapshot?.totalTecnicos ?? 0
     }
@@ -1261,20 +783,4 @@ onUnmounted(() => {
 @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
-/* Animación de crecimiento de barras */
-.bar-anim {
-  transform-origin: bottom;
-  animation: growBar 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-}
-
-@keyframes growBar {
-  from {
-    transform: scaleY(0);
-    opacity: 0.6;
-  }
-  to {
-    transform: scaleY(1);
-    opacity: 1;
-  }
-}
 </style>

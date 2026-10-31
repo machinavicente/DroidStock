@@ -81,6 +81,36 @@
             </button>
           </div>
         </div>
+
+        <div class="mt-3 border-t border-slate-100 pt-3">
+          <div class="flex flex-wrap gap-2">
+            <button
+              v-for="categoria in categoriasFiltro"
+              :key="categoria.value"
+              @click="filtroCategoria = categoria.value"
+              :aria-pressed="filtroCategoria === categoria.value"
+              :class="[
+                'flex items-center gap-1.5 rounded-lg border px-3 py-2 text-[10px] font-black uppercase tracking-wider transition-all',
+                filtroCategoria === categoria.value
+                  ? categoria.activeClass
+                  : 'border-[#D1D5DB] bg-white text-gray-500 hover:border-gray-400'
+              ]"
+            >
+              <i
+                :class="[
+                  categoria.icon,
+                  filtroCategoria === categoria.value ? 'text-white' : categoria.iconClass
+                ]"
+                class="text-xs"
+              ></i>
+              {{ categoria.label }}
+              <span
+                :class="filtroCategoria === categoria.value ? 'bg-white/60' : 'bg-slate-100 text-slate-600'"
+                class="rounded-full px-1.5 py-0.5 text-[9px] font-black"
+              >{{ categoria.total }}</span>
+            </button>
+          </div>
+        </div>
       </div>
 
       <!-- ============ TOAST ============ -->
@@ -136,12 +166,22 @@
         >
           <!-- Card header -->
           <div class="border-b border-[#D1D5DB] bg-[#F8FAFC] px-3 py-2.5 flex items-center gap-2 min-w-0">
-            <div class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-white border border-[#10B981]/30 text-[#10B981]">
-              <i class="ri-stack-line text-base"></i>
+            <div
+              :class="claseIconoCategoria(repuesto)"
+              class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg border"
+            >
+              <i :class="iconoCategoria(repuesto)" class="text-base"></i>
             </div>
             <h3 class="min-w-0 flex-1 break-words text-xs sm:text-sm font-black leading-snug text-[#065F46] uppercase tracking-tight">
               {{ repuesto.nombre_repuesto }}
             </h3>
+            <span
+              :class="claseBadgeCategoria(repuesto)"
+              class="inline-flex shrink-0 items-center gap-1 rounded-full border px-2 py-0.5 text-[8px] font-black uppercase tracking-wide"
+            >
+              <i :class="iconoCategoria(repuesto)" class="text-[9px]"></i>
+              {{ etiquetaCategoria(repuesto) }}
+            </span>
           </div>
 
           <!-- Card body -->
@@ -451,6 +491,7 @@ const { tienda } = useAuth()
 const busqueda = ref('')
 const filtroStockBajo = ref(false)
 const filtroSinStock = ref(false)
+const filtroCategoria = ref('')
 const modalEliminarVisible = ref(false)
 const repuestoAEliminar = ref(null)
 const eliminando = ref(false)
@@ -499,6 +540,70 @@ const toggleFiltroSinStock = () => {
   if (filtroSinStock.value) filtroStockBajo.value = false
 }
 
+const categoriasFiltro = computed(() => [
+  {
+    value: '',
+    label: 'Todos',
+    icon: 'ri-apps-line',
+    iconClass: 'text-slate-500',
+    activeClass: 'border-[#065F46] bg-[#065F46] text-white shadow-sm',
+    total: repuestos.value.length
+  },
+  {
+    value: 'repuesto',
+    label: 'Repuestos',
+    icon: 'ri-cpu-line',
+    iconClass: 'text-emerald-600',
+    activeClass: 'border-emerald-600 bg-emerald-500 text-white shadow-sm',
+    total: repuestos.value.filter(r => obtenerCategoria(r) === 'repuesto').length
+  },
+  {
+    value: 'accesorio',
+    label: 'Accesorios',
+    icon: 'ri-headphone-line',
+    iconClass: 'text-blue-600',
+    activeClass: 'border-blue-700 bg-blue-600 text-white shadow-sm',
+    total: repuestos.value.filter(r => obtenerCategoria(r) === 'accesorio').length
+  },
+  {
+    value: 'equipo',
+    label: 'Equipos',
+    icon: 'ri-smartphone-line',
+    iconClass: 'text-amber-600',
+    activeClass: 'border-amber-600 bg-amber-500 text-white shadow-sm',
+    total: repuestos.value.filter(r => obtenerCategoria(r) === 'equipo').length
+  }
+])
+
+const obtenerCategoria = (repuesto) =>
+  ['repuesto', 'accesorio', 'equipo'].includes(repuesto?.categoria)
+    ? repuesto.categoria
+    : 'repuesto'
+
+const etiquetaCategoria = (repuesto) => ({
+  repuesto: 'Repuesto',
+  accesorio: 'Accesorio',
+  equipo: 'Equipo'
+}[obtenerCategoria(repuesto)])
+
+const iconoCategoria = (repuesto) => ({
+  repuesto: 'ri-cpu-line',
+  accesorio: 'ri-headphone-line',
+  equipo: 'ri-smartphone-line'
+}[obtenerCategoria(repuesto)])
+
+const claseBadgeCategoria = (repuesto) => ({
+  repuesto: 'border-emerald-200 bg-emerald-50 text-emerald-700',
+  accesorio: 'border-blue-200 bg-blue-50 text-blue-700',
+  equipo: 'border-amber-200 bg-amber-50 text-amber-700'
+}[obtenerCategoria(repuesto)])
+
+const claseIconoCategoria = (repuesto) => ({
+  repuesto: 'border-emerald-200 bg-emerald-50 text-emerald-600',
+  accesorio: 'border-blue-200 bg-blue-50 text-blue-600',
+  equipo: 'border-amber-200 bg-amber-50 text-amber-600'
+}[obtenerCategoria(repuesto)])
+
 const totalStockBajo = computed(() =>
   repuestos.value.filter(r => Number(r.cantidad_disponible) > 0 && Number(r.cantidad_disponible) <= 3).length
 )
@@ -508,11 +613,15 @@ const totalSinStock = computed(() =>
 )
 
 const hayFiltrosActivos = computed(() =>
-  filtroStockBajo.value || filtroSinStock.value || Boolean(busqueda.value.trim())
+  filtroStockBajo.value || filtroSinStock.value || Boolean(filtroCategoria.value) || Boolean(busqueda.value.trim())
 )
 
 const repuestosFiltrados = computed(() => {
   let filtrados = repuestos.value
+
+  if (filtroCategoria.value) {
+    filtrados = filtrados.filter(r => obtenerCategoria(r) === filtroCategoria.value)
+  }
 
   if (filtroStockBajo.value) {
     filtrados = filtrados.filter(r => Number(r.cantidad_disponible) <= 3 && Number(r.cantidad_disponible) > 0)

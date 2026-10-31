@@ -8,7 +8,8 @@ export default defineEventHandler(async (event) => {
     const usuarioId = session.usuario_admin_id
 
     const body = await readBody(event)
-    const { nombre_repuesto, cantidad_disponible, precio_costo, precio_venta, precio_montaje, precio_tecnico } = body
+    const { categoria, nombre_repuesto, cantidad_disponible, precio_costo, precio_venta, precio_montaje, precio_tecnico } = body
+    const categoriaValida = ['repuesto', 'accesorio', 'equipo'].includes(categoria)
 
     console.log('=== CREAR REPUESTO ===')
     console.log('Datos:', { nombre_repuesto, cantidad_disponible, precio_costo, precio_venta, precio_montaje, precio_tecnico })
@@ -17,6 +18,13 @@ export default defineEventHandler(async (event) => {
       return {
         success: false,
         message: 'El nombre del repuesto es requerido'
+      }
+    }
+
+    if (categoria && !categoriaValida) {
+      return {
+        success: false,
+        message: 'La categoría debe ser repuesto, accesorio o equipo'
       }
     }
 
@@ -42,6 +50,7 @@ export default defineEventHandler(async (event) => {
       .from('stock_repuestos')
       .insert({
         tienda_id: tiendaId,
+        categoria: categoria || 'repuesto',
         nombre_repuesto: nombre_repuesto.trim(),
         cantidad_disponible: cantidad_disponible || 0,
         precio_costo: precio_costo && precio_costo !== '' ? Number(precio_costo) : null,
