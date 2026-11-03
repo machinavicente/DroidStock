@@ -61,11 +61,19 @@ export default defineEventHandler(async (event) => {
       }
     }
 
-    const precioUnitario = Number(repuesto.precio_tecnico || 0)
-    if (precioUnitario <= 0) {
+    const categoria = ['repuesto', 'accesorio', 'equipo'].includes(repuesto.categoria)
+      ? repuesto.categoria
+      : 'repuesto'
+    const precioConfigurado = categoria === 'repuesto'
+      ? repuesto.precio_tecnico
+      : repuesto.precio_venta
+    const precioUnitario = Number(precioConfigurado)
+    if (!Number.isFinite(precioUnitario) || precioUnitario <= 0) {
       return {
         success: false,
-        message: 'Este repuesto no tiene configurado un precio para otros talleres'
+        message: categoria === 'repuesto'
+          ? 'Este repuesto no tiene configurado un precio para otros talleres'
+          : `Este ${categoria} no tiene configurado un precio de venta`
       }
     }
     const subtotal = precioUnitario * Number(cantidad)

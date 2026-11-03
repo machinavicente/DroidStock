@@ -516,6 +516,12 @@ onMounted(cargarTecnicos)
   @apply ring-2 ring-[#10B981]/20;
 }
 
+input[type="search"]::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+  display: none;
+}
+
 .label-circuit {
   @apply text-[8px] font-black text-gray-400 uppercase tracking-widest ml-0.5;
 }

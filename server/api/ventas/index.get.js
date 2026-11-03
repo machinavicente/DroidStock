@@ -27,7 +27,8 @@ export default defineEventHandler(async (event) => {
         id,
         serie,
         numero,
-        estado
+        estado,
+        metodo_pago
       )
     `)
     .eq('tienda_id', tiendaId)

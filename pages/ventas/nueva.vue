@@ -195,25 +195,106 @@
 
             <div class="p-4 space-y-3 flex-1">
               <div class="space-y-1">
-                <label class="label-circuit">Repuesto <span class="text-red-500">*</span></label>
-                <select v-model="ventaForm.repuesto_id" required class="form-input-circuit" @change="calcularPrecios">
-                  <option :value="null">Seleccionar</option>
-                  <option v-for="r in repuestosDisponibles" :key="r.id" :value="r.id">
-                    {{ r.nombre_repuesto }} · STK: {{ r.cantidad_disponible }} · ${{ (r.precio_tecnico || 0).toFixed(2) }}
-                  </option>
-                </select>
+                <label class="label-circuit">Buscar ítem <span class="text-red-500">*</span></label>
+<div class="relative">
+  <i class="ri-search-line pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-400"></i>
+  <input
+    :value="busquedaItem"
+    @input="cambiarBusquedaItem($event.target.value)"
+    @focus="mostrarSugerenciasItem = true"
+    @blur="ocultarSugerenciasItem"
+    type="text"
+    autocomplete="off"
+    placeholder="Nombre del repuesto, accesorio o equipo..."
+    class="form-input-circuit py-2 !pl-11 pr-10"
+    aria-label="Buscar repuesto, accesorio o equipo"
+  />
+                  <button
+                    v-if="itemSeleccionado"
+                    type="button"
+                    @mousedown.prevent
+                    @click="limpiarItemSeleccionado"
+                    class="absolute right-2 top-1/2 -translate-y-1/2 rounded p-1 text-gray-400 transition hover:bg-red-50 hover:text-red-500"
+                    aria-label="Cambiar ítem seleccionado"
+                  >
+                    <i class="ri-close-line text-sm"></i>
+                  </button>
+                  <div
+                    v-if="mostrarSugerenciasItem && !itemSeleccionado"
+                    class="absolute left-0 right-0 top-full z-30 mt-1 max-h-64 overflow-y-auto rounded-lg border border-[#D1D5DB] bg-white shadow-xl"
+                  >
+                    <button
+                      v-for="item in itemsFiltrados"
+                      :key="item.id"
+                      type="button"
+                      @mousedown.prevent="seleccionarItem(item)"
+                      class="flex w-full items-center justify-between gap-3 border-b border-gray-100 px-3 py-2.5 text-left transition last:border-b-0 hover:bg-[#F0FDF4]"
+                    >
+                      <span class="min-w-0">
+                        <span class="block truncate text-xs font-bold text-[#334155]">{{ item.nombre_repuesto }}</span>
+                        <span class="mt-1 flex items-center gap-2">
+                          <span
+                            class="inline-flex items-center gap-1 rounded-full border px-1.5 py-0.5 text-[8px] font-black uppercase tracking-wide"
+                            :class="claseBadgeCategoria(item)"
+                          >
+                            <i :class="iconoCategoria(item)"></i>
+                            {{ etiquetaCategoria(item) }}
+                          </span>
+                          <span class="text-[9px] font-mono text-gray-400">ID: {{ item.id }}</span>
+                        </span>
+                      </span>
+                      <span class="shrink-0 text-right">
+                        <span class="block text-[9px] font-black text-[#065F46]">STK: {{ item.cantidad_disponible }}</span>
+                        <span class="block text-[9px] font-mono text-gray-500">${{ precioItem(item).toFixed(2) }}</span>
+                      </span>
+                    </button>
+                    <p v-if="itemsFiltrados.length === 0" class="p-3 text-center text-[10px] text-gray-500">
+                      No hay ítems disponibles con esa búsqueda.
+                    </p>
+                  </div>
+                </div>
+                <p v-if="itemSeleccionado" class="mt-1 flex items-center gap-1.5 text-[9px] font-bold text-[#065F46]">
+                  <i class="ri-checkbox-circle-fill"></i>
+                  {{ etiquetaCategoria(itemSeleccionado) }} seleccionado · Stock: {{ itemSeleccionado.cantidad_disponible }}
+                </p>
               </div>
 
               <div class="space-y-1">
                 <label class="label-circuit">Cantidad <span class="text-red-500">*</span></label>
-                <input
-                  v-model.number="ventaForm.cantidad"
-                  type="number"
-                  min="1"
-                  required
-                  class="form-input-circuit"
-                  @input="calcularTotal"
-                />
+                <div class="flex items-stretch">
+                  <button
+                    type="button"
+                    @click="decrementarCantidad"
+                    :disabled="!itemSeleccionado || ventaForm.cantidad <= 1"
+                    aria-label="Disminuir cantidad"
+                    class="flex w-10 shrink-0 items-center justify-center rounded-l-lg border border-r-0 border-[#D1D5DB] bg-[#F8FAFC] text-[#065F46] transition hover:bg-[#D1FAE5] disabled:cursor-not-allowed disabled:opacity-40"
+                  >
+                    <i class="ri-subtract-line text-sm"></i>
+                  </button>
+                  <input
+                    v-model.number="ventaForm.cantidad"
+                    type="number"
+                    min="1"
+                    step="1"
+                    :max="itemSeleccionado?.cantidad_disponible || undefined"
+                    required
+                    :class="['form-input-circuit min-w-0 rounded-none text-center', stockExcedido ? '!border-red-400 !bg-red-50 !text-red-700' : '']"
+                    @input="calcularTotal"
+                  />
+                  <button
+                    type="button"
+                    @click="incrementarCantidad"
+                    :disabled="!itemSeleccionado || ventaForm.cantidad >= itemSeleccionado.cantidad_disponible"
+                    aria-label="Aumentar cantidad"
+                    class="flex w-10 shrink-0 items-center justify-center rounded-r-lg border border-l-0 border-[#D1D5DB] bg-[#F8FAFC] text-[#065F46] transition hover:bg-[#D1FAE5] disabled:cursor-not-allowed disabled:opacity-40"
+                  >
+                    <i class="ri-add-line text-sm"></i>
+                  </button>
+                </div>
+                <p v-if="stockExcedido" class="mt-1 flex items-center gap-1.5 text-[10px] font-bold text-red-600 uppercase tracking-wide">
+                  <i class="ri-error-warning-fill text-sm"></i>
+                  Excede el stock disponible ({{ itemSeleccionado.cantidad_disponible }} uds)
+                </p>
               </div>
 
               <div class="space-y-1">
@@ -230,7 +311,9 @@
               </div>
 
               <div class="space-y-1">
-                <label class="label-circuit">Precio a otros talleres</label>
+                <label class="label-circuit">
+                  {{ obtenerCategoria(itemSeleccionado) === 'repuesto' ? 'Precio a otros talleres' : 'Precio de venta' }}
+                </label>
                 <div class="relative">
                   <span class="absolute left-3 top-1/2 -translate-y-1/2 font-mono text-gray-400 text-xs pointer-events-none">$</span>
                   <input
@@ -365,8 +448,10 @@ const { crearVenta } = useVentas()
 const { repuestos, obtenerRepuestos } = useRepuestos()
 
 const guardando = ref(false)
-const repuestosDisponibles = ref([])
-const repuestoSeleccionado = ref(null)
+const itemsDisponibles = ref([])
+const itemSeleccionado = ref(null)
+const busquedaItem = ref('')
+const mostrarSugerenciasItem = ref(false)
 
 const busquedaCliente = ref('')
 const clientesEncontrados = ref([])
@@ -386,18 +471,59 @@ const clienteForm = reactive({
 })
 
 const ventaForm = reactive({
-  repuesto_id: null,
+  item_id: null,
   cantidad: 1,
   precio_unitario: 0,
   nota: '',
   metodo_pago: ''
 })
 
+const obtenerCategoria = (item) =>
+  ['repuesto', 'accesorio', 'equipo'].includes(item?.categoria) ? item.categoria : 'repuesto'
+
+const etiquetaCategoria = (item) => ({
+  repuesto: 'Repuesto',
+  accesorio: 'Accesorio',
+  equipo: 'Equipo'
+}[obtenerCategoria(item)])
+
+const iconoCategoria = (item) => ({
+  repuesto: 'ri-cpu-line',
+  accesorio: 'ri-headphone-line',
+  equipo: 'ri-smartphone-line'
+}[obtenerCategoria(item)])
+
+const claseBadgeCategoria = (item) => ({
+  repuesto: 'border-emerald-200 bg-emerald-50 text-emerald-700',
+  accesorio: 'border-blue-200 bg-blue-50 text-blue-700',
+  equipo: 'border-amber-200 bg-amber-50 text-amber-700'
+}[obtenerCategoria(item)])
+
+const precioItem = (item) => obtenerCategoria(item) === 'repuesto'
+  ? Number(item.precio_tecnico || item.precio_venta || 0)
+  : Number(item.precio_venta || 0)
+
+const itemsFiltrados = computed(() => {
+  const termino = busquedaItem.value.trim().toLowerCase()
+  const disponibles = itemsDisponibles.value
+  if (!termino) return disponibles.slice(0, 20)
+  return disponibles.filter(item =>
+    item.nombre_repuesto?.toLowerCase().includes(termino) ||
+    String(item.id).toLowerCase().includes(termino) ||
+    etiquetaCategoria(item).toLowerCase().includes(termino)
+  ).slice(0, 30)
+})
+
 const stockDisponible = computed(() => {
-  if (repuestoSeleccionado.value) {
-    return `${repuestoSeleccionado.value.cantidad_disponible} UDS`
+  if (itemSeleccionado.value) {
+    return `${itemSeleccionado.value.cantidad_disponible} UDS`
   }
   return '-- SELECCIONE --'
+})
+
+const stockExcedido = computed(() => {
+  return itemSeleccionado.value !== null &&
+         ventaForm.cantidad > itemSeleccionado.value.cantidad_disponible
 })
 
 const subtotal = computed(() => {
@@ -418,19 +544,82 @@ const total = computed(() => {
 const formularioValido = computed(() => {
   return clienteForm.nombre_completo &&
          clienteForm.telefono &&
-         ventaForm.repuesto_id &&
+         ventaForm.item_id &&
          ventaForm.cantidad > 0 &&
-         repuestoSeleccionado.value &&
-         ventaForm.cantidad <= repuestoSeleccionado.value.cantidad_disponible
+         itemSeleccionado.value &&
+         ventaForm.cantidad <= itemSeleccionado.value.cantidad_disponible
 })
 
 const calcularPrecios = () => {
-  const repuesto = repuestosDisponibles.value.find(r => r.id === ventaForm.repuesto_id)
-  repuestoSeleccionado.value = repuesto
-  if (repuesto) {
-    ventaForm.precio_unitario = repuesto.precio_tecnico || 0
+  const item = itemsDisponibles.value.find(i => i.id === ventaForm.item_id)
+  itemSeleccionado.value = item
+
+  if (item) {
+    // Repuesto usa precio_tecnico si existe; si no, precio_venta.
+    // Accesorio y equipo siempre usan precio_venta.
+    if (obtenerCategoria(item) === 'repuesto') {
+      ventaForm.precio_unitario = item.precio_tecnico || item.precio_venta || 0
+    } else {
+      ventaForm.precio_unitario = item.precio_venta || 0
+    }
+
+    if (ventaForm.cantidad > item.cantidad_disponible) {
+      ventaForm.cantidad = item.cantidad_disponible
+    }
+  } else {
+    ventaForm.cantidad = 1
+    ventaForm.precio_unitario = 0
   }
   calcularTotal()
+}
+
+const incrementarCantidad = () => {
+  if (!itemSeleccionado.value) return
+  const cantidadActual = Number(ventaForm.cantidad)
+  ventaForm.cantidad = Math.min(
+    (Number.isFinite(cantidadActual) ? cantidadActual : 0) + 1,
+    Number(itemSeleccionado.value.cantidad_disponible)
+  )
+}
+
+const decrementarCantidad = () => {
+  const cantidadActual = Number(ventaForm.cantidad)
+  ventaForm.cantidad = Math.max((Number.isFinite(cantidadActual) ? cantidadActual : 1) - 1, 1)
+}
+
+const cambiarBusquedaItem = (valor) => {
+  busquedaItem.value = valor
+  mostrarSugerenciasItem.value = true
+  if (itemSeleccionado.value && valor !== itemSeleccionado.value.nombre_repuesto) {
+    itemSeleccionado.value = null
+    ventaForm.item_id = null
+    ventaForm.precio_unitario = 0
+  }
+}
+
+const seleccionarItem = (item) => {
+  const itemDisponible = itemsDisponibles.value.find(disponible => disponible.id === item.id)
+  if (!itemDisponible) {
+    mostrarToast('El ítem seleccionado ya no está disponible', 'error')
+    return
+  }
+  ventaForm.item_id = itemDisponible.id
+  busquedaItem.value = itemDisponible.nombre_repuesto
+  mostrarSugerenciasItem.value = false
+  calcularPrecios()
+}
+
+const limpiarItemSeleccionado = () => {
+  itemSeleccionado.value = null
+  ventaForm.item_id = null
+  ventaForm.precio_unitario = 0
+  ventaForm.cantidad = 1
+  busquedaItem.value = ''
+  mostrarSugerenciasItem.value = true
+}
+
+const ocultarSugerenciasItem = () => {
+  setTimeout(() => { mostrarSugerenciasItem.value = false }, 150)
 }
 
 const calcularTotal = () => {
@@ -456,7 +645,7 @@ const buscarClientesEnTiempoReal = async () => {
 
       clientesEncontrados.value = clientes.filter(c =>
         c.nombre_completo.toLowerCase().includes(termino) ||
-        c.dni_cedula.toLowerCase().includes(termino) ||
+        (c.dni_cedula && c.dni_cedula.toLowerCase().includes(termino)) ||
         (c.telefono && c.telefono.includes(termino))
       )
     } catch (error) {
@@ -487,12 +676,13 @@ const desvincularCliente = () => {
   mostrarToast('Cliente desvinculado')
 }
 
-const cargarRepuestos = async () => {
+const cargarItems = async () => {
   try {
     await obtenerRepuestos()
-    repuestosDisponibles.value = repuestos.value.filter(r => r.cantidad_disponible > 0 && r.precio_tecnico > 0)
+    // Incluye repuestos, accesorios y equipos con stock disponible
+    itemsDisponibles.value = repuestos.value.filter(i => i.cantidad_disponible > 0)
   } catch (error) {
-    console.error('Error al cargar repuestos:', error)
+    console.error('Error al cargar ítems:', error)
   }
 }
 
@@ -504,6 +694,11 @@ const mostrarToast = (mensaje, tipo = 'success') => {
 const guardarVenta = async () => {
   if (!formularioValido.value) {
     mostrarToast('Faltan parámetros obligatorios o hay inconsistencias', 'error')
+    return
+  }
+
+  if (stockExcedido.value) {
+    mostrarToast(`Stock insuficiente: solo hay ${itemSeleccionado.value.cantidad_disponible} unidades`, 'error')
     return
   }
 
@@ -546,7 +741,7 @@ const guardarVenta = async () => {
 
     const result = await crearVenta({
       cliente_id: clienteId,
-      repuesto_id: ventaForm.repuesto_id,
+      repuesto_id: ventaForm.item_id,
       cantidad: ventaForm.cantidad,
       incluye_montaje: false,
       total: totalFinal,
@@ -596,7 +791,7 @@ const guardarVenta = async () => {
 }
 
 onMounted(() => {
-  cargarRepuestos()
+  cargarItems()
 })
 </script>
 

@@ -16,6 +16,13 @@
         </div>
 
         <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+          <NuxtLink
+            to="/ventas/dashboard"
+            class="flex items-center justify-center gap-2 rounded-lg border border-[#10B981]/30 bg-white px-4 py-2.5 text-[10px] font-black uppercase tracking-widest text-[#065F46] transition-all hover:bg-[#F0FDF4]"
+          >
+            <i class="ri-dashboard-line text-base"></i>
+            Dashboard
+          </NuxtLink>
           <button
             @click="exportarPDF"
             :disabled="exportando || ventasFiltradas.length === 0"

@@ -10,6 +10,7 @@ export default defineEventHandler(async (event) => {
     const id = getRouterParam(event, 'id')
     const body = await readBody(event)
     const { repuesto_id, cantidad } = body
+    const cantidadNumerica = Number(cantidad)
 
     console.log('===== AGREGANDO REPUESTO =====')
     console.log('Reparación ID:', id)
@@ -23,10 +24,10 @@ export default defineEventHandler(async (event) => {
       })
     }
 
-    if (!cantidad || cantidad < 1) {
+    if (!Number.isInteger(cantidadNumerica) || cantidadNumerica < 1) {
       throw createError({
         statusCode: 400,
-        message: 'La cantidad debe ser mayor a 0'
+        message: 'La cantidad debe ser un número entero mayor a 0'
       })
     }
 
@@ -64,7 +65,8 @@ export default defineEventHandler(async (event) => {
     console.log('Stock actual:', repuesto.cantidad_disponible)
 
     // 2. Verificar stock
-    if (repuesto.cantidad_disponible < cantidad) {
+    const stockDisponible = Number(repuesto.cantidad_disponible)
+    if (!Number.isFinite(stockDisponible) || stockDisponible < cantidadNumerica) {
       throw createError({
         statusCode: 400,
         message: `Stock insuficiente. Solo hay ${repuesto.cantidad_disponible} unidades`
@@ -72,8 +74,8 @@ export default defineEventHandler(async (event) => {
     }
 
     // 3. Calcular nuevo stock
-    const stockAnterior = repuesto.cantidad_disponible
-    const nuevoStock = stockAnterior - cantidad
+    const stockAnterior = stockDisponible
+    const nuevoStock = stockAnterior - cantidadNumerica
     console.log('Stock anterior:', stockAnterior)
     console.log('Nuevo stock:', nuevoStock)
 
@@ -97,7 +99,7 @@ const { data: asignacion, error: insertError } = await supabase
   .insert({
     reparacion_id: id,
     repuesto_id: repuesto_id,
-    cantidad: cantidad,
+    cantidad: cantidadNumerica,
     precio_unitario: repuesto.precio_venta
   })
   .select()
@@ -123,7 +125,7 @@ const { error: movError } = await supabase
     tienda_id: tiendaId,
     repuesto_id: repuesto_id,
     tipo: 'salida',
-    cantidad: cantidad,
+    cantidad: cantidadNumerica,
     stock_anterior: stockAnterior,
     stock_nuevo: nuevoStock,
     precio_unitario_costo: repuesto.precio_costo,
@@ -143,7 +145,7 @@ if (movError) {
 
     return {
       success: true,
-      message: `Repuesto "${repuesto.nombre_repuesto}" agregado (${cantidad} unidades)`,
+      message: `Repuesto "${repuesto.nombre_repuesto}" agregado (${cantidadNumerica} unidades)`,
       data: asignacion
     }
   } catch (error) {

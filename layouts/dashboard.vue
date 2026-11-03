@@ -125,7 +125,7 @@
               to="/ventas"
               :class="[
                 'flex items-center rounded-lg px-3 py-2.5 text-sm transition-colors',
-                $route.path.startsWith('/ventas')
+                $route.path === '/ventas' || $route.path === '/ventas/nueva'
                   ? 'bg-white/15 text-white font-bold shadow-sm'
                   : 'text-white/70 hover:bg-white/10 hover:text-white'
               ]"
@@ -133,6 +133,19 @@
             >
               <i class="ri-shopping-cart-line text-lg"></i>
               <span class="ml-3">Ventas</span>
+            </NuxtLink>
+            <NuxtLink
+              to="/ventas/dashboard"
+              :class="[
+                'ml-5 flex items-center rounded-lg px-3 py-2 text-xs transition-colors',
+                $route.path === '/ventas/dashboard'
+                  ? 'bg-white/15 text-white font-bold shadow-sm'
+                  : 'text-white/60 hover:bg-white/10 hover:text-white'
+              ]"
+              @click="sidebarAbierta = false"
+            >
+              <i class="ri-dashboard-2-line text-base"></i>
+              <span class="ml-3">Dashboard de ventas</span>
             </NuxtLink>
             <NuxtLink
               to="/movimientos"
@@ -263,12 +276,23 @@
                 to="/ventas"
                 :class="[
                   'flex items-center rounded-lg px-3 py-2.5 text-sm transition-colors',
-                  $route.path.startsWith('/ventas') ? 'bg-white/15 text-white font-bold' : 'text-white/70 hover:bg-white/10 hover:text-white'
+                  $route.path === '/ventas' || $route.path === '/ventas/nueva' ? 'bg-white/15 text-white font-bold' : 'text-white/70 hover:bg-white/10 hover:text-white'
                 ]"
                 @click="sidebarAbierta = false"
               >
                 <i class="ri-shopping-cart-line text-lg"></i>
                 <span class="ml-3">Ventas</span>
+              </NuxtLink>
+              <NuxtLink
+                to="/ventas/dashboard"
+                :class="[
+                  'ml-5 flex items-center rounded-lg px-3 py-2 text-xs transition-colors',
+                  $route.path === '/ventas/dashboard' ? 'bg-white/15 text-white font-bold' : 'text-white/60 hover:bg-white/10 hover:text-white'
+                ]"
+                @click="sidebarAbierta = false"
+              >
+                <i class="ri-dashboard-2-line text-base"></i>
+                <span class="ml-3">Dashboard de ventas</span>
               </NuxtLink>
               <NuxtLink
                 to="/movimientos"
@@ -411,6 +435,7 @@ const iniciales = computed(() => usuarioEmail.value.charAt(0).toUpperCase() || '
 
 const tituloPagina = computed(() => {
   const path = router.currentRoute.value.path
+  if (path === '/ventas/dashboard') return 'Dashboard de ventas'
   if (path.includes('dashboard')) return 'Dashboard'
   if (path.includes('clientes')) return 'Clientes'
   if (path.includes('tecnicos')) return 'Técnicos'

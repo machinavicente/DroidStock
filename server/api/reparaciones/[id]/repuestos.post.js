@@ -8,6 +8,7 @@ export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, 'id')
   const body = await readBody(event)
   const { repuesto_id, cantidad } = body
+  const cantidadNumerica = Number(cantidad)
 
   if (!repuesto_id) {
     throw createError({
@@ -16,10 +17,10 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  if (!cantidad || cantidad < 1) {
+  if (!Number.isInteger(cantidadNumerica) || cantidadNumerica < 1) {
     throw createError({
       statusCode: 400,
-      message: 'La cantidad debe ser mayor a 0'
+      message: 'La cantidad debe ser un número entero mayor a 0'
     })
   }
 
@@ -68,7 +69,8 @@ export default defineEventHandler(async (event) => {
   }
 
   // Verificar stock disponible
-  if (repuesto.cantidad_disponible < cantidad) {
+  const stockDisponible = Number(repuesto.cantidad_disponible)
+  if (!Number.isFinite(stockDisponible) || stockDisponible < cantidadNumerica) {
     throw createError({
       statusCode: 400,
       message: `Stock insuficiente. Solo hay ${repuesto.cantidad_disponible} unidades disponibles`
@@ -79,7 +81,7 @@ export default defineEventHandler(async (event) => {
   const { error: updateError } = await supabase
     .from('stock_repuestos')
     .update({
-      cantidad_disponible: repuesto.cantidad_disponible - cantidad
+      cantidad_disponible: stockDisponible - cantidadNumerica
     })
     .eq('id', repuesto_id)
 
@@ -96,7 +98,7 @@ export default defineEventHandler(async (event) => {
     .insert({
       reparacion_id: id,
       repuesto_id: repuesto_id,
-      cantidad: cantidad,
+      cantidad: cantidadNumerica,
       precio_unitario: repuesto.precio_venta
     })
     .select()
@@ -123,10 +125,10 @@ export default defineEventHandler(async (event) => {
     .insert({
       tienda_id: tiendaId,
       repuesto_id: repuesto_id,
-      cantidad: cantidad,
+      cantidad: cantidadNumerica,
       tipo: 'salida',
-      stock_anterior: repuesto.cantidad_disponible,
-      stock_nuevo: repuesto.cantidad_disponible - cantidad,
+      stock_anterior: stockDisponible,
+      stock_nuevo: stockDisponible - cantidadNumerica,
       referencia_tipo: 'reparacion',
       referencia_id: id,
       motivo: `Reparación #${id.slice(0, 8)}`,
@@ -141,7 +143,7 @@ export default defineEventHandler(async (event) => {
 
   return {
     success: true,
-    message: `Repuesto "${repuesto.nombre_repuesto}" agregado (${cantidad} unidades)`,
+    message: `Repuesto "${repuesto.nombre_repuesto}" agregado (${cantidadNumerica} unidades)`,
     data: asignacion
   }
 })

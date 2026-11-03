@@ -101,7 +101,7 @@
             <!-- Separador -->
             <div class="border-t border-[#E5E7EB]"></div>
 
-            <!-- 02 — Precios y Stock (2x2) -->
+            <!-- 02 — Precios y Stock (condicional según categoría) -->
             <div>
               <header class="flex items-center gap-2 mb-2">
                 <span class="text-[9px] font-mono font-black text-[#10B981] bg-[#F8FAFC] border border-[#10B981]/30 rounded px-1.5 py-0.5">02</span>
@@ -109,7 +109,8 @@
                 <h2 class="text-[10px] font-black text-[#065F46] uppercase tracking-widest">Precios y Stock</h2>
               </header>
 
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <!-- MODO REPUESTO: 4 campos -->
+              <div v-if="esRepuesto" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div class="space-y-1">
                   <label class="label-circuit">Costo proveedor ($) <span class="text-red-500">*</span></label>
                   <div class="relative">
@@ -154,6 +155,53 @@
                     />
                   </div>
                   <p class="mt-1 text-[10px] text-gray-500">Usado al vender a otro taller.</p>
+                </div>
+
+                <div class="space-y-1">
+                  <label class="label-circuit">Stock disponible <span class="text-red-500">*</span></label>
+                  <div class="relative">
+                    <i class="ri-archive-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-base pointer-events-none"></i>
+                    <input
+                      v-model.number="form.cantidad_disponible"
+                      type="number"
+                      min="0"
+                      class="form-input-circuit pl-10 pr-3 py-2.5 text-sm"
+                    />
+                  </div>
+                  <p class="mt-1 text-[10px] text-gray-500">Unidades en inventario.</p>
+                </div>
+              </div>
+
+              <!-- MODO ACCESORIO / EQUIPO: costo + precio venta + stock -->
+              <div v-else class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="space-y-1">
+                  <label class="label-circuit">Costo proveedor ($) <span class="text-red-500">*</span></label>
+                  <div class="relative">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 font-mono text-gray-400 text-sm pointer-events-none">$</span>
+                    <input
+                      v-model.number="form.precio_costo"
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      class="form-input-circuit pl-8 pr-3 py-2.5 text-sm"
+                      placeholder="0.00"
+                    />
+                  </div>
+                </div>
+
+                <div class="space-y-1">
+                  <label class="label-circuit">Precio de venta ($) <span class="text-red-500">*</span></label>
+                  <div class="relative">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 font-mono text-gray-400 text-sm pointer-events-none">$</span>
+                    <input
+                      v-model.number="form.precio_venta"
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      class="form-input-circuit pl-8 pr-3 py-2.5 text-sm"
+                      placeholder="0.00"
+                    />
+                  </div>
                 </div>
 
                 <div class="space-y-1">
@@ -284,16 +332,22 @@ const categoriaActual = computed(() => {
   return categorias.find(c => c.value === form.categoria) || categorias[0]
 })
 
+// Solo repuesto muestra precio reparación y precio talleres
+const esRepuesto = computed(() => form.categoria === 'repuesto')
+
+// Validez: stock obligatorio en TODAS las categorías
 const formularioValido = computed(() => {
-  return form.categoria &&
-         form.nombre_repuesto &&
-         form.nombre_repuesto.trim() !== '' &&
-         form.cantidad_disponible !== null &&
-         form.cantidad_disponible >= 0 &&
-         form.precio_costo !== null &&
-         form.precio_costo >= 0 &&
-         form.precio_venta !== null &&
-         form.precio_venta >= 0
+  return (
+    form.categoria &&
+    form.nombre_repuesto &&
+    form.nombre_repuesto.trim() !== '' &&
+    form.cantidad_disponible !== null &&
+    form.cantidad_disponible >= 0 &&
+    form.precio_costo !== null &&
+    form.precio_costo >= 0 &&
+    form.precio_venta !== null &&
+    form.precio_venta >= 0
+  )
 })
 
 const mostrarToast = (mensaje, tipo = 'success') => {
@@ -315,13 +369,17 @@ const guardarRepuesto = async () => {
   guardando.value = true
 
   try {
+    const esRep = form.categoria === 'repuesto'
+
     const datosAEnviar = {
       categoria: form.categoria,
       nombre_repuesto: form.nombre_repuesto,
+      // Stock aplica a todas las categorías
       cantidad_disponible: form.cantidad_disponible || 0,
       precio_costo: form.precio_costo || null,
       precio_venta: form.precio_venta !== null && form.precio_venta !== undefined ? Number(form.precio_venta) : null,
-      precio_tecnico: form.precio_tecnico || null
+      // precio_tecnico solo tiene sentido en repuestos
+      precio_tecnico: esRep ? (form.precio_tecnico || null) : null
     }
 
     const result = await crearRepuesto(datosAEnviar)

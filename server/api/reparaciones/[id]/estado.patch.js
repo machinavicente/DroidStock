@@ -30,6 +30,13 @@ export default defineEventHandler(async (event) => {
       })
     }
 
+    if (nuevoEstado === 'Finalizado' && (presupuesto === null || presupuesto <= 0)) {
+      throw createError({
+        statusCode: 400,
+        message: 'La mano de obra debe ser mayor a $0.00 para finalizar la reparación'
+      })
+    }
+
     const supabase = createServerClient()
 
     // Verificar que la reparación existe

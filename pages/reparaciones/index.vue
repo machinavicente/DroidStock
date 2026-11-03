@@ -390,38 +390,85 @@
                 <p v-if="repuestosFiltrados.length === 0" class="p-3 text-[10px] text-gray-500">Sin repuestos disponibles.</p>
               </div>
               <p v-if="repuestoSeleccionado" class="mt-1 text-[10px] font-bold text-[#065F46]">
-                Stock: {{ repuestoSeleccionado.cantidad_disponible }}
+                Stock disponible: {{ stockDisponibleParaAgregar }} uds
                 <button type="button" @click="limpiarRepuestoSeleccionado" class="ml-1 underline hover:text-[#10B981]">Cambiar</button>
               </p>
             </div>
 
             <div>
               <label class="mb-1 block text-[9px] font-black uppercase tracking-widest text-gray-400">Cantidad</label>
-              <input
-                v-model.number="cantidadRepuesto"
-                @change="agregarRepuestoALista"
-                @keyup.enter="agregarRepuestoALista"
-                type="number"
-                min="0"
-                :max="repuestoSeleccionado?.cantidad_disponible || undefined"
-                class="w-full rounded-lg border border-[#D1D5DB] bg-[#F8FAFC] py-2 text-center text-xs font-black focus:border-[#10B981] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#10B981]/20"
-              />
+              <div class="flex items-stretch">
+                <button
+                  type="button"
+                  @click="decrementarCantidadRepuesto"
+                  :disabled="!repuestoSeleccionado || Number(cantidadRepuesto || 0) <= 0"
+                  aria-label="Disminuir cantidad"
+                  class="flex w-9 items-center justify-center rounded-l-lg border border-r-0 border-[#D1D5DB] bg-[#F8FAFC] text-[#065F46] transition hover:bg-[#D1FAE5] disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  <i class="ri-subtract-line text-sm"></i>
+                </button>
+                <input
+                  v-model.number="cantidadRepuesto"
+                  @keyup.enter="agregarRepuestoALista"
+                  type="number"
+                  min="1"
+                  step="1"
+                  :max="repuestoSeleccionado ? stockDisponibleParaAgregar : undefined"
+                  :class="[
+                    'min-w-0 w-full border bg-[#F8FAFC] py-2 text-center text-xs font-black focus:z-10 focus:bg-white focus:outline-none focus:ring-2',
+                    cantidadRepuestoInvalida
+                      ? 'border-red-400 bg-red-50 text-red-700 focus:border-red-400 focus:ring-red-200'
+                      : 'border-[#D1D5DB] focus:border-[#10B981] focus:ring-[#10B981]/20'
+                  ]"
+                />
+                <button
+                  type="button"
+                  @click="incrementarCantidadRepuesto"
+                  :disabled="!repuestoSeleccionado || stockDisponibleParaAgregar <= 0 || Number(cantidadRepuesto || 0) >= stockDisponibleParaAgregar"
+                  aria-label="Aumentar cantidad"
+                  class="flex w-9 items-center justify-center rounded-r-lg border border-l-0 border-[#D1D5DB] bg-[#F8FAFC] text-[#065F46] transition hover:bg-[#D1FAE5] disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  <i class="ri-add-line text-sm"></i>
+                </button>
+              </div>
             </div>
           </div>
+          <p v-if="cantidadRepuestoInvalida" class="-mt-2 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide text-red-600">
+            <i class="ri-error-warning-fill text-sm"></i>
+            <span v-if="stockExcedido">Excede el stock disponible ({{ stockDisponibleParaAgregar }} uds)</span>
+            <span v-else>Selecciona un repuesto y escribe una cantidad entera mayor a cero</span>
+          </p>
+          <button
+            type="button"
+            @click="agregarRepuestoALista"
+            :disabled="cantidadRepuestoInvalida || !repuestoSeleccionado"
+            class="w-full rounded-lg border-b-2 border-[#047857] bg-[#065F46] py-2 text-[10px] font-black uppercase tracking-widest text-white shadow-sm transition hover:bg-[#047857] active:translate-y-0.5 active:border-b-0 disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            <i class="ri-add-line mr-1"></i>Agregar repuesto
+          </button>
 
           <div>
-            <label class="mb-1 block text-[9px] font-black uppercase tracking-widest text-gray-400">Mano de obra / montaje</label>
+            <label class="mb-1 block text-[9px] font-black uppercase tracking-widest text-gray-400">Mano de obra / montaje <span class="text-red-500">*</span></label>
             <div class="relative">
               <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 font-mono text-gray-400 text-xs">$</span>
               <input
                 v-model.number="presupuestoReparacion"
                 type="number"
-                min="0"
+                min="0.01"
                 step="0.01"
-                class="w-full rounded-lg border border-[#D1D5DB] bg-[#F8FAFC] py-2 pl-7 pr-3 text-xs font-bold focus:border-[#10B981] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#10B981]/20"
-                placeholder="0.00"
+                :class="[
+                  'w-full rounded-lg border bg-[#F8FAFC] py-2 pl-7 pr-3 text-xs font-bold focus:bg-white focus:outline-none focus:ring-2',
+                  presupuestoReparacionValido
+                    ? 'border-[#D1D5DB] focus:border-[#10B981] focus:ring-[#10B981]/20'
+                    : 'border-red-400 bg-red-50 text-red-700 focus:border-red-400 focus:ring-red-200'
+                ]"
+                placeholder="0.01"
               />
             </div>
+            <p v-if="!presupuestoReparacionValido" class="mt-1 flex items-center gap-1 text-[10px] font-bold text-red-600">
+              <i class="ri-error-warning-fill"></i>
+              La mano de obra debe ser mayor a $0.00
+            </p>
           </div>
 
           <div class="rounded-lg border border-gray-200 bg-gray-50 p-2.5">
@@ -434,7 +481,8 @@
                 <span class="min-w-0 truncate text-[11px] font-bold text-gray-700">{{ item.nombre }}</span>
                 <div class="ml-2 flex items-center gap-2">
                   <span class="text-[11px] font-black text-[#065F46]">x{{ item.cantidad }}</span>
-                  <button @click="eliminarRepuestoDeLista(idx)" aria-label="Quitar" class="text-gray-400 hover:text-red-600">
+                  <span v-if="item.registrado" class="text-[8px] font-black uppercase text-gray-400">Asignado</span>
+                  <button v-else @click="eliminarRepuestoDeLista(idx)" aria-label="Quitar" class="text-gray-400 hover:text-red-600">
                     <i class="ri-delete-bin-line text-xs"></i>
                   </button>
                 </div>
@@ -452,10 +500,10 @@
             </button>
             <button
               @click="finalizarConRepuestos"
-              :disabled="repuestosTemp.length === 0 && Number(presupuestoReparacion || 0) <= 0"
+              :disabled="cantidadRepuestoInvalida || Boolean(repuestoSeleccionado) || Number(cantidadRepuesto || 0) !== 0 || !presupuestoReparacionValido || procesandoId === reparacionSeleccionada?.id"
               class="flex-[1.5] rounded-lg border-b-2 border-[#047857] bg-[#065F46] py-2 text-[10px] font-black uppercase tracking-widest text-white shadow-sm hover:bg-[#047857] active:translate-y-0.5 active:border-b-0 disabled:cursor-not-allowed disabled:opacity-40"
             >
-              Finalizar reparación
+              {{ procesandoId === reparacionSeleccionada?.id ? 'Procesando...' : 'Finalizar reparación' }}
             </button>
           </div>
 
@@ -574,6 +622,29 @@ const mostrarSugerencias = ref(false)
 const cantidadRepuesto = ref(0)
 const repuestosTemp = ref([])
 const presupuestoReparacion = ref(0)
+const cantidadAgregadaSeleccionada = computed(() => {
+  if (!repuestoSeleccionado.value) return 0
+  return repuestosTemp.value
+    .filter(item => item.id === repuestoSeleccionado.value.id && !item.registrado)
+    .reduce((total, item) => total + Number(item.cantidad || 0), 0)
+})
+const stockDisponibleParaAgregar = computed(() => {
+  if (!repuestoSeleccionado.value) return 0
+  return Math.max(Number(repuestoSeleccionado.value.cantidad_disponible || 0) - cantidadAgregadaSeleccionada.value, 0)
+})
+const stockExcedido = computed(() => (
+  Boolean(repuestoSeleccionado.value) &&
+  Number(cantidadRepuesto.value) > stockDisponibleParaAgregar.value
+))
+const cantidadRepuestoInvalida = computed(() => {
+  const cantidad = Number(cantidadRepuesto.value)
+  if (!repuestoSeleccionado.value && (Number(cantidadRepuesto.value) !== 0 || cantidadRepuesto.value === '')) return true
+  if (Number(cantidadRepuesto.value) === 0 && !repuestoSeleccionado.value) return false
+  return !Number.isInteger(cantidad) || cantidad <= 0 || stockExcedido.value
+})
+const presupuestoReparacionValido = computed(() => (
+  Number.isFinite(Number(presupuestoReparacion.value)) && Number(presupuestoReparacion.value) > 0
+))
 const modalEntregaVisible = ref(false)
 const reparacionEntrega = ref(null)
 const metodoPagoReparacion = ref('')
@@ -743,7 +814,8 @@ const abrirModalRepuestos = async (reparacion) => {
     repuestosTemp.value = yaRegistrados.map(item => ({
       id: item.repuesto_id,
       nombre: item.stock_repuestos?.nombre_repuesto || `Repuesto ${item.repuesto_id}`,
-      cantidad: Number(item.cantidad)
+      cantidad: Number(item.cantidad),
+      registrado: true
     }))
   }
 
@@ -780,11 +852,26 @@ const seleccionarRepuesto = (repuesto) => {
 const limpiarRepuestoSeleccionado = () => {
   repuestoSeleccionado.value = null
   busquedaRepuesto.value = ''
+  cantidadRepuesto.value = 0
   mostrarSugerencias.value = true
 }
 
 const ocultarSugerencias = () => {
   setTimeout(() => { mostrarSugerencias.value = false }, 150)
+}
+
+const incrementarCantidadRepuesto = () => {
+  if (!repuestoSeleccionado.value || stockDisponibleParaAgregar.value <= 0) return
+  const cantidadActual = Number(cantidadRepuesto.value)
+  cantidadRepuesto.value = Math.min(
+    (Number.isFinite(cantidadActual) ? cantidadActual : 0) + 1,
+    stockDisponibleParaAgregar.value
+  )
+}
+
+const decrementarCantidadRepuesto = () => {
+  const cantidadActual = Number(cantidadRepuesto.value)
+  cantidadRepuesto.value = Math.max((Number.isFinite(cantidadActual) ? cantidadActual : 0) - 1, 0)
 }
 
 const agregarRepuestoALista = () => {
@@ -799,8 +886,8 @@ const agregarRepuestoALista = () => {
     return mostrarNotificacion('Selecciona un repuesto válido y una cantidad entera', 'error')
   }
 
-  const existente = repuestosTemp.value.find(item => item.id === repuestoValido.id)
-  const cantidadAcumulada = (existente?.cantidad || 0) + cantidad
+  const existente = repuestosTemp.value.find(item => item.id === repuestoValido.id && !item.registrado)
+  const cantidadAcumulada = cantidadAgregadaSeleccionada.value + cantidad
   if (cantidadAcumulada > repuestoValido.cantidad_disponible) {
     return mostrarNotificacion('Stock insuficiente', 'error')
   }
@@ -811,7 +898,8 @@ const agregarRepuestoALista = () => {
     repuestosTemp.value.push({
       id: repuestoValido.id,
       nombre: repuestoValido.nombre_repuesto,
-      cantidad
+      cantidad,
+      registrado: false
     })
   }
 
@@ -823,19 +911,27 @@ const agregarRepuestoALista = () => {
 const eliminarRepuestoDeLista = (idx) => repuestosTemp.value.splice(idx, 1)
 
 const finalizarConRepuestos = async () => {
+  if (cantidadRepuestoInvalida.value || repuestoSeleccionado.value || Number(cantidadRepuesto.value || 0) !== 0) {
+    return mostrarNotificacion('Agrega o limpia la cantidad pendiente antes de finalizar', 'error')
+  }
+  if (!presupuestoReparacionValido.value) {
+    return mostrarNotificacion('La mano de obra debe ser mayor a $0.00', 'error')
+  }
+
   try {
     procesandoId.value = reparacionSeleccionada.value.id
-    for (const item of repuestosTemp.value) {
+    for (const item of repuestosTemp.value.filter(item => !item.registrado)) {
       await $fetch(`/api/reparaciones/${reparacionSeleccionada.value.id}/repuestos`, {
         method: 'POST',
         body: { repuesto_id: item.id, cantidad: item.cantidad }
       })
+      item.registrado = true
     }
     await $fetch(`/api/reparaciones/${reparacionSeleccionada.value.id}/estado`, {
       method: 'PATCH',
       body: {
         nuevoEstado: 'Finalizado',
-        presupuesto: Math.max(Number(presupuestoReparacion.value || 0), 0)
+        presupuesto: Number(presupuestoReparacion.value)
       }
     })
     modalRepuestosVisible.value = false
