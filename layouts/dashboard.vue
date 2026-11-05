@@ -8,23 +8,21 @@
     >
       <!-- Skeleton Desktop -->
       <div class="hidden lg:flex h-full">
-        <!-- Sidebar Skeleton -->
-        <aside class="w-64" style="background-color: #065F46">
+        <aside class="w-[260px] border-r border-slate-200 bg-[#F8FAFC]">
           <div class="flex h-full flex-col">
-            <div class="flex h-16 items-center justify-center border-b" style="border-color: rgba(255, 255, 255, 0.1)">
-              <div class="skeleton-dark h-8 w-32 rounded"></div>
+            <div class="flex h-16 items-center px-4 gap-3">
+              <div class="skeleton h-7 w-7 rounded-md"></div>
+              <div class="skeleton h-6 w-24 rounded"></div>
             </div>
-            <nav class="flex-1 overflow-y-auto px-4 py-6 space-y-3">
-              <div v-for="i in 7" :key="i" class="skeleton-dark h-12 w-full rounded-lg"></div>
+            <nav class="flex-1 px-3 py-4 space-y-1">
+              <div class="skeleton h-4 w-16 rounded mb-2 ml-1"></div>
+              <div v-for="i in 8" :key="i" class="skeleton h-10 w-full rounded-lg"></div>
             </nav>
-            <div class="border-t p-4" style="border-color: rgba(255, 255, 255, 0.1)">
-              <div class="skeleton-dark h-12 w-full rounded-lg"></div>
-            </div>
           </div>
         </aside>
 
-        <div class="flex-1 lg:ml-64">
-          <header class="sticky top-0 z-40 border-b shadow-md" style="background-color: #FFFFFF; border-color: #D1D5DB">
+        <div class="flex-1 lg:ml-[260px]">
+          <header class="sticky top-0 z-40 border-b shadow-sm bg-white border-slate-200">
             <div class="flex items-center justify-between px-4 py-3 sm:px-6 sm:py-4">
               <div class="skeleton h-8 w-40 rounded"></div>
               <div class="flex items-center space-x-2 sm:space-x-4">
@@ -43,174 +41,132 @@
           </main>
         </div>
       </div>
-
-      <!-- Skeleton Mobile -->
-      <div class="lg:hidden flex h-full">
-        <div class="flex-1">
-          <header class="sticky top-0 z-40 border-b shadow-md" style="background-color: #FFFFFF; border-color: #D1D5DB">
-            <div class="flex items-center justify-between px-4 py-3">
-              <div class="skeleton h-8 w-8 rounded"></div>
-              <div class="skeleton h-6 w-32 rounded"></div>
-              <div class="skeleton h-8 w-8 rounded-full"></div>
-            </div>
-          </header>
-          <main class="p-3">
-            <div class="space-y-4">
-              <div v-for="i in 3" :key="i" class="skeleton h-24 w-full rounded-lg"></div>
-              <div class="space-y-3">
-                <div v-for="i in 5" :key="i" class="skeleton h-16 w-full rounded-lg"></div>
-              </div>
-            </div>
-          </main>
-        </div>
-      </div>
     </div>
 
     <template v-else>
       <!-- ============ SIDEBAR DESKTOP ============ -->
       <aside
-        class="fixed inset-y-0 left-0 z-50 hidden w-64 shadow-xl lg:flex lg:flex-col"
-        style="background-color: #065F46"
+        class="fixed inset-y-0 left-0 z-50 hidden w-[260px] flex-col border-r border-slate-200 bg-[#F8FAFC] lg:flex"
       >
         <div class="flex h-full flex-col">
-
-          <!-- Logo -->
-          <div class="flex h-16 items-center justify-center border-b border-white/10">
-            <i class="ri-smartphone-line text-2xl text-white"></i>
-            <span class="ml-2 text-xl font-bold text-white tracking-tight">DroidStock</span>
+          
+          <!-- Logo Principal -->
+          <div class="flex h-16 items-center justify-between px-4">
+            <div class="flex items-center gap-2.5">
+              <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-[#065F46]">
+                <i class="ri-smartphone-line text-lg text-white"></i>
+              </div>
+              <span class="text-xl font-bold tracking-tight text-slate-800">DroidStock</span>
+            </div>
+            <button class="text-slate-400 hover:text-slate-600">
+              <i class="ri-side-bar-line text-lg"></i>
+            </button>
           </div>
 
-          <!-- Menú -->
-          <nav class="flex-1 overflow-y-auto px-3 py-4 space-y-1">
-            <NuxtLink
-              to="/dashboard"
-              :class="[
-                'flex items-center rounded-lg px-3 py-2.5 text-sm transition-colors',
-                $route.path === '/dashboard'
-                  ? 'bg-white/15 text-white font-bold shadow-sm'
-                  : 'text-white/70 hover:bg-white/10 hover:text-white'
-              ]"
-              @click="sidebarAbierta = false"
-            >
-              <i class="ri-dashboard-line text-lg"></i>
-              <span class="ml-3">Dashboard</span>
-            </NuxtLink>
-            <NuxtLink
-              to="/reparaciones"
-              :class="[
-                'flex items-center rounded-lg px-3 py-2.5 text-sm transition-colors',
-                $route.path.startsWith('/reparaciones')
-                  ? 'bg-white/15 text-white font-bold shadow-sm'
-                  : 'text-white/70 hover:bg-white/10 hover:text-white'
-              ]"
-              @click="sidebarAbierta = false"
-            >
-              <i class="ri-tools-line text-lg"></i>
-              <span class="ml-3">Órdenes de trabajo</span>
-            </NuxtLink>
-            <NuxtLink
-              to="/repuestos"
-              :class="[
-                'flex items-center rounded-lg px-3 py-2.5 text-sm transition-colors',
-                $route.path.startsWith('/repuestos')
-                  ? 'bg-white/15 text-white font-bold shadow-sm'
-                  : 'text-white/70 hover:bg-white/10 hover:text-white'
-              ]"
-              @click="sidebarAbierta = false"
-            >
-              <i class="ri-stack-line text-lg"></i>
-              <span class="ml-3">Stock de repuestos</span>
-            </NuxtLink>
-            <NuxtLink
-              to="/ventas"
-              :class="[
-                'flex items-center rounded-lg px-3 py-2.5 text-sm transition-colors',
-                $route.path === '/ventas' || $route.path === '/ventas/nueva'
-                  ? 'bg-white/15 text-white font-bold shadow-sm'
-                  : 'text-white/70 hover:bg-white/10 hover:text-white'
-              ]"
-              @click="sidebarAbierta = false"
-            >
-              <i class="ri-shopping-cart-line text-lg"></i>
-              <span class="ml-3">Ventas</span>
-            </NuxtLink>
-            <NuxtLink
-              to="/ventas/dashboard"
-              :class="[
-                'ml-5 flex items-center rounded-lg px-3 py-2 text-xs transition-colors',
-                $route.path === '/ventas/dashboard'
-                  ? 'bg-white/15 text-white font-bold shadow-sm'
-                  : 'text-white/60 hover:bg-white/10 hover:text-white'
-              ]"
-              @click="sidebarAbierta = false"
-            >
-              <i class="ri-dashboard-2-line text-base"></i>
-              <span class="ml-3">Dashboard de ventas</span>
-            </NuxtLink>
-            <NuxtLink
-              to="/movimientos"
-              :class="[
-                'flex items-center rounded-lg px-3 py-2.5 text-sm transition-colors',
-                $route.path.startsWith('/movimientos')
-                  ? 'bg-white/15 text-white font-bold shadow-sm'
-                  : 'text-white/70 hover:bg-white/10 hover:text-white'
-              ]"
-              @click="sidebarAbierta = false"
-            >
-              <i class="ri-exchange-line text-lg"></i>
-              <span class="ml-3">Movimientos</span>
-            </NuxtLink>
+          <nav class="flex-1 overflow-y-auto px-3 py-4">
+            <p class="px-3 pb-2 text-xs font-semibold text-slate-500">
+              Menú
+            </p>
 
-            <NuxtLink
-              to="/tecnicos"
-              :class="[
-                'flex items-center rounded-lg px-3 py-2.5 text-sm transition-colors',
-                $route.path.startsWith('/tecnicos')
-                  ? 'bg-white/15 text-white font-bold shadow-sm'
-                  : 'text-white/70 hover:bg-white/10 hover:text-white'
-              ]"
-              @click="sidebarAbierta = false"
-            >
-              <i class="ri-user-settings-line text-lg"></i>
-              <span class="ml-3">Equipo técnico</span>
-            </NuxtLink>
-            <NuxtLink
-              to="/reportes/defectuosos"
-              :class="[
-                'flex items-center rounded-lg px-3 py-2.5 text-sm transition-colors',
-                $route.path.startsWith('/reportes')
-                  ? 'bg-white/15 text-white font-bold shadow-sm'
-                  : 'text-white/70 hover:bg-white/10 hover:text-white'
-              ]"
-              @click="sidebarAbierta = false"
-            >
-              <i class="ri-error-warning-line text-lg"></i>
-              <span class="ml-3">Repuestos defectuosos</span>
-            </NuxtLink>
+            <!-- Items del Menú Principal -->
+            <div class="space-y-0.5">
+              <NuxtLink to="/dashboard" :class="claseNav('/dashboard')" @click="sidebarAbierta = false">
+                <div class="flex items-center gap-3">
+                  <i class="ri-dashboard-line text-lg"></i>
+                  <span>Dashboard</span>
+                </div>
+              </NuxtLink>
+
+              <NuxtLink to="/reparaciones" :class="claseNav('/reparaciones', true)" @click="sidebarAbierta = false">
+                <div class="flex items-center gap-3">
+                  <i class="ri-tools-line text-lg"></i>
+                  <span>Órdenes de trabajo</span>
+                </div>
+              </NuxtLink>
+
+              <NuxtLink to="/repuestos" :class="claseNav('/repuestos', true)" @click="sidebarAbierta = false">
+                <div class="flex items-center gap-3">
+                  <i class="ri-stack-line text-lg"></i>
+                  <span>Stock de repuestos</span>
+                </div>
+              </NuxtLink>
+
+              <NuxtLink to="/ventas" :class="claseNav('/ventas')" @click="sidebarAbierta = false">
+                <div class="flex items-center gap-3">
+                  <i class="ri-shopping-cart-line text-lg"></i>
+                  <span>Ventas</span>
+                </div>
+              </NuxtLink>
+              
+              <!-- Submenú integrado -->
+              <NuxtLink to="/ventas/dashboard" :class="claseSubNav('/ventas/dashboard')" @click="sidebarAbierta = false">
+                <span class="ml-9">Dashboard de ventas</span>
+              </NuxtLink>
+
+              <NuxtLink to="/movimientos" :class="claseNav('/movimientos', true)" @click="sidebarAbierta = false">
+                <div class="flex items-center gap-3">
+                  <i class="ri-exchange-line text-lg"></i>
+                  <span>Movimientos</span>
+                </div>
+              </NuxtLink>
+
+              <NuxtLink to="/tecnicos" :class="claseNav('/tecnicos', true)" @click="sidebarAbierta = false">
+                <div class="flex items-center gap-3">
+                  <i class="ri-user-settings-line text-lg"></i>
+                  <span>Equipo técnico</span>
+                </div>
+              </NuxtLink>
+
+              <NuxtLink to="/reportes/defectuosos" :class="claseNav('/reportes', true)" @click="sidebarAbierta = false">
+                <div class="flex items-center gap-3">
+                  <i class="ri-error-warning-line text-lg"></i>
+                  <span>Repuestos defectuosos</span>
+                </div>
+              </NuxtLink>
+            </div>
+
+            <!-- Sección General -->
+            <p class="px-3 pb-2 pt-6 text-xs font-semibold text-slate-500">
+              General
+            </p>
+
+            <div class="space-y-0.5">
+              <NuxtLink to="/perfil" :class="claseNav('/perfil')" @click="sidebarAbierta = false">
+                <div class="flex items-center gap-3">
+                  <i class="ri-settings-3-line text-lg"></i>
+                  <span>Perfil y Ajustes</span>
+                </div>
+              </NuxtLink>
+
+              <button
+                @click="cerrarSesion"
+                class="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-slate-600 transition-colors hover:bg-red-50 hover:text-red-600"
+              >
+                <i class="ri-logout-box-line text-lg"></i>
+                <span>Cerrar sesión</span>
+              </button>
+            </div>
           </nav>
 
-          <!-- Footer -->
-          <div class="border-t border-white/10 p-3 space-y-2">
-            <NuxtLink
-              to="/perfil"
-              :class="[
-                'flex items-center rounded-lg px-3 py-2.5 text-sm transition-colors',
-                $route.path === '/perfil'
-                  ? 'bg-white/15 text-white font-bold border border-white/25'
-                  : 'text-white/70 border border-white/10 hover:bg-white/10 hover:text-white'
-              ]"
-              @click="sidebarAbierta = false"
-            >
-              <i class="ri-user-settings-line text-lg"></i>
-              <span class="ml-3">Perfil</span>
-            </NuxtLink>
-            <button
-              @click="cerrarSesion"
-              class="flex w-full items-center rounded-lg border border-white/10 px-3 py-2.5 text-sm text-white/70 transition-colors hover:border-red-400/40 hover:bg-red-500/90 hover:text-white"
-            >
-              <i class="ri-logout-box-line text-lg"></i>
-              <span class="ml-3">Cerrar sesión</span>
-            </button>
+          <!-- Footer: Tarjeta compacta de soporte -->
+          <div class="p-3">
+            <div class="relative overflow-hidden rounded-lg bg-[#065F46] p-2.5 text-white shadow-sm flex items-center justify-between">
+              <div class="flex items-center gap-2 z-10">
+                <div class="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500/30">
+                  <i class="ri-whatsapp-line text-sm text-emerald-100"></i>
+                </div>
+                <p class="text-xs font-semibold">Soporte</p>
+              </div>
+              
+              <a 
+                href="https://wa.me/584267379617?text=Hola,%20necesito%20soporte%20t%C3%A9cnico%20con%20DroidStock" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                class="z-10 rounded bg-emerald-500 px-2.5 py-1 text-[10px] font-semibold text-white transition hover:bg-emerald-400"
+              >
+                Enviar DM
+              </a>
+            </div>
           </div>
         </div>
       </aside>
@@ -219,142 +175,89 @@
       <transition name="sidebar">
         <aside
           v-if="sidebarAbierta"
-          class="fixed inset-y-0 left-0 z-50 w-64 shadow-2xl lg:hidden"
-          style="background-color: #065F46"
+          class="fixed inset-y-0 left-0 z-50 flex w-[260px] flex-col border-r border-slate-200 bg-[#F8FAFC] shadow-2xl lg:hidden"
         >
           <div class="flex h-full flex-col">
-            <div class="flex items-center justify-between border-b border-white/10 px-4 py-4">
-              <div class="flex items-center">
-                <i class="ri-smartphone-line text-2xl text-white"></i>
-                <span class="ml-2 text-xl font-bold text-white tracking-tight">DroidStock</span>
+            <div class="flex h-16 items-center justify-between px-4">
+              <div class="flex items-center gap-2.5">
+                <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-[#065F46]">
+                  <i class="ri-smartphone-line text-lg text-white"></i>
+                </div>
+                <span class="text-xl font-bold tracking-tight text-slate-800">DroidStock</span>
               </div>
               <button
                 @click="sidebarAbierta = false"
-                class="rounded-lg p-1 text-white/70 hover:bg-white/10 hover:text-white"
-                aria-label="Cerrar menú"
+                class="rounded-lg p-1 text-slate-500 hover:bg-slate-200 hover:text-slate-900"
               >
                 <i class="ri-close-line text-xl"></i>
               </button>
             </div>
 
-            <nav class="flex-1 overflow-y-auto px-3 py-4 space-y-1">
-              <NuxtLink
-                to="/dashboard"
-                :class="[
-                  'flex items-center rounded-lg px-3 py-2.5 text-sm transition-colors',
-                  $route.path === '/dashboard' ? 'bg-white/15 text-white font-bold' : 'text-white/70 hover:bg-white/10 hover:text-white'
-                ]"
-                @click="sidebarAbierta = false"
-              >
-                <i class="ri-dashboard-line text-lg"></i>
-                <span class="ml-3">Dashboard</span>
-              </NuxtLink>
+            <nav class="flex-1 overflow-y-auto px-3 py-4">
+              <p class="px-3 pb-2 text-xs font-semibold text-slate-500">Menú</p>
 
-              <NuxtLink
-                to="/reparaciones"
-                :class="[
-                  'flex items-center rounded-lg px-3 py-2.5 text-sm transition-colors',
-                  $route.path.startsWith('/reparaciones') ? 'bg-white/15 text-white font-bold' : 'text-white/70 hover:bg-white/10 hover:text-white'
-                ]"
-                @click="sidebarAbierta = false"
-              >
-                <i class="ri-tools-line text-lg"></i>
-                <span class="ml-3">Órdenes de trabajo</span>
-              </NuxtLink>
-              <NuxtLink
-                to="/repuestos"
-                :class="[
-                  'flex items-center rounded-lg px-3 py-2.5 text-sm transition-colors',
-                  $route.path.startsWith('/repuestos') ? 'bg-white/15 text-white font-bold' : 'text-white/70 hover:bg-white/10 hover:text-white'
-                ]"
-                @click="sidebarAbierta = false"
-              >
-                <i class="ri-stack-line text-lg"></i>
-                <span class="ml-3">Stock de repuestos</span>
-              </NuxtLink>
-              <NuxtLink
-                to="/ventas"
-                :class="[
-                  'flex items-center rounded-lg px-3 py-2.5 text-sm transition-colors',
-                  $route.path === '/ventas' || $route.path === '/ventas/nueva' ? 'bg-white/15 text-white font-bold' : 'text-white/70 hover:bg-white/10 hover:text-white'
-                ]"
-                @click="sidebarAbierta = false"
-              >
-                <i class="ri-shopping-cart-line text-lg"></i>
-                <span class="ml-3">Ventas</span>
-              </NuxtLink>
-              <NuxtLink
-                to="/ventas/dashboard"
-                :class="[
-                  'ml-5 flex items-center rounded-lg px-3 py-2 text-xs transition-colors',
-                  $route.path === '/ventas/dashboard' ? 'bg-white/15 text-white font-bold' : 'text-white/60 hover:bg-white/10 hover:text-white'
-                ]"
-                @click="sidebarAbierta = false"
-              >
-                <i class="ri-dashboard-2-line text-base"></i>
-                <span class="ml-3">Dashboard de ventas</span>
-              </NuxtLink>
-              <NuxtLink
-                to="/movimientos"
-                :class="[
-                  'flex items-center rounded-lg px-3 py-2.5 text-sm transition-colors',
-                  $route.path.startsWith('/movimientos') ? 'bg-white/15 text-white font-bold' : 'text-white/70 hover:bg-white/10 hover:text-white'
-                ]"
-                @click="sidebarAbierta = false"
-              >
-                <i class="ri-exchange-line text-lg"></i>
-                <span class="ml-3">Movimientos</span>
-              </NuxtLink>
-              <NuxtLink
-                to="/tecnicos"
-                :class="[
-                  'flex items-center rounded-lg px-3 py-2.5 text-sm transition-colors',
-                  $route.path.startsWith('/tecnicos') ? 'bg-white/15 text-white font-bold' : 'text-white/70 hover:bg-white/10 hover:text-white'
-                ]"
-                @click="sidebarAbierta = false"
-              >
-                <i class="ri-user-settings-line text-lg"></i>
-                <span class="ml-3">Equipo técnico</span>
-              </NuxtLink>
-              <NuxtLink
-                to="/reportes/defectuosos"
-                :class="[
-                  'flex items-center rounded-lg px-3 py-2.5 text-sm transition-colors',
-                  $route.path.startsWith('/reportes') ? 'bg-white/15 text-white font-bold' : 'text-white/70 hover:bg-white/10 hover:text-white'
-                ]"
-                @click="sidebarAbierta = false"
-              >
-                <i class="ri-error-warning-line text-lg"></i>
-                <span class="ml-3">Repuestos defectuosos</span>
-              </NuxtLink>
+              <div class="space-y-0.5">
+                <NuxtLink to="/dashboard" :class="claseNav('/dashboard')" @click="sidebarAbierta = false">
+                  <div class="flex items-center gap-3"><i class="ri-dashboard-line text-lg"></i><span>Dashboard</span></div>
+                </NuxtLink>
+                <NuxtLink to="/reparaciones" :class="claseNav('/reparaciones', true)" @click="sidebarAbierta = false">
+                  <div class="flex items-center gap-3"><i class="ri-tools-line text-lg"></i><span>Órdenes de trabajo</span></div>
+                </NuxtLink>
+                <NuxtLink to="/repuestos" :class="claseNav('/repuestos', true)" @click="sidebarAbierta = false">
+                  <div class="flex items-center gap-3"><i class="ri-stack-line text-lg"></i><span>Stock de repuestos</span></div>
+                </NuxtLink>
+                <NuxtLink to="/ventas" :class="claseNav('/ventas')" @click="sidebarAbierta = false">
+                  <div class="flex items-center gap-3"><i class="ri-shopping-cart-line text-lg"></i><span>Ventas</span></div>
+                </NuxtLink>
+                <NuxtLink to="/ventas/dashboard" :class="claseSubNav('/ventas/dashboard')" @click="sidebarAbierta = false">
+                  <span class="ml-9">Dashboard de ventas</span>
+                </NuxtLink>
+                <NuxtLink to="/movimientos" :class="claseNav('/movimientos', true)" @click="sidebarAbierta = false">
+                  <div class="flex items-center gap-3"><i class="ri-exchange-line text-lg"></i><span>Movimientos</span></div>
+                </NuxtLink>
+                <NuxtLink to="/tecnicos" :class="claseNav('/tecnicos', true)" @click="sidebarAbierta = false">
+                  <div class="flex items-center gap-3"><i class="ri-user-settings-line text-lg"></i><span>Equipo técnico</span></div>
+                </NuxtLink>
+                <NuxtLink to="/reportes/defectuosos" :class="claseNav('/reportes', true)" @click="sidebarAbierta = false">
+                  <div class="flex items-center gap-3"><i class="ri-error-warning-line text-lg"></i><span>Repuestos defectuosos</span></div>
+                </NuxtLink>
+              </div>
+
+              <p class="px-3 pb-2 pt-6 text-xs font-semibold text-slate-500">General</p>
+
+              <div class="space-y-0.5">
+                <NuxtLink to="/perfil" :class="claseNav('/perfil')" @click="sidebarAbierta = false">
+                  <div class="flex items-center gap-3"><i class="ri-settings-3-line text-lg"></i><span>Perfil y Ajustes</span></div>
+                </NuxtLink>
+                <button @click="cerrarSesion" class="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-slate-600 transition-colors hover:bg-red-50 hover:text-red-600">
+                  <i class="ri-logout-box-line text-lg"></i><span>Cerrar sesión</span>
+                </button>
+              </div>
             </nav>
 
-            <div class="border-t border-white/10 p-3 space-y-2">
-              <NuxtLink
-                to="/perfil"
-                :class="[
-                  'flex items-center rounded-lg px-3 py-2.5 text-sm transition-colors',
-                  $route.path === '/perfil' ? 'bg-white/15 text-white font-bold border border-white/25' : 'text-white/70 border border-white/10 hover:bg-white/10 hover:text-white'
-                ]"
-                @click="sidebarAbierta = false"
-              >
-                <i class="ri-user-settings-line text-lg"></i>
-                <span class="ml-3">Perfil</span>
-              </NuxtLink>
-              <button
-                @click="cerrarSesion"
-                class="flex w-full items-center rounded-lg border border-white/10 px-3 py-2.5 text-sm text-white/70 transition-colors hover:border-red-400/40 hover:bg-red-500/90 hover:text-white"
-              >
-                <i class="ri-logout-box-line text-lg"></i>
-                <span class="ml-3">Cerrar sesión</span>
-              </button>
+            <!-- Footer Mobile Compacto -->
+            <div class="p-3">
+              <div class="relative overflow-hidden rounded-lg bg-[#065F46] p-2.5 text-white shadow-sm flex items-center justify-between">
+                <div class="flex items-center gap-2 z-10">
+                  <i class="ri-whatsapp-line text-lg text-emerald-200"></i>
+                  <p class="text-xs font-semibold">Soporte</p>
+                </div>
+                <a 
+                  href="https://wa.me/584267379617?text=Hola,%20necesito%20soporte%20t%C3%A9cnico%20con%20DroidStock" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  class="z-10 rounded bg-emerald-500 px-2.5 py-1 text-[10px] font-semibold text-white transition hover:bg-emerald-400"
+                >
+                  Enviar DM
+                </a>
+              </div>
             </div>
           </div>
         </aside>
       </transition>
 
       <!-- ============ CONTENIDO ============ -->
-      <div class="lg:ml-64">
+      <div class="lg:ml-[260px]">
         <!-- Navbar -->
         <header class="sticky top-0 z-40 border-b border-[#D1D5DB] bg-white shadow-sm">
           <div class="flex min-h-14 items-center justify-between gap-2 px-3 py-2 sm:min-h-16 sm:px-5">
@@ -372,30 +275,88 @@
               </h1>
             </div>
 
-            <div class="flex min-w-0 items-center gap-2 sm:gap-4">
-              <div class="flex min-w-0 items-center gap-2">
-                <div class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg border border-emerald-100 bg-emerald-50 text-emerald-700">
-                  <i class="ri-store-2-line"></i>
-                </div>
-                <div class="min-w-0">
-                  <p class="max-w-[120px] truncate text-xs font-bold text-slate-800 sm:max-w-[220px] sm:text-sm">
-                    {{ tiendaNombre }}
-                  </p>
-                  <p class="flex items-center gap-1 text-[10px] font-medium text-emerald-700">
-                    <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
-                    Sesión activa
-                  </p>
+            <div class="relative flex min-w-0 items-center gap-2 sm:gap-3">
+              <div class="relative">
+                <button
+                  type="button"
+                  @click="menuPerfilAbierto = !menuPerfilAbierto"
+                  class="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-2 py-1.5 text-left shadow-sm transition hover:border-emerald-200 hover:bg-emerald-50/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+                  :aria-expanded="menuPerfilAbierto"
+                  aria-label="Abrir menú de perfil"
+                >
+                  <div class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg border border-emerald-100 bg-emerald-50 text-emerald-700">
+                    <i class="ri-store-2-line text-sm"></i>
+                  </div>
+
+                  <div class="min-w-0">
+                    <p class="max-w-[120px] truncate text-[11px] font-bold text-slate-800 sm:max-w-[200px] sm:text-sm">
+                      {{ tiendaNombre }}
+                    </p>
+                    <p class="flex items-center gap-1 text-[10px] font-medium text-emerald-700">
+                      <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+                      Sesión activa
+                    </p>
+                  </div>
+
+                  <div class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-[#065F46] text-[11px] font-bold text-white">
+                    {{ iniciales }}
+                  </div>
+                </button>
+
+                <div
+                  v-if="menuPerfilAbierto"
+                  @click.stop
+                  class="perfil-menu-dropdown absolute right-0 top-full z-50 mt-2 w-[280px] overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl"
+                >
+                  <div class="flex items-center gap-3 border-b border-slate-200 bg-slate-50 px-4 py-3">
+                    <div class="flex h-11 w-11 items-center justify-center rounded-full bg-[#065F46] text-sm font-bold text-white">
+                      {{ iniciales }}
+                    </div>
+                    <div class="min-w-0">
+                      <p class="truncate text-sm font-bold text-slate-800">
+                        {{ usuarioNombre || 'Usuario' }}
+                      </p>
+                      <p class="truncate text-xs text-slate-500">
+                        {{ usuarioEmail || 'Sin correo' }}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="px-4 py-3">
+                    <p class="mb-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-400">
+                      Taller
+                    </p>
+                    <div class="rounded-lg border border-emerald-100 bg-emerald-50/50 p-2.5">
+                      <p class="text-sm font-semibold text-slate-800">
+                        {{ tiendaNombre }}
+                      </p>
+                      <p class="mt-1 text-xs text-slate-500">
+                        {{ usuarioEmail || 'Información del taller disponible' }}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="border-t border-slate-200">
+                    <NuxtLink
+                      to="/perfil"
+                      @click="menuPerfilAbierto = false"
+                      class="flex items-center gap-2 px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-50 hover:text-slate-900"
+                    >
+                      <i class="ri-user-settings-line text-base text-emerald-600"></i>
+                      Perfil y configuración
+                    </NuxtLink>
+
+                    <button
+                      type="button"
+                      @click="cerrarSesion()"
+                      class="flex w-full items-center gap-2 px-4 py-2.5 text-left text-sm text-red-600 transition hover:bg-red-50"
+                    >
+                      <i class="ri-logout-box-line text-base"></i>
+                      Cerrar sesión
+                    </button>
+                  </div>
                 </div>
               </div>
-
-              <NuxtLink
-                to="/perfil"
-                :aria-label="usuarioEmail ? 'Ver perfil de ' + usuarioEmail : 'Ver perfil'"
-                title="Ver perfil"
-                class="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-[#065F46] text-xs font-bold text-white transition-colors hover:bg-[#054A37] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2"
-              >
-                {{ iniciales }}
-              </NuxtLink>
             </div>
           </div>
         </header>
@@ -421,17 +382,36 @@
 const { usuario, tienda, verificarSesion, logout } = useAuth()
 
 const sidebarAbierta = ref(false)
+const menuPerfilAbierto = ref(false)
 const router = useRouter()
 const cargandoSesion = ref(true)
 
 onMounted(async () => {
   await verificarSesion()
   cargandoSesion.value = false
+  document.addEventListener('click', cerrarMenuPerfilFuera)
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener('click', cerrarMenuPerfilFuera)
 })
 
 const tiendaNombre = computed(() => tienda.value?.nombre || 'Mi Taller')
 const usuarioEmail = computed(() => usuario.value?.email || '')
-const iniciales = computed(() => usuarioEmail.value.charAt(0).toUpperCase() || 'U')
+const usuarioNombre = computed(() => usuario.value?.nombre || usuario.value?.displayName || usuario.value?.fullName || 'Usuario')
+const iniciales = computed(() => (usuarioNombre.value || 'U').charAt(0).toUpperCase())
+
+const cerrarMenuPerfilFuera = (event) => {
+  if (!menuPerfilAbierto.value) return
+
+  const boton = document.querySelector('[aria-label="Abrir menú de perfil"]')
+  const menu = document.querySelector('.perfil-menu-dropdown')
+  const target = event.target
+
+  if (!boton?.contains(target) && !menu?.contains(target)) {
+    menuPerfilAbierto.value = false
+  }
+}
 
 const tituloPagina = computed(() => {
   const path = router.currentRoute.value.path
@@ -447,6 +427,28 @@ const tituloPagina = computed(() => {
   if (path.includes('reportes')) return 'Reportes'
   return 'DroidStock'
 })
+
+// Helper para el estado activo
+const claseNav = (ruta, prefijo = false) => {
+  const path = router.currentRoute.value.path
+  const activo = prefijo ? path.startsWith(ruta) : path === ruta
+  return [
+    'flex items-center rounded-lg px-3 py-2.5 text-sm transition-colors group',
+    activo
+      ? 'bg-[#065F46]/10 text-[#065F46] font-semibold' 
+      : 'text-slate-600 hover:bg-slate-200/50 hover:text-slate-900'
+  ]
+}
+
+const claseSubNav = (ruta) => {
+  const activo = router.currentRoute.value.path === ruta
+  return [
+    'flex items-center rounded-lg py-2 pr-3 text-[13px] transition-colors',
+    activo
+      ? 'text-[#065F46] font-semibold bg-[#065F46]/5'
+      : 'text-slate-500 hover:text-slate-800 hover:bg-slate-200/30'
+  ]
+}
 
 const cerrarSesion = async () => {
   const result = await logout()
