@@ -68,29 +68,34 @@
               Menú
             </p>
 
-            <!-- Items del Menú Principal -->
             <div class="space-y-0.5">
               <NuxtLink to="/dashboard" :class="claseNav('/dashboard')" @click="sidebarAbierta = false">
                 <div class="flex items-center gap-3">
-                  <i class="ri-dashboard-line text-lg"></i>
-                  <span>Dashboard</span>
+                  <i class="ri-home-4-line text-lg"></i>
+                  <span>Inicio</span>
                 </div>
               </NuxtLink>
+            </div>
 
+            <p class="px-3 pb-2 pt-5 text-xs font-semibold text-slate-500">Operación del taller</p>
+            <div class="space-y-0.5">
               <NuxtLink to="/reparaciones" :class="claseNav('/reparaciones', true)" @click="sidebarAbierta = false">
                 <div class="flex items-center gap-3">
                   <i class="ri-tools-line text-lg"></i>
-                  <span>Órdenes de trabajo</span>
+                  <span>Reparaciones</span>
                 </div>
               </NuxtLink>
 
-              <NuxtLink to="/repuestos" :class="claseNav('/repuestos', true)" @click="sidebarAbierta = false">
+              <NuxtLink to="/reparaciones/dashboard" :class="claseSubNav('/reparaciones/dashboard')" @click="sidebarAbierta = false">
+                <span class="ml-9">Resumen de reparaciones</span>
+              </NuxtLink>
+
+              <NuxtLink to="/tecnicos" :class="claseNav('/tecnicos', true)" @click="sidebarAbierta = false">
                 <div class="flex items-center gap-3">
-                  <i class="ri-stack-line text-lg"></i>
-                  <span>Stock de repuestos</span>
+                  <i class="ri-user-settings-line text-lg"></i>
+                  <span>Equipo técnico</span>
                 </div>
               </NuxtLink>
-
               <NuxtLink to="/ventas" :class="claseNav('/ventas')" @click="sidebarAbierta = false">
                 <div class="flex items-center gap-3">
                   <i class="ri-shopping-cart-line text-lg"></i>
@@ -102,21 +107,22 @@
               <NuxtLink to="/ventas/dashboard" :class="claseSubNav('/ventas/dashboard')" @click="sidebarAbierta = false">
                 <span class="ml-9">Dashboard de ventas</span>
               </NuxtLink>
+            </div>
 
+            <p class="px-3 pb-2 pt-5 text-xs font-semibold text-slate-500">Inventario</p>
+            <div class="space-y-0.5">
+              <NuxtLink to="/repuestos" :class="claseNav('/repuestos', true)" @click="sidebarAbierta = false">
+                <div class="flex items-center gap-3">
+                  <i class="ri-stack-line text-lg"></i>
+                  <span>Stock de repuestos</span>
+                </div>
+              </NuxtLink>
               <NuxtLink to="/movimientos" :class="claseNav('/movimientos', true)" @click="sidebarAbierta = false">
                 <div class="flex items-center gap-3">
                   <i class="ri-exchange-line text-lg"></i>
                   <span>Movimientos</span>
                 </div>
               </NuxtLink>
-
-              <NuxtLink to="/tecnicos" :class="claseNav('/tecnicos', true)" @click="sidebarAbierta = false">
-                <div class="flex items-center gap-3">
-                  <i class="ri-user-settings-line text-lg"></i>
-                  <span>Equipo técnico</span>
-                </div>
-              </NuxtLink>
-
               <NuxtLink to="/reportes/defectuosos" :class="claseNav('/reportes', true)" @click="sidebarAbierta = false">
                 <div class="flex items-center gap-3">
                   <i class="ri-error-warning-line text-lg"></i>
@@ -195,16 +201,22 @@
 
             <nav class="flex-1 overflow-y-auto px-3 py-4">
               <p class="px-3 pb-2 text-xs font-semibold text-slate-500">Menú</p>
-
               <div class="space-y-0.5">
                 <NuxtLink to="/dashboard" :class="claseNav('/dashboard')" @click="sidebarAbierta = false">
-                  <div class="flex items-center gap-3"><i class="ri-dashboard-line text-lg"></i><span>Dashboard</span></div>
+                  <div class="flex items-center gap-3"><i class="ri-home-4-line text-lg"></i><span>Inicio</span></div>
                 </NuxtLink>
+              </div>
+
+              <p class="px-3 pb-2 pt-5 text-xs font-semibold text-slate-500">Operación del taller</p>
+              <div class="space-y-0.5">
                 <NuxtLink to="/reparaciones" :class="claseNav('/reparaciones', true)" @click="sidebarAbierta = false">
-                  <div class="flex items-center gap-3"><i class="ri-tools-line text-lg"></i><span>Órdenes de trabajo</span></div>
+                  <div class="flex items-center gap-3"><i class="ri-tools-line text-lg"></i><span>Reparaciones</span></div>
                 </NuxtLink>
-                <NuxtLink to="/repuestos" :class="claseNav('/repuestos', true)" @click="sidebarAbierta = false">
-                  <div class="flex items-center gap-3"><i class="ri-stack-line text-lg"></i><span>Stock de repuestos</span></div>
+                <NuxtLink to="/reparaciones/dashboard" :class="claseSubNav('/reparaciones/dashboard')" @click="sidebarAbierta = false">
+                  <span class="ml-9">Resumen de reparaciones</span>
+                </NuxtLink>
+                <NuxtLink to="/tecnicos" :class="claseNav('/tecnicos', true)" @click="sidebarAbierta = false">
+                  <div class="flex items-center gap-3"><i class="ri-user-settings-line text-lg"></i><span>Equipo técnico</span></div>
                 </NuxtLink>
                 <NuxtLink to="/ventas" :class="claseNav('/ventas')" @click="sidebarAbierta = false">
                   <div class="flex items-center gap-3"><i class="ri-shopping-cart-line text-lg"></i><span>Ventas</span></div>
@@ -212,11 +224,15 @@
                 <NuxtLink to="/ventas/dashboard" :class="claseSubNav('/ventas/dashboard')" @click="sidebarAbierta = false">
                   <span class="ml-9">Dashboard de ventas</span>
                 </NuxtLink>
+              </div>
+
+              <p class="px-3 pb-2 pt-5 text-xs font-semibold text-slate-500">Inventario</p>
+              <div class="space-y-0.5">
+                <NuxtLink to="/repuestos" :class="claseNav('/repuestos', true)" @click="sidebarAbierta = false">
+                  <div class="flex items-center gap-3"><i class="ri-stack-line text-lg"></i><span>Stock de repuestos</span></div>
+                </NuxtLink>
                 <NuxtLink to="/movimientos" :class="claseNav('/movimientos', true)" @click="sidebarAbierta = false">
                   <div class="flex items-center gap-3"><i class="ri-exchange-line text-lg"></i><span>Movimientos</span></div>
-                </NuxtLink>
-                <NuxtLink to="/tecnicos" :class="claseNav('/tecnicos', true)" @click="sidebarAbierta = false">
-                  <div class="flex items-center gap-3"><i class="ri-user-settings-line text-lg"></i><span>Equipo técnico</span></div>
                 </NuxtLink>
                 <NuxtLink to="/reportes/defectuosos" :class="claseNav('/reportes', true)" @click="sidebarAbierta = false">
                   <div class="flex items-center gap-3"><i class="ri-error-warning-line text-lg"></i><span>Repuestos defectuosos</span></div>
@@ -416,6 +432,8 @@ const cerrarMenuPerfilFuera = (event) => {
 const tituloPagina = computed(() => {
   const path = router.currentRoute.value.path
   if (path === '/ventas/dashboard') return 'Dashboard de ventas'
+  if (path === '/dashboard') return 'Dashboard'
+  if (path === '/reparaciones/dashboard') return 'Resumen de reparaciones'
   if (path.includes('dashboard')) return 'Dashboard'
   if (path.includes('clientes')) return 'Clientes'
   if (path.includes('tecnicos')) return 'Técnicos'
