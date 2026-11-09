@@ -41,66 +41,61 @@
     </div>
 
     <!-- FILTROS DE FECHA -->
-    <section class="rounded-xl border border-[#D1D5DB] bg-white p-3 shadow-sm sm:p-4">
-      <div class="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
-        <div>
-          <h2 class="mb-2 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[#065F46]">
-            <i class="ri-calendar-line text-base text-[#10B981]"></i>
-            Período de ventas
-          </h2>
-          <div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
-            <label class="text-[9px] font-bold uppercase tracking-wider text-gray-400">
-              Desde
-              <input
-                v-model="fechas.desde"
-                @change="presetActivo = ''"
-                type="date"
-                :max="fechas.hasta || undefined"
-                class="mt-1 block w-full rounded-lg border border-[#D1D5DB] bg-[#F8FAFC] px-3 py-2 text-xs font-bold text-[#334155] focus:border-[#10B981] focus:outline-none focus:ring-2 focus:ring-[#10B981]/20"
-              />
-            </label>
-            <label class="text-[9px] font-bold uppercase tracking-wider text-gray-400">
-              Hasta
-              <input
-                v-model="fechas.hasta"
-                @change="presetActivo = ''"
-                type="date"
-                :min="fechas.desde || undefined"
-                :max="hoy"
-                class="mt-1 block w-full rounded-lg border border-[#D1D5DB] bg-[#F8FAFC] px-3 py-2 text-xs font-bold text-[#334155] focus:border-[#10B981] focus:outline-none focus:ring-2 focus:ring-[#10B981]/20"
-              />
-            </label>
-          </div>
+    <section class="rounded-xl bg-[#065F46] p-2.5 text-white shadow-sm sm:p-3">
+      <div class="flex min-w-0 flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+        <div class="flex items-center gap-2">
+          <i class="ri-calendar-line text-sm text-white/85"></i>
+          <h2 class="text-[10px] font-semibold uppercase tracking-wider text-white/75">Período</h2>
         </div>
-
-        <div class="flex flex-wrap gap-1.5">
+        <div class="grid w-full min-w-0 grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-1.5 sm:w-auto sm:gap-2">
+          <label class="sr-only" for="ventas-fecha-desde">Desde</label>
+          <input
+            id="ventas-fecha-desde"
+            v-model="fechas.desde"
+            @change="presetActivo = ''"
+            type="date"
+            :max="fechas.hasta || undefined"
+            class="w-full min-w-0 rounded-md border-0 bg-white/95 px-2 py-1.5 text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-300"
+          />
+          <span class="text-xs text-white/60">→</span>
+          <label class="sr-only" for="ventas-fecha-hasta">Hasta</label>
+          <input
+            id="ventas-fecha-hasta"
+            v-model="fechas.hasta"
+            @change="presetActivo = ''"
+            type="date"
+            :min="fechas.desde || undefined"
+            :max="hoy"
+            class="w-full min-w-0 rounded-md border-0 bg-white/95 px-2 py-1.5 text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-300"
+          />
+        </div>
+        <div class="grid grid-cols-4 gap-1 sm:flex sm:flex-wrap sm:items-center">
           <button
             v-for="preset in presetsFecha"
             :key="preset.id"
             type="button"
             @click="aplicarPreset(preset.id)"
-            class="rounded-lg border px-3 py-2 text-[9px] font-black uppercase tracking-wider transition"
+            class="min-w-0 rounded-md px-1.5 py-1 text-[10px] font-semibold transition-colors sm:px-2.5"
             :class="presetActivo === preset.id
-              ? 'border-[#065F46] bg-[#065F46] text-white'
-              : 'border-gray-200 bg-white text-gray-500 hover:border-[#10B981] hover:text-[#065F46]'"
+              ? 'bg-white text-[#065F46]'
+              : 'bg-white/15 text-white hover:bg-white/25'"
           >
             {{ preset.label }}
           </button>
+        </div>
+        <div class="flex items-center self-end sm:ml-auto sm:self-auto">
           <button
             type="button"
             @click="refrescar"
             :disabled="cargando"
             aria-label="Actualizar dashboard"
-            class="rounded-lg border border-gray-200 bg-white px-3 py-2 text-gray-500 transition hover:bg-gray-50 disabled:opacity-50"
+            class="flex items-center gap-1.5 rounded-md bg-white/15 px-2.5 py-1.5 text-white transition-colors hover:bg-white/25 disabled:opacity-50"
           >
-            <i :class="cargando ? 'ri-loader-4-line animate-spin' : 'ri-refresh-line'"></i>
+            <i :class="cargando ? 'ri-loader-4-line animate-spin' : 'ri-refresh-line'" class="text-sm"></i>
           </button>
         </div>
       </div>
-      <p v-if="rangoInvalido" class="mt-2 text-[10px] font-bold text-red-600">La fecha inicial debe ser anterior o igual a la fecha final.</p>
-      <p v-else class="mt-2 text-[9px] font-mono text-gray-400">
-        {{ rangoTexto }} · {{ ventasFiltradas.length }} ventas encontradas
-      </p>
+      <p v-if="rangoInvalido" class="mt-2 text-[10px] font-bold text-red-100">La fecha inicial debe ser anterior o igual a la fecha final.</p>
     </section>
 
     <!-- KPIs PRINCIPALES -->

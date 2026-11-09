@@ -6,7 +6,6 @@
       class="fixed inset-0 z-50"
       style="background-color: #F3F4F6"
     >
-      <!-- Skeleton Desktop -->
       <div class="hidden lg:flex h-full">
         <aside class="w-[260px] border-r border-slate-200 bg-[#F8FAFC]">
           <div class="flex h-full flex-col">
@@ -49,7 +48,6 @@
         class="fixed inset-y-0 left-0 z-50 hidden w-[260px] flex-col border-r border-slate-200 bg-[#F8FAFC] lg:flex"
       >
         <div class="flex h-full flex-col">
-          
           <!-- Logo Principal -->
           <div class="flex h-16 items-center justify-between px-4">
             <div class="flex items-center gap-2.5">
@@ -58,100 +56,70 @@
               </div>
               <span class="text-xl font-bold tracking-tight text-slate-800">DroidStock</span>
             </div>
-            <button class="text-slate-400 hover:text-slate-600">
+            <button
+              class="text-slate-400 hover:text-slate-600"
+              aria-label="Colapsar menú lateral"
+            >
               <i class="ri-side-bar-line text-lg"></i>
             </button>
           </div>
 
+          <!-- Navegación -->
           <nav class="flex-1 overflow-y-auto px-3 py-4">
-            <p class="px-3 pb-2 text-xs font-semibold text-slate-500">
-              Menú
-            </p>
+            <template v-for="(grupo, gi) in navGrupos" :key="grupo.label">
+              <!-- Primer grupo: solo label, sin líneas -->
+              <div v-if="gi === 0" class="mb-2 px-3 pt-1">
+                <span class="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400">
+                  {{ grupo.label }}
+                </span>
+              </div>
+              <!-- Resto de grupos: línea + label + línea -->
+              <div v-else class="mt-5 mb-2 flex items-center gap-2 px-3">
+                <span class="h-px flex-1 bg-slate-200"></span>
+                <span class="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400">
+                  {{ grupo.label }}
+                </span>
+                <span class="h-px flex-1 bg-slate-200"></span>
+              </div>
 
-            <div class="space-y-0.5">
-              <NuxtLink to="/dashboard" :class="claseNav('/dashboard')" @click="sidebarAbierta = false">
-                <div class="flex items-center gap-3">
-                  <i class="ri-home-4-line text-lg"></i>
-                  <span>Inicio</span>
-                </div>
-              </NuxtLink>
-            </div>
+              <div class="space-y-0.5">
+                <template v-for="item in grupo.items" :key="item.to">
+                  <!-- Item principal -->
+                  <NuxtLink
+                    :to="item.to"
+                    :class="claseNav(item.to, item.prefijo, item.excluir)"
+                    :aria-current="esActivo(item.to, item.prefijo, item.excluir) ? 'page' : undefined"
+                    @click="sidebarAbierta = false"
+                  >
+                    <span
+                      v-if="esActivo(item.to, item.prefijo, item.excluir)"
+                      class="absolute left-0 top-1/2 h-6 w-1 -translate-y-1/2 rounded-r-full bg-[#065F46]"
+                    ></span>
+                    <i :class="[item.icon, 'text-lg']"></i>
+                    <span>{{ item.label }}</span>
+                  </NuxtLink>
 
-            <p class="px-3 pb-2 pt-5 text-xs font-semibold text-slate-500">Operación del taller</p>
-            <div class="space-y-0.5">
-              <NuxtLink to="/reparaciones" :class="claseNav('/reparaciones', true)" @click="sidebarAbierta = false">
-                <div class="flex items-center gap-3">
-                  <i class="ri-tools-line text-lg"></i>
-                  <span>Reparaciones</span>
-                </div>
-              </NuxtLink>
-
-              <NuxtLink to="/reparaciones/dashboard" :class="claseSubNav('/reparaciones/dashboard')" @click="sidebarAbierta = false">
-                <span class="ml-9">Resumen de reparaciones</span>
-              </NuxtLink>
-
-              <NuxtLink to="/tecnicos" :class="claseNav('/tecnicos', true)" @click="sidebarAbierta = false">
-                <div class="flex items-center gap-3">
-                  <i class="ri-user-settings-line text-lg"></i>
-                  <span>Equipo técnico</span>
-                </div>
-              </NuxtLink>
-              <NuxtLink to="/ventas" :class="claseNav('/ventas')" @click="sidebarAbierta = false">
-                <div class="flex items-center gap-3">
-                  <i class="ri-shopping-cart-line text-lg"></i>
-                  <span>Ventas</span>
-                </div>
-              </NuxtLink>
-              
-              <!-- Submenú integrado -->
-              <NuxtLink to="/ventas/dashboard" :class="claseSubNav('/ventas/dashboard')" @click="sidebarAbierta = false">
-                <span class="ml-9">Dashboard de ventas</span>
-              </NuxtLink>
-            </div>
-
-            <p class="px-3 pb-2 pt-5 text-xs font-semibold text-slate-500">Inventario</p>
-            <div class="space-y-0.5">
-              <NuxtLink to="/repuestos" :class="claseNav('/repuestos', true)" @click="sidebarAbierta = false">
-                <div class="flex items-center gap-3">
-                  <i class="ri-stack-line text-lg"></i>
-                  <span>Stock de repuestos</span>
-                </div>
-              </NuxtLink>
-              <NuxtLink to="/movimientos" :class="claseNav('/movimientos', true)" @click="sidebarAbierta = false">
-                <div class="flex items-center gap-3">
-                  <i class="ri-exchange-line text-lg"></i>
-                  <span>Movimientos</span>
-                </div>
-              </NuxtLink>
-              <NuxtLink to="/reportes/defectuosos" :class="claseNav('/reportes', true)" @click="sidebarAbierta = false">
-                <div class="flex items-center gap-3">
-                  <i class="ri-error-warning-line text-lg"></i>
-                  <span>Repuestos defectuosos</span>
-                </div>
-              </NuxtLink>
-            </div>
-
-            <!-- Sección General -->
-            <p class="px-3 pb-2 pt-6 text-xs font-semibold text-slate-500">
-              General
-            </p>
-
-            <div class="space-y-0.5">
-              <NuxtLink to="/perfil" :class="claseNav('/perfil')" @click="sidebarAbierta = false">
-                <div class="flex items-center gap-3">
-                  <i class="ri-settings-3-line text-lg"></i>
-                  <span>Perfil y Ajustes</span>
-                </div>
-              </NuxtLink>
-
-              <button
-                @click="cerrarSesion"
-                class="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-slate-600 transition-colors hover:bg-red-50 hover:text-red-600"
-              >
-                <i class="ri-logout-box-line text-lg"></i>
-                <span>Cerrar sesión</span>
-              </button>
-            </div>
+                  <!-- Subitems (hijos) con línea guía vertical -->
+                  <template v-if="item.hijos?.length">
+                    <div
+                      v-for="hijo in item.hijos"
+                      :key="hijo.to"
+                      class="relative ml-6 pl-4"
+                    >
+                      <span class="absolute left-0 top-0 bottom-0 w-px bg-slate-200"></span>
+                      <NuxtLink
+                        :to="hijo.to"
+                        :class="claseSubNav(hijo.to)"
+                        :aria-current="esActivo(hijo.to) ? 'page' : undefined"
+                        @click="sidebarAbierta = false"
+                      >
+                        <span>{{ hijo.label }}</span>
+                      </NuxtLink>
+                    </div>
+                  </template>
+                </template>
+              </div>
+            </template>
           </nav>
 
           <!-- Footer: Tarjeta compacta de soporte -->
@@ -163,10 +131,10 @@
                 </div>
                 <p class="text-xs font-semibold">Soporte</p>
               </div>
-              
-              <a 
-                href="https://wa.me/584267379617?text=Hola,%20necesito%20soporte%20t%C3%A9cnico%20con%20DroidStock" 
-                target="_blank" 
+
+              <a
+                href="https://wa.me/584267379617?text=Hola,%20necesito%20soporte%20t%C3%A9cnico%20con%20DroidStock"
+                target="_blank"
                 rel="noopener noreferrer"
                 class="z-10 rounded bg-emerald-500 px-2.5 py-1 text-[10px] font-semibold text-white transition hover:bg-emerald-400"
               >
@@ -181,6 +149,7 @@
       <transition name="sidebar">
         <aside
           v-if="sidebarAbierta"
+          id="sidebar-mobile"
           class="fixed inset-y-0 left-0 z-50 flex w-[260px] flex-col border-r border-slate-200 bg-[#F8FAFC] shadow-2xl lg:hidden"
         >
           <div class="flex h-full flex-col">
@@ -194,61 +163,64 @@
               <button
                 @click="sidebarAbierta = false"
                 class="rounded-lg p-1 text-slate-500 hover:bg-slate-200 hover:text-slate-900"
+                aria-label="Cerrar menú de navegación"
               >
                 <i class="ri-close-line text-xl"></i>
               </button>
             </div>
 
+            <!-- Misma navegación reutilizada -->
             <nav class="flex-1 overflow-y-auto px-3 py-4">
-              <p class="px-3 pb-2 text-xs font-semibold text-slate-500">Menú</p>
-              <div class="space-y-0.5">
-                <NuxtLink to="/dashboard" :class="claseNav('/dashboard')" @click="sidebarAbierta = false">
-                  <div class="flex items-center gap-3"><i class="ri-home-4-line text-lg"></i><span>Inicio</span></div>
-                </NuxtLink>
-              </div>
+              <template v-for="(grupo, gi) in navGrupos" :key="'m-' + grupo.label">
+                <div v-if="gi === 0" class="mb-2 px-3 pt-1">
+                  <span class="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400">
+                    {{ grupo.label }}
+                  </span>
+                </div>
+                <div v-else class="mt-5 mb-2 flex items-center gap-2 px-3">
+                  <span class="h-px flex-1 bg-slate-200"></span>
+                  <span class="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400">
+                    {{ grupo.label }}
+                  </span>
+                  <span class="h-px flex-1 bg-slate-200"></span>
+                </div>
 
-              <p class="px-3 pb-2 pt-5 text-xs font-semibold text-slate-500">Operación del taller</p>
-              <div class="space-y-0.5">
-                <NuxtLink to="/reparaciones" :class="claseNav('/reparaciones', true)" @click="sidebarAbierta = false">
-                  <div class="flex items-center gap-3"><i class="ri-tools-line text-lg"></i><span>Reparaciones</span></div>
-                </NuxtLink>
-                <NuxtLink to="/reparaciones/dashboard" :class="claseSubNav('/reparaciones/dashboard')" @click="sidebarAbierta = false">
-                  <span class="ml-9">Resumen de reparaciones</span>
-                </NuxtLink>
-                <NuxtLink to="/tecnicos" :class="claseNav('/tecnicos', true)" @click="sidebarAbierta = false">
-                  <div class="flex items-center gap-3"><i class="ri-user-settings-line text-lg"></i><span>Equipo técnico</span></div>
-                </NuxtLink>
-                <NuxtLink to="/ventas" :class="claseNav('/ventas')" @click="sidebarAbierta = false">
-                  <div class="flex items-center gap-3"><i class="ri-shopping-cart-line text-lg"></i><span>Ventas</span></div>
-                </NuxtLink>
-                <NuxtLink to="/ventas/dashboard" :class="claseSubNav('/ventas/dashboard')" @click="sidebarAbierta = false">
-                  <span class="ml-9">Dashboard de ventas</span>
-                </NuxtLink>
-              </div>
+                <div class="space-y-0.5">
+                  <template v-for="item in grupo.items" :key="'m-' + item.to">
+                    <NuxtLink
+                      :to="item.to"
+                      :class="claseNav(item.to, item.prefijo, item.excluir)"
+                      :aria-current="esActivo(item.to, item.prefijo, item.excluir) ? 'page' : undefined"
+                      @click="sidebarAbierta = false"
+                    >
+                      <span
+                        v-if="esActivo(item.to, item.prefijo, item.excluir)"
+                        class="absolute left-0 top-1/2 h-6 w-1 -translate-y-1/2 rounded-r-full bg-[#065F46]"
+                      ></span>
+                      <i :class="[item.icon, 'text-lg']"></i>
+                      <span>{{ item.label }}</span>
+                    </NuxtLink>
 
-              <p class="px-3 pb-2 pt-5 text-xs font-semibold text-slate-500">Inventario</p>
-              <div class="space-y-0.5">
-                <NuxtLink to="/repuestos" :class="claseNav('/repuestos', true)" @click="sidebarAbierta = false">
-                  <div class="flex items-center gap-3"><i class="ri-stack-line text-lg"></i><span>Stock de repuestos</span></div>
-                </NuxtLink>
-                <NuxtLink to="/movimientos" :class="claseNav('/movimientos', true)" @click="sidebarAbierta = false">
-                  <div class="flex items-center gap-3"><i class="ri-exchange-line text-lg"></i><span>Movimientos</span></div>
-                </NuxtLink>
-                <NuxtLink to="/reportes/defectuosos" :class="claseNav('/reportes', true)" @click="sidebarAbierta = false">
-                  <div class="flex items-center gap-3"><i class="ri-error-warning-line text-lg"></i><span>Repuestos defectuosos</span></div>
-                </NuxtLink>
-              </div>
-
-              <p class="px-3 pb-2 pt-6 text-xs font-semibold text-slate-500">General</p>
-
-              <div class="space-y-0.5">
-                <NuxtLink to="/perfil" :class="claseNav('/perfil')" @click="sidebarAbierta = false">
-                  <div class="flex items-center gap-3"><i class="ri-settings-3-line text-lg"></i><span>Perfil y Ajustes</span></div>
-                </NuxtLink>
-                <button @click="cerrarSesion" class="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-slate-600 transition-colors hover:bg-red-50 hover:text-red-600">
-                  <i class="ri-logout-box-line text-lg"></i><span>Cerrar sesión</span>
-                </button>
-              </div>
+                    <template v-if="item.hijos?.length">
+                      <div
+                        v-for="hijo in item.hijos"
+                        :key="'m-' + hijo.to"
+                        class="relative ml-6 pl-4"
+                      >
+                        <span class="absolute left-0 top-0 bottom-0 w-px bg-slate-200"></span>
+                        <NuxtLink
+                          :to="hijo.to"
+                          :class="claseSubNav(hijo.to)"
+                          :aria-current="esActivo(hijo.to) ? 'page' : undefined"
+                          @click="sidebarAbierta = false"
+                        >
+                          <span>{{ hijo.label }}</span>
+                        </NuxtLink>
+                      </div>
+                    </template>
+                  </template>
+                </div>
+              </template>
             </nav>
 
             <!-- Footer Mobile Compacto -->
@@ -258,9 +230,9 @@
                   <i class="ri-whatsapp-line text-lg text-emerald-200"></i>
                   <p class="text-xs font-semibold">Soporte</p>
                 </div>
-                <a 
-                  href="https://wa.me/584267379617?text=Hola,%20necesito%20soporte%20t%C3%A9cnico%20con%20DroidStock" 
-                  target="_blank" 
+                <a
+                  href="https://wa.me/584267379617?text=Hola,%20necesito%20soporte%20t%C3%A9cnico%20con%20DroidStock"
+                  target="_blank"
                   rel="noopener noreferrer"
                   class="z-10 rounded bg-emerald-500 px-2.5 py-1 text-[10px] font-semibold text-white transition hover:bg-emerald-400"
                 >
@@ -281,6 +253,7 @@
               <button
                 @click="sidebarAbierta = !sidebarAbierta"
                 :aria-expanded="sidebarAbierta"
+                aria-controls="sidebar-mobile"
                 aria-label="Abrir menú de navegación"
                 class="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-700 transition-colors hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 lg:hidden"
               >
@@ -414,7 +387,13 @@ onBeforeUnmount(() => {
 
 const tiendaNombre = computed(() => tienda.value?.nombre || 'Mi Taller')
 const usuarioEmail = computed(() => usuario.value?.email || '')
-const usuarioNombre = computed(() => usuario.value?.nombre || usuario.value?.displayName || usuario.value?.fullName || 'Usuario')
+const usuarioNombre = computed(
+  () =>
+    usuario.value?.nombre ||
+    usuario.value?.displayName ||
+    usuario.value?.fullName ||
+    'Usuario'
+)
 const iniciales = computed(() => (usuarioNombre.value || 'U').charAt(0).toUpperCase())
 
 const cerrarMenuPerfilFuera = (event) => {
@@ -446,27 +425,93 @@ const tituloPagina = computed(() => {
   return 'DroidStock'
 })
 
-// Helper para el estado activo
-const claseNav = (ruta, prefijo = false) => {
+// ===== Configuración de navegación (una sola fuente de verdad) =====
+const navGrupos = [
+  {
+    label: 'Menú',
+    items: [
+      {
+        label: 'Inicio',
+        to: '/dashboard',
+        icon: 'ri-home-4-line'
+      }
+    ]
+  },
+  {
+    label: 'Operación del taller',
+    items: [
+      {
+        label: 'Reparaciones',
+        to: '/reparaciones',
+        icon: 'ri-tools-line',
+        prefijo: true,
+        excluir: '/reparaciones/dashboard',
+        hijos: [
+          { label: 'Resumen de reparaciones', to: '/reparaciones/dashboard' }
+        ]
+      },
+      {
+        label: 'Equipo técnico',
+        to: '/tecnicos',
+        icon: 'ri-user-settings-line',
+        prefijo: true
+      },
+      {
+        label: 'Ventas',
+        to: '/ventas',
+        icon: 'ri-shopping-cart-line',
+        hijos: [
+          { label: 'Dashboard de ventas', to: '/ventas/dashboard' }
+        ]
+      }
+    ]
+  },
+  {
+    label: 'Inventario',
+    items: [
+      {
+        label: 'Stock de repuestos',
+        to: '/repuestos',
+        icon: 'ri-stack-line',
+        prefijo: true
+      },
+      {
+        label: 'Movimientos',
+        to: '/movimientos',
+        icon: 'ri-exchange-line',
+        prefijo: true
+      },
+      {
+        label: 'Repuestos defectuosos',
+        to: '/reportes/defectuosos',
+        icon: 'ri-error-warning-line',
+        prefijo: true
+      }
+    ]
+  }
+]
+
+// ===== Helpers de estado activo y clases =====
+const esActivo = (ruta, prefijo = false, rutaExcluida) => {
   const path = router.currentRoute.value.path
-  const activo = prefijo ? path.startsWith(ruta) : path === ruta
-  return [
-    'flex items-center rounded-lg px-3 py-2.5 text-sm transition-colors group',
-    activo
-      ? 'bg-[#065F46]/10 text-[#065F46] font-semibold' 
-      : 'text-slate-600 hover:bg-slate-200/50 hover:text-slate-900'
-  ]
+  return prefijo
+    ? path.startsWith(ruta) && path !== rutaExcluida
+    : path === ruta
 }
 
-const claseSubNav = (ruta) => {
-  const activo = router.currentRoute.value.path === ruta
-  return [
-    'flex items-center rounded-lg py-2 pr-3 text-[13px] transition-colors',
-    activo
-      ? 'text-[#065F46] font-semibold bg-[#065F46]/5'
-      : 'text-slate-500 hover:text-slate-800 hover:bg-slate-200/30'
-  ]
-}
+const claseNav = (ruta, prefijo = false, rutaExcluida) => [
+  'group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors',
+  esActivo(ruta, prefijo, rutaExcluida)
+    ? 'bg-[#065F46]/10 text-[#065F46] font-semibold'
+    : 'text-slate-600 hover:bg-slate-200/50 hover:text-slate-900'
+]
+
+const claseSubNav = (ruta) => [
+  'flex items-center rounded-lg py-2 pr-3 text-[13px] transition-colors',
+  esActivo(ruta)
+    ? 'text-[#065F46] font-semibold bg-[#065F46]/5'
+    : 'text-slate-500 hover:text-slate-800 hover:bg-slate-200/30'
+]
 
 const cerrarSesion = async () => {
   const result = await logout()
